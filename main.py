@@ -2,6 +2,7 @@ import copy
 import math
 import os.path
 import subprocess
+import tempfile
 import threading
 import time
 from pathlib import Path
@@ -12,6 +13,7 @@ from PIL import Image as im
 from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.d2xmanagement import D2xManagement, D2xResidualCoordinate
 from dandere2xlib.ffmpeg.VideoFrameExtractor import VideoFrameExtractor
+from dandere2xlib.waifu2x import upscale_file
 
 
 def copy_from(A: np.ndarray, B: np.ndarray,
@@ -162,16 +164,36 @@ def part4():
         manager.residual_images[pos] = residual_image
         # residual_image.save(Path(f"residuals\\frame{pos}.png"))
 
-
 def part5():
+
+    for pos in range(frame_count - 1):
+
+        while manager.residual_images[pos] is None:
+            print("waiting part 5 wait 1")
+
+        input_frame = manager.residual_images[pos]
+
+        temp_residual = Path(f"temp/temp_residual{pos}.png")
+        temp_residual_upscaled = Path(f"temp/temp_residual_upscaled{pos}.png")
+
+        input_frame.save(temp_residual)
+        upscale_file(temp_residual, temp_residual_upscaled, 2)
+
+        loaded_image = D2xFrame.from_file(str(temp_residual_upscaled))
+        manager.residual_images_upscaled[pos] = loaded_image
+
+
+
+def part6():
     BLEED = 1
-    black = D2xFrame(1920, 1920)
-    undone = D2xFrame(1920, 1080)
+    SCALE_FACTOR = 2
+
+    undone = D2xFrame(4000, 4000)
     for pos in range(frame_count - 1):
         while manager.residual_blocks[pos] is None:
             print("waiting 1")
             time.sleep(0.0001)
-        while manager.residual_images[pos] is None:
+        while manager.residual_images_upscaled[pos] is None:
             print("waiting")
             time.sleep(0.0001)
 
@@ -181,17 +203,19 @@ def part5():
 
         residual_undo = manager.residual_blocks[pos]
         missing_blocks = manager.missing_blocks[pos]
-        residual_image = manager.residual_images[pos]
+        residual_image = manager.residual_images_upscaled[pos]
 
         if len(missing_blocks) == 0:
             undone = residual_image
         else:
             for residual in residual_undo:
                 residual: D2xResidualCoordinate = residual
-
-                undone.copy_block(frame_other=residual_image, block_size=block_size,
-                                  this_x=residual.x_start, this_y=residual.y_start,
-                                  other_x=residual.residual_x * block_size, other_y=residual.residual_y * block_size)
+                try:
+                    undone.copy_block(frame_other=residual_image, block_size=block_size * SCALE_FACTOR,
+                                      this_x=residual.x_start * 2, this_y=residual.y_start * 2,
+                                      other_x=residual.residual_x * block_size * SCALE_FACTOR , other_y=residual.residual_y * block_size * SCALE_FACTOR)
+                except:
+                    pass
         undone.save(f"pt5\\frame{pos}.png")
 
 
@@ -217,5 +241,6 @@ part2()
 part3()
 part4()
 part5()
+part6()
 
 print(time.time() - start_time)
