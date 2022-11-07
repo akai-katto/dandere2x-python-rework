@@ -87,8 +87,8 @@ class D2xFrame:
                    x_other: int, y_other: int):
 
         self.copy_from(frame_other.frame_array, self.frame_array,
-                       (y_other, x_other), (y_this, x_this),
-                       (y_this + block_size - 1, x_this + block_size - 1))
+                       (y_this, x_this), (y_other, x_other),
+                       (y_other + block_size - 1, x_other + block_size - 1))
 
     # methods #
 

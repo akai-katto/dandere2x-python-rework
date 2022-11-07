@@ -10,7 +10,7 @@ from typing import Tuple
 import numpy as np
 from PIL import Image as im
 from dandere2xlib.d2xframe import D2xFrame
-from dandere2xlib.d2xmanagement import D2xManagement
+from dandere2xlib.d2xmanagement import D2xManagement, D2xResidualCoordinate
 from dandere2xlib.ffmpeg.VideoFrameExtractor import VideoFrameExtractor
 
 
@@ -47,7 +47,7 @@ def part1():
     for x in range(frame_count):
         frame = extractor.get_frame()
         manager.input_images_array[x] = frame
-        #frame.save(Path(f"inputs\\frame{x}.png"))
+        # frame.save(Path(f"inputs\\frame{x}.png"))
 
 
 def part2():
@@ -65,7 +65,7 @@ def part3():
     while manager.input_images_array[0] is None:
         time.sleep(0.0001)
 
-    f1 = D2xFrame(1920,1080)
+    f1 = D2xFrame(1920, 1080)
     for frame_pos in range(0, frame_count - 1):
 
         while manager.input_images_array[frame_pos + 1] is None:
@@ -107,7 +107,7 @@ def part3():
                 if compared[y][x] >= 0:
                     missing_blocks.append((x * block_size, y * block_size))
 
-        if len(missing_blocks) > (1920/30) * (1080/30) * .95:
+        if len(missing_blocks) > (1920 / 30) * (1080 / 30) * .95:
             missing_blocks = []
 
         for missing_block in missing_blocks:
@@ -117,7 +117,7 @@ def part3():
                           x, y)
 
         f1 = f2
-        f1.save(Path(f"pt2f1save/output{frame_pos}.png"))
+        # f1.save(Path(f"pt2f1save/output{frame_pos}.png"))
         manager.missing_blocks[frame_pos] = missing_blocks
 
 
@@ -133,10 +133,9 @@ def part4():
 
         missing_blocks = manager.missing_blocks[pos]
         f1 = copy.deepcopy(manager.input_images_array[pos])
-        f1.create_buffered_image(BUFFER)
-        f1.save(Path(f"inputs\\frame{pos}.png"))
 
         if len(missing_blocks) != 0:
+            f1.create_buffered_image(BUFFER)
             dim = math.ceil(math.sqrt(len(missing_blocks))) + 1
             residual_image = D2xFrame(dim * (block_size + BLEED * 2), dim * (block_size + BLEED * 2))
 
@@ -152,7 +151,7 @@ def part4():
                                           x, y,
                                           x_dim * block_size, y_dim * block_size)
 
-                residual_undo.append(((x, y), (x_dim, y_dim)))
+                residual_undo.append(D2xResidualCoordinate(x_start=x, y_start=y, residual_x=x_dim, residual_y=y_dim))
                 x_dim += 1
 
             manager.residual_blocks[pos] = residual_undo
@@ -161,16 +160,17 @@ def part4():
             manager.residual_blocks[pos] = []
 
         manager.residual_images[pos] = residual_image
-        residual_image.save(Path(f"residuals\\frame{pos}.png"))
+        # residual_image.save(Path(f"residuals\\frame{pos}.png"))
+
 
 def part5():
-    BLEED = 0
+    BLEED = 1
+    black = D2xFrame(1920, 1920)
     undone = D2xFrame(1920, 1080)
     for pos in range(frame_count - 1):
         while manager.residual_blocks[pos] is None:
             print("waiting 1")
             time.sleep(0.0001)
-
         while manager.residual_images[pos] is None:
             print("waiting")
             time.sleep(0.0001)
@@ -187,11 +187,11 @@ def part5():
             undone = residual_image
         else:
             for residual in residual_undo:
-                placement_pos, residual_pos = residual
-                x1, y1, = placement_pos
-                x2, y2 = residual_pos
+                residual: D2xResidualCoordinate = residual
 
-                undone.copy_block(residual_image, block_size, x2 * block_size, y2 * block_size, x1, y1)
+                undone.copy_block(frame_other=residual_image, block_size=block_size,
+                                  this_x=residual.x_start, this_y=residual.y_start,
+                                  other_x=residual.residual_x * block_size, other_y=residual.residual_y * block_size)
         undone.save(f"pt5\\frame{pos}.png")
 
 
@@ -204,17 +204,18 @@ start_time = time.time()
 # t3.start()
 # t4 = threading.Thread(target=part4)
 # t4.start()
-#
+# t5 = threading.Thread(target=part5)
+# t5.start()
+# #
 # t1.join()
 # t2.join()
 # t3.join()
 # t4.join()
-
+# t5.join()
 part1()
 part2()
 part3()
 part4()
 part5()
-
 
 print(time.time() - start_time)
