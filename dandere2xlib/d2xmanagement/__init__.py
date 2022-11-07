@@ -24,6 +24,10 @@ class D2xManagement:
         for x in range(50000):
             self.residual_blocks.append(None)
 
+        self.residual_images = []
+        for x in range(50000):
+            self.residual_images.append(None)
+
 
 
 if __name__ == "__main__":

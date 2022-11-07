@@ -1,6 +1,7 @@
 import copy
 import logging
 import tempfile
+import threading
 from pathlib import Path
 from typing import Tuple
 
@@ -73,16 +74,12 @@ class D2xFrame:
         B_start is the index with respect to B of the upper left corner of the overlap
         B_end is the index of with respect to B of the lower right corner of the overlap
         """
-        try:
-            A_start, B_start, B_end = map(np.asarray, [A_start, B_start, B_end])
-            shape = B_end - B_start
-            B_slices = tuple(map(slice, B_start, B_end + 1))
-            A_slices = tuple(map(slice, A_start, A_start + shape + 1))
-            B[B_slices] = A[A_slices]
+        A_start, B_start, B_end = map(np.asarray, [A_start, B_start, B_end])
+        shape = B_end - B_start
+        B_slices = tuple(map(slice, B_start, B_end + 1))
+        A_slices = tuple(map(slice, A_start, A_start + shape + 1))
+        B[B_slices] = A[A_slices]
 
-        except ValueError:
-            D2xFrame.LOGGING.info("fatal error copying block")
-            raise ValueError
 
     def copy_block(self, frame_other: 'D2xFrame',
                    block_size: int,
@@ -98,6 +95,21 @@ class D2xFrame:
     def save(self, location: Path):
         save_image = self.get_pil_image()
         save_image.save(location, format='PNG')
+
+    def save_detatch(self, location: Path):
+        threading.Thread(target=self.save, args=[location]).start()
+
+    def create_buffered_image(self, buffer: int):
+        bleed_frame_array: np.array = np.zeros([self.__image_height + buffer * 2, self.__image_width + buffer * 2, 3],
+                                               dtype=np.uint8)
+        self.copy_from(self.frame_array,
+                       bleed_frame_array,
+                       (0, 0),
+                       (buffer, buffer), (self.__image_height + buffer - 1, self.__image_width + buffer - 1))
+
+        self.__image_width = self.__image_width + buffer * 2
+        self.__image_height = self.__image_height + buffer * 2
+        self.frame_array = bleed_frame_array
 
     def get_pil_image(self):
         return Image.fromarray(self.frame_array.astype(np.uint8))
