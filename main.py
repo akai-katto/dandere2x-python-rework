@@ -124,8 +124,8 @@ def part3():
 
 
 def part4():
-    BUFFER = 0
-    BLEED = 0
+    BUFFER = 5
+    BLEED = 1
 
     for pos in range(frame_count - 1):
         while manager.missing_blocks[pos] is None:
@@ -149,9 +149,9 @@ def part4():
                 if x_dim >= dim:
                     x_dim = 0
                     y_dim += 1
-                residual_image.copy_block(f1, block_size,
-                                          x, y,
-                                          x_dim * block_size, y_dim * block_size)
+                residual_image.copy_block(f1, (block_size + BLEED * 2),
+                                          x + BUFFER - BLEED, y + BUFFER - BLEED,
+                                          x_dim * (block_size + BLEED * 2), y_dim * (block_size + BLEED * 2))
 
                 residual_undo.append(D2xResidualCoordinate(x_start=x, y_start=y, residual_x=x_dim, residual_y=y_dim))
                 x_dim += 1
@@ -212,35 +212,41 @@ def part6():
                 residual: D2xResidualCoordinate = residual
                 try:
                     undone.copy_block(frame_other=residual_image, block_size=block_size * SCALE_FACTOR,
-                                      this_x=residual.x_start * 2, this_y=residual.y_start * 2,
-                                      other_x=residual.residual_x * block_size * SCALE_FACTOR , other_y=residual.residual_y * block_size * SCALE_FACTOR)
+                                      this_x=residual.x_start * 2,
+                                      this_y=residual.y_start * 2,
+                                      other_x=residual.residual_x * (block_size + BLEED * 2) * SCALE_FACTOR + (BLEED * SCALE_FACTOR),
+                                      other_y=residual.residual_y * (block_size + BLEED * 2) * SCALE_FACTOR + (BLEED * SCALE_FACTOR))
                 except:
                     pass
         undone.save(f"pt5\\frame{pos}.png")
 
 
 start_time = time.time()
-# t1 = threading.Thread(target=part1)
-# t1.start()
-# t2 = threading.Thread(target=part2)
-# t2.start()
-# t3 = threading.Thread(target=part3)
-# t3.start()
-# t4 = threading.Thread(target=part4)
-# t4.start()
-# t5 = threading.Thread(target=part5)
-# t5.start()
-# #
-# t1.join()
-# t2.join()
-# t3.join()
-# t4.join()
-# t5.join()
-part1()
-part2()
-part3()
-part4()
-part5()
-part6()
+t1 = threading.Thread(target=part1)
+t1.start()
+t2 = threading.Thread(target=part2)
+t2.start()
+t3 = threading.Thread(target=part3)
+t3.start()
+t4 = threading.Thread(target=part4)
+t4.start()
+t5 = threading.Thread(target=part5)
+t5.start()
+t6 = threading.Thread(target=part5)
+t6.start()
+#
+t1.join()
+t2.join()
+t3.join()
+t4.join()
+t5.join()
+t6.join()
+
+# part1()
+# part2()
+# part3()
+# part4()
+# part5()
+# part6()
 
 print(time.time() - start_time)

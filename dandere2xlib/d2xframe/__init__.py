@@ -80,16 +80,6 @@ class D2xFrame:
         A_slices = tuple(map(slice, A_start, A_start + shape + 1))
         B[B_slices] = A[A_slices]
 
-
-    def copy_block(self, frame_other: 'D2xFrame',
-                   block_size: int,
-                   x_this: int, y_this: int,
-                   x_other: int, y_other: int):
-
-        self.copy_from(frame_other.frame_array, self.frame_array,
-                       (y_this, x_this), (y_other, x_other),
-                       (y_other + block_size - 1, x_other + block_size - 1))
-
     # methods #
 
     def save(self, location: Path):
@@ -113,6 +103,22 @@ class D2xFrame:
 
     def get_pil_image(self):
         return Image.fromarray(self.frame_array.astype(np.uint8))
+
+    def copy_block(self,
+                   frame_other: 'D2xFrame',
+                   block_size: int,
+                   other_x: int, other_y: int,
+                   this_x: int, this_y: int) -> None:
+        """
+        Check that we can validly copy a block before calling the numpy copy_from method. This way, detailed
+        errors are given, rather than numpy just throwing an un-informative error.
+        """
+        # Check if inputs are valid before calling numpy copy_from
+        #self.check_if_block_operation_valid(frame_other, block_size, other_x, other_y, this_x, this_y)
+
+        D2xFrame.copy_from(frame_other.frame_array, self.frame_array,
+                           (other_y, other_x), (this_y, this_x),
+                           (this_y + block_size - 1, this_x + block_size - 1))
 
     def check_if_block_operation_valid(self,
                                        frame_other: 'D2xFrame',
