@@ -39,6 +39,8 @@ class D2xManagement:
         for x in range(50000):
             self.residual_images_upscaled.append(None)
 
+        self.active_w2x = 0
+
 
 
 if __name__ == "__main__":

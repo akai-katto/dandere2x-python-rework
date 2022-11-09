@@ -34,15 +34,15 @@ def copy_from(A: np.ndarray, B: np.ndarray,
         D2xFrame.LOGGING.info("fatal error copying block")
         raise ValueError
 
-
+total_active_processes = 0
 manager = D2xManagement()
 
 extractor = VideoFrameExtractor(ffmpeg_binary=Path("C:\\ffmpeg\\ffmpeg.exe"),
-                                input_video=Path("C:\\Users\\windw0z\\Desktop\\3.7\\workspace\\yn_moving.mkv"),
+                                input_video=Path("C:\\Users\\windw0z\\Desktop\\3.7\\workspace\\clipped.mkv"),
                                 width=1920,
                                 height=1080)
 block_size = 30
-frame_count = 10
+frame_count = 100
 
 
 def part1():
@@ -118,7 +118,7 @@ def part3():
                           x, y,
                           x, y)
 
-        f1 = f2
+        f1 = copy.deepcopy(f2)
         # f1.save(Path(f"pt2f1save/output{frame_pos}.png"))
         manager.missing_blocks[frame_pos] = missing_blocks
 
@@ -164,31 +164,49 @@ def part4():
         manager.residual_images[pos] = residual_image
         # residual_image.save(Path(f"residuals\\frame{pos}.png"))
 
+
+def run_iteration(position):
+
+    manager.active_w2x += 1
+    input_frame = manager.residual_images[position]
+
+    temp_residual = Path(f"temp/temp_residual{position}.png")
+    temp_residual_upscaled = Path(f"temp/temp_residual_upscaled{position}.png")
+
+    input_frame.save(temp_residual)
+    upscale_file(temp_residual, temp_residual_upscaled, 2)
+
+    loaded = False
+    while not loaded:
+        try:
+            loaded_image = D2xFrame.from_file(str(temp_residual_upscaled))
+            loaded = True
+        except:
+            pass
+    manager.residual_images_upscaled[position] = loaded_image
+
+    manager.active_w2x -= 1
+
+
 def part5():
+
 
     for pos in range(frame_count - 1):
 
         while manager.residual_images[pos] is None:
             print("waiting part 5 wait 1")
+            time.sleep(0.001)
 
-        input_frame = manager.residual_images[pos]
+        while manager.active_w2x > 4:
+            time.sleep(0.001)
 
-        temp_residual = Path(f"temp/temp_residual{pos}.png")
-        temp_residual_upscaled = Path(f"temp/temp_residual_upscaled{pos}.png")
-
-        input_frame.save(temp_residual)
-        upscale_file(temp_residual, temp_residual_upscaled, 2)
-
-        loaded_image = D2xFrame.from_file(str(temp_residual_upscaled))
-        manager.residual_images_upscaled[pos] = loaded_image
-
-
+        threading.Thread(target=run_iteration, args=[pos]).start()
 
 def part6():
     BLEED = 1
     SCALE_FACTOR = 2
 
-    undone = D2xFrame(4000, 4000)
+    undone = D2xFrame(3840, 2160)
     for pos in range(frame_count - 1):
         while manager.residual_blocks[pos] is None:
             print("waiting 1")
@@ -203,21 +221,20 @@ def part6():
 
         residual_undo = manager.residual_blocks[pos]
         missing_blocks = manager.missing_blocks[pos]
-        residual_image = manager.residual_images_upscaled[pos]
+        residual_image: D2xFrame = manager.residual_images_upscaled[pos]
 
         if len(missing_blocks) == 0:
-            undone = residual_image
+            undone = copy.deepcopy(residual_image)
         else:
             for residual in residual_undo:
                 residual: D2xResidualCoordinate = residual
-                try:
-                    undone.copy_block(frame_other=residual_image, block_size=block_size * SCALE_FACTOR,
-                                      this_x=residual.x_start * 2,
-                                      this_y=residual.y_start * 2,
-                                      other_x=residual.residual_x * (block_size + BLEED * 2) * SCALE_FACTOR + (BLEED * SCALE_FACTOR),
-                                      other_y=residual.residual_y * (block_size + BLEED * 2) * SCALE_FACTOR + (BLEED * SCALE_FACTOR))
-                except:
-                    pass
+                undone.copy_block(frame_other=residual_image, block_size=block_size * SCALE_FACTOR,
+                                  this_x=residual.x_start * 2,
+                                  this_y=residual.y_start * 2,
+                                  other_x=residual.residual_x * (block_size + BLEED * 2) * SCALE_FACTOR + (
+                                              BLEED * SCALE_FACTOR),
+                                  other_y=residual.residual_y * (block_size + BLEED * 2) * SCALE_FACTOR + (
+                                              BLEED * SCALE_FACTOR))
         undone.save(f"pt5\\frame{pos}.png")
 
 
@@ -232,7 +249,7 @@ t4 = threading.Thread(target=part4)
 t4.start()
 t5 = threading.Thread(target=part5)
 t5.start()
-t6 = threading.Thread(target=part5)
+t6 = threading.Thread(target=part6)
 t6.start()
 #
 t1.join()
