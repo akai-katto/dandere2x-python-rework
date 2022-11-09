@@ -102,22 +102,26 @@ def part3():
             dtype=np.float32,
         )
 
+        matched_blocks = []
         missing_blocks = []
         compared = matched_mean - compressed_mean
         for y in range(int(1080 / block_size)):
             for x in range(int(1920 / block_size)):
-                if compared[y][x] >= 0:
+                if compared[y][x] <= 0:
+                    matched_blocks.append((x * block_size, y * block_size))
+                else:
                     missing_blocks.append((x * block_size, y * block_size))
 
-        if len(missing_blocks) > (1920 / 30) * (1080 / 30) * .95:
-            missing_blocks = []
+        # if len(missing_blocks) > (1920 / 30) * (1080 / 30) * .95:
+        #     missing_blocks = []
 
-        for missing_block in missing_blocks:
-            x, y = missing_block
+        for matched_block in matched_blocks:
+            x, y = matched_block
             f2.copy_block(f1, block_size,
                           x, y,
                           x, y)
 
+        print(len(missing_blocks))
         f1 = copy.deepcopy(f2)
         # f1.save(Path(f"pt2f1save/output{frame_pos}.png"))
         manager.missing_blocks[frame_pos] = missing_blocks
@@ -134,7 +138,7 @@ def part4():
             time.sleep(0.0001)
 
         missing_blocks = manager.missing_blocks[pos]
-        f1 = copy.deepcopy(manager.input_images_array[pos])
+        f1 = copy.deepcopy(manager.input_images_array[pos+1])
 
         if len(missing_blocks) != 0:
             f1.create_buffered_image(BUFFER)
@@ -158,7 +162,7 @@ def part4():
 
             manager.residual_blocks[pos] = residual_undo
         else:
-            residual_image = f1
+            residual_image = D2xFrame(1,1)
             manager.residual_blocks[pos] = []
 
         manager.residual_images[pos] = residual_image
@@ -194,7 +198,6 @@ def part5():
     for pos in range(frame_count - 1):
 
         while manager.residual_images[pos] is None:
-            print("waiting part 5 wait 1")
             time.sleep(0.001)
 
         while manager.active_w2x > 4:
@@ -209,14 +212,11 @@ def part6():
     undone = D2xFrame(3840, 2160)
     for pos in range(frame_count - 1):
         while manager.residual_blocks[pos] is None:
-            print("waiting 1")
             time.sleep(0.0001)
         while manager.residual_images_upscaled[pos] is None:
-            print("waiting")
             time.sleep(0.0001)
 
         while manager.missing_blocks[pos] is None:
-            print("waiting")
             time.sleep(0.0001)
 
         residual_undo = manager.residual_blocks[pos]
@@ -224,7 +224,7 @@ def part6():
         residual_image: D2xFrame = manager.residual_images_upscaled[pos]
 
         if len(missing_blocks) == 0:
-            undone = copy.deepcopy(residual_image)
+            pass
         else:
             for residual in residual_undo:
                 residual: D2xResidualCoordinate = residual
