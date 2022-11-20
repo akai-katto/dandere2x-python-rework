@@ -39,7 +39,7 @@ class VideoFrameExtractor:
 
         raw = self.ffmpeg.stdout.read(self.__width * self.__height * 3)
         if not raw:
-            raise IndexError
+            raise IndexError(self.__count)
 
         raw = copy(raw)
 

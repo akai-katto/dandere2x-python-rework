@@ -1,7 +1,9 @@
 import copy
+import io
 import logging
 import tempfile
 import threading
+import time
 from pathlib import Path
 from typing import Tuple
 
@@ -64,6 +66,18 @@ class D2xFrame:
 
         return instantiated_frame
 
+    @classmethod
+    def from_bytes(cls, raw_bytes: bytes) -> 'D2xFrame':
+        img_byte_arr = io.BytesIO()
+        img_byte_arr.write(raw_bytes)
+        img_byte_arr.seek(0)
+
+        image = imageio.imread(img_byte_arr, pilmode="RGB").astype(np.uint8)
+        instantiated_class = cls(image.shape[0], image.shape[1])
+        instantiated_class.frame_name = "loaded from bytes"
+        instantiated_class.frame_array = copy.copy(image)
+        return instantiated_class
+
     # static methods #
 
     @staticmethod
@@ -84,10 +98,16 @@ class D2xFrame:
 
     def save(self, location: Path):
         save_image = self.get_pil_image()
-        save_image.save(location, format='PNG')
+        save_image.save(location, format='BMP')
 
     def save_detatch(self, location: Path):
         threading.Thread(target=self.save, args=[location]).start()
+
+    def get_byte_array(self):
+
+        img_byte_arr = io.BytesIO()
+        self.get_pil_image().save(img_byte_arr, format='BMP')
+        return img_byte_arr.getvalue()
 
     def create_buffered_image(self, buffer: int):
         bleed_frame_array: np.array = np.zeros([self.__image_height + buffer * 2, self.__image_width + buffer * 2, 3],
@@ -181,3 +201,12 @@ class D2xFrame:
     @property
     def height(self) -> int:
         return self.__image_height
+
+
+if __name__ == "__main__":
+
+    d2x_image = D2xFrame.from_file("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\inputs\\frame0.png")
+
+    start = time.time()
+    d2x_image.get_byte_array()
+    print(time.time() - start)

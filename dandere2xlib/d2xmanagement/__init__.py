@@ -31,7 +31,7 @@ class D2xManagement:
         for x in range(50000):
             self.residual_blocks.append(None)
 
-        self.residual_images = []
+        self.residual_images: list[Union[D2xFrame, None]] = []
         for x in range(50000):
             self.residual_images.append(None)
 
