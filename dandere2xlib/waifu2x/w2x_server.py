@@ -63,19 +63,9 @@ def upscale_d2x_frame(frame: D2xFrame) -> D2xFrame:
 
     s.send(b"done")
     s.recv(1)
+    received_bmp = s.recv(500000000)
 
-    receive_msg = s.recv(10)
-    while receive_msg != b"start_send":
-        receive_msg = s.recv(10)
-        print("waiting for start command")
-
-    length = int(s.recv(20))
-    print("length: " + str(length))
-    s.send(b"a")
-    received_bmp = s.recv(length)
-    if received_bmp is None:
-        print("it is none")
-
+    s.close()
     return D2xFrame.from_bytes(received_bmp)
 
 if __name__ == "__main__":

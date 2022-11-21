@@ -40,11 +40,11 @@ total_active_processes = 0
 manager = D2xManagement()
 
 extractor = VideoFrameExtractor(ffmpeg_binary=Path("C:\\ffmpeg\\ffmpeg.exe"),
-                                input_video=Path("C:\\Users\\windw0z\\Desktop\\3.7\\workspace\\yn_moving.mkv"),
+                                input_video=Path("C:\\Users\\windw0z\\Desktop\\3.6\\workspace\\clipped.mkv"),
                                 width=1920,
                                 height=1080)
 block_size = 30
-frame_count = 239
+frame_count = 96
 
 
 def part1():
@@ -175,7 +175,7 @@ def part4():
             manager.residual_blocks[pos] = []
 
         manager.residual_images[pos] = residual_image
-        # residual_image.save(Path(f"residuals\\frame{pos}.png"))
+#        residual_image.save(Path(f"residuals\\frame{pos}.png"))
 
 
 # def run_iteration(position):
@@ -261,7 +261,7 @@ def part6():
                                           (BLEED * SCALE_FACTOR),
                                   other_y=residual.residual_y * (block_size + BLEED * 2) * SCALE_FACTOR +
                                           (BLEED * SCALE_FACTOR))
-        #undone.save(f"pt6\\frame{pos}.png")
+        undone.save(f"pt6\\frame{pos}.png")
 
 
 start_time = time.time()

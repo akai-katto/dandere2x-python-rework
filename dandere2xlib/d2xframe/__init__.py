@@ -12,7 +12,6 @@ import numpy
 import numpy as np
 from PIL import Image
 
-
 class D2xFrame:
     """
     A wrapper that wraps dandere2x related functions around the PIL / Numpy library, primarily implementing tools and
