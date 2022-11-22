@@ -46,14 +46,6 @@ def upscale_d2x_frame(frame: D2xFrame) -> D2xFrame:
     s.sendall(bytes(height, encoding='utf8'))
     print(s.recv(1))
 
-    # print("what im sending over: ")
-    # print(frame.width)
-    # print(bytes(str(frame.width).ljust(6)))
-    # s.sendall(bytes(str(frame.width).ljust(6)))
-    # print(s.recv(1))
-    #
-    # s.sendall(bytes(str(frame.height).ljust(6)))
-    # print(s.recv(1))
     chunked = divide_chunks(frame.get_byte_array(), 1000000)
 
     for chunk in chunked:
@@ -61,10 +53,14 @@ def upscale_d2x_frame(frame: D2xFrame) -> D2xFrame:
         s.send(chunk)
         print(s.recv(1))
 
+    print("sending done")
     s.send(b"done")
+    print("done sent, waiting on recv")
     s.recv(1)
+    print("recieve done")
+    s.send(b"a")
     received_bmp = s.recv(500000000)
-
+    print("recieved image")
     s.close()
     return D2xFrame.from_bytes(received_bmp)
 

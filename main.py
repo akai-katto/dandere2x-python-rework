@@ -40,11 +40,11 @@ total_active_processes = 0
 manager = D2xManagement()
 
 extractor = VideoFrameExtractor(ffmpeg_binary=Path("C:\\ffmpeg\\ffmpeg.exe"),
-                                input_video=Path("C:\\Users\\windw0z\\Desktop\\3.6\\workspace\\clipped.mkv"),
+                                input_video=Path("C:\\Users\\windw0z\\Desktop\\3.7\\workspace\\yn_moving.mkv"),
                                 width=1920,
                                 height=1080)
 block_size = 30
-frame_count = 96
+frame_count = 239
 
 
 def part1():
@@ -223,10 +223,17 @@ def part5():
         while manager.residual_images[pos] is None:
             time.sleep(0.001)
 
-        print(f"position of {pos}")
-        d2x_image = manager.residual_images[pos]
-        d2x_upscaled = upscale_d2x_frame(d2x_image)
-        manager.residual_images_upscaled[pos] = d2x_upscaled
+        success = False
+        while not success:
+            try:
+                print(f"position of {pos}")
+                d2x_image = manager.residual_images[pos]
+                d2x_upscaled = upscale_d2x_frame(d2x_image)
+                manager.residual_images_upscaled[pos] = d2x_upscaled
+                success = True
+            except:
+                print("failed, trying again")
+                pass
 
 
 def part6():
@@ -261,36 +268,36 @@ def part6():
                                           (BLEED * SCALE_FACTOR),
                                   other_y=residual.residual_y * (block_size + BLEED * 2) * SCALE_FACTOR +
                                           (BLEED * SCALE_FACTOR))
-        undone.save(f"pt6\\frame{pos}.png")
+        #undone.save(f"pt6\\frame{pos}.png")
 
 
 start_time = time.time()
-# t1 = threading.Thread(target=part1)
-# t1.start()
-# t2 = threading.Thread(target=part2)
-# t2.start()
-# t3 = threading.Thread(target=part3)
-# t3.start()
-# t4 = threading.Thread(target=part4)
-# t4.start()
-# t5 = threading.Thread(target=part5)
-# t5.start()
-# t6 = threading.Thread(target=part6)
-# t6.start()
-# #
-# t1.join()
-# t2.join()
-# t3.join()
-# t4.join()
-# t5.join()
-# t6.join()
+t1 = threading.Thread(target=part1)
+t1.start()
+t2 = threading.Thread(target=part2)
+t2.start()
+t3 = threading.Thread(target=part3)
+t3.start()
+t4 = threading.Thread(target=part4)
+t4.start()
+t5 = threading.Thread(target=part5)
+t5.start()
+t6 = threading.Thread(target=part6)
+t6.start()
+#
+t1.join()
+t2.join()
+t3.join()
+t4.join()
+t5.join()
+t6.join()
 
 #
-part1()
-part2()
-part3()
-part4()
-part5()
-part6()
+# part1()
+# part2()
+# part3()
+# part4()
+# part5()
+# part6()
 
 print(time.time() - start_time)
