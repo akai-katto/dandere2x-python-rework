@@ -14,7 +14,7 @@ from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.d2xmanagement import D2xManagement, D2xResidualCoordinate
 from dandere2xlib.ffmpeg.VideoFrameExtractor import VideoFrameExtractor
 from dandere2xlib.waifu2x import upscale_file
-from dandere2xlib.waifu2x.w2x_server import W2xServer, upscale_d2x_frame
+from dandere2xlib.waifu2x.w2x_server import W2xServer
 
 
 def copy_from(A: np.ndarray, B: np.ndarray,
@@ -215,26 +215,43 @@ def part4():
 
 def part5():
 
-    w2x_server = W2xServer()
-    w2x_server.start()
+    def waifu2x_thread(port, start, iter_val):
+        print("starting thread 1")
 
-    for pos in range(frame_count - 1):
+        w2x_server1 = W2xServer(port)
+        w2x_server1.start()
 
-        while manager.residual_images[pos] is None:
-            time.sleep(0.001)
+        for pos in range(start, frame_count - 1, iter_val):
 
-        success = False
-        while not success:
-            try:
-                print(f"position of {pos}")
-                d2x_image = manager.residual_images[pos]
-                d2x_upscaled = upscale_d2x_frame(d2x_image)
-                manager.residual_images_upscaled[pos] = d2x_upscaled
-                success = True
-            except:
-                print("failed, trying again")
-                pass
+            while manager.residual_images[pos] is None:
+                time.sleep(0.001)
 
+            success = False
+            while not success:
+                try:
+                    print(f"position of {pos}")
+                    d2x_image = manager.residual_images[pos]
+                    d2x_upscaled = w2x_server1.upscale_d2x_frame(d2x_image)
+                    manager.residual_images_upscaled[pos] = d2x_upscaled
+                    success = True
+                except:
+                    print("it failed need to try again")
+                    pass
+
+    t1 = threading.Thread(target=waifu2x_thread, args = (3509, 0, 2))
+    t2 = threading.Thread(target=waifu2x_thread, args=(3510, 1, 2))
+    # t3 = threading.Thread(target=waifu2x_thread, args=(3511, 2, 4))
+    # t4 = threading.Thread(target=waifu2x_thread, args=(3512, 3, 4))
+
+    t1.start()
+    t2.start()
+    # t3.start()
+    # t4.start()
+
+    t1.join()
+    t2.join()
+    # t3.join()
+    # t4.join()
 
 def part6():
     BLEED = 1
@@ -268,7 +285,7 @@ def part6():
                                           (BLEED * SCALE_FACTOR),
                                   other_y=residual.residual_y * (block_size + BLEED * 2) * SCALE_FACTOR +
                                           (BLEED * SCALE_FACTOR))
-        #undone.save(f"pt6\\frame{pos}.png")
+        undone.save(f"pt6\\frame{pos}.png")
 
 
 start_time = time.time()
