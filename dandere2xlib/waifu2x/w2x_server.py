@@ -2,6 +2,7 @@ import os
 import socket
 import subprocess
 import threading
+import time
 from pathlib import Path
 
 from dandere2xlib.d2xframe import D2xFrame
@@ -20,10 +21,11 @@ class W2xServer(threading.Thread):
         self.executable_location = W2xServer.BINARY_LOCATION / "waifu2x-ncnn-vulkan.exe"
 
     def run(self):
-        print(str(self.executable_location))
-        active_waifu2x_subprocess = subprocess.Popen(args=[str(self.executable_location), str(self.port)],
-                                                     cwd=str(self.BINARY_LOCATION))
-        active_waifu2x_subprocess.wait()
+        pass
+        # print(str(self.executable_location))
+        # active_waifu2x_subprocess = subprocess.Popen(args=[str(self.executable_location), str(self.port)],
+        #                                              cwd=str(self.BINARY_LOCATION))
+        # active_waifu2x_subprocess.wait()
 
     def join(self, timeout=None):
         threading.Thread.join(self, timeout)
@@ -55,14 +57,21 @@ class W2xServer(threading.Thread):
 
         print("sending done")
         s.send(b"done")
-        print("done sent, waiting on recv")
-        s.recv(1)
-        print("recieve done")
-        s.send(b"a")
-        received_bmp = s.recv(500000000)
+        s.close()
+
+
+        host = 'localhost'
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((host, 3510))
+
+        s.send(b"s")
+        all_bytes = s.recv(500000000)
+
+        d2x_frame = D2xFrame.from_bytes(all_bytes)
+
         print("recieved image")
         s.close()
-        return D2xFrame.from_bytes(received_bmp)
+        return d2x_frame
 
 if __name__ == "__main__":
     print('hi')
@@ -72,9 +81,9 @@ if __name__ == "__main__":
     d2x_image = D2xFrame.from_file("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\inputs\\frame0.png")
 
     d2x_upscaled1 = w2x_server.upscale_d2x_frame(d2x_image)
-    d2x_upscaled2 = w2x_server.upscale_d2x_frame(d2x_image)
-
-    d2x_upscaled1.save(Path("upscaled1.png"))
-    d2x_upscaled2.save(Path("upscaled2.png"))
-
-    print("hi2")
+    # d2x_upscaled2 = w2x_server.upscale_d2x_frame(d2x_image)
+    #
+    d2x_upscaled1.save(Path("upscaled1.bmp"))
+    # d2x_upscaled2.save(Path("upscaled2.png"))
+    #
+    # print("hi2")
