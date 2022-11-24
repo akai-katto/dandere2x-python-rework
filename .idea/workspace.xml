@@ -39,6 +39,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\temp" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\dandere2xlib\waifu2x" />
       <recent name="C:\Users\tylerpc\Documents\GitHub\dandere2x-python-rework\dandere2xlib" />
@@ -191,16 +192,5 @@
       <updated>1667171252027</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/dandere2xlib/waifu2x/w2x_server.py</url>
-          <line>83</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

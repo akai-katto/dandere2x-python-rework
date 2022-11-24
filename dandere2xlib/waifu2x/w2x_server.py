@@ -14,18 +14,20 @@ class W2xServer(threading.Thread):
     """
     BINARY_LOCATION = Path("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-rework\\test_fork\\cmake-build-debug-visual-studio")
 
-    def __init__(self, port):
+    def __init__(self, receive_port, send_port):
         threading.Thread.__init__(self, name="W2xServer")
 
-        self.port = port
+        self.receive_port = receive_port
+        self.send_port = send_port
         self.executable_location = W2xServer.BINARY_LOCATION / "waifu2x-ncnn-vulkan.exe"
 
     def run(self):
-        pass
-        # print(str(self.executable_location))
-        # active_waifu2x_subprocess = subprocess.Popen(args=[str(self.executable_location), str(self.port)],
-        #                                              cwd=str(self.BINARY_LOCATION))
-        # active_waifu2x_subprocess.wait()
+        print(str(self.executable_location))
+        active_waifu2x_subprocess = subprocess.Popen(args=[str(self.executable_location),
+                                                           str(self.receive_port),
+                                                           str(self.send_port)],
+                                                     cwd=str(self.BINARY_LOCATION))
+        active_waifu2x_subprocess.wait()
 
     def join(self, timeout=None):
         threading.Thread.join(self, timeout)
@@ -38,7 +40,7 @@ class W2xServer(threading.Thread):
 
         host = 'localhost'
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((host, self.port))
+        s.connect((host, self.receive_port))
 
         width = str(frame.width).ljust(6)
         height = str(frame.height).ljust(6)
@@ -62,7 +64,7 @@ class W2xServer(threading.Thread):
 
         host = 'localhost'
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((host, 3510))
+        s.connect((host, self.send_port))
 
         s.send(b"s")
         all_bytes = s.recv(500000000)
@@ -75,15 +77,15 @@ class W2xServer(threading.Thread):
 
 if __name__ == "__main__":
     print('hi')
-    w2x_server = W2xServer(3509)
+    w2x_server = W2xServer(3509, 3510)
     w2x_server.start()
 
-    d2x_image = D2xFrame.from_file("/temp/inputs\\frame0.png")
+    d2x_image = D2xFrame.from_file("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\inputs\\frame0.png")
 
     d2x_upscaled1 = w2x_server.upscale_d2x_frame(d2x_image)
     # d2x_upscaled2 = w2x_server.upscale_d2x_frame(d2x_image)
     #
-    d2x_upscaled1.save(Path("upscaled1.bmp"))
+    d2x_upscaled1.save(Path("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\upscaled1.bmp"))
     # d2x_upscaled2.save(Path("upscaled2.png"))
     #
     # print("hi2")

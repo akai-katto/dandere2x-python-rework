@@ -232,20 +232,20 @@ def part5():
                     print(f"position of {pos}")
                     d2x_image = manager.residual_images[pos]
                     d2x_upscaled = w2x_server1.upscale_d2x_frame(d2x_image)
-                    d2x_upscaled.save(Path(f"pt5_residuals_upscaled/frame{pos}.png"))
+                    #d2x_upscaled.save(Path(f"pt5_residuals_upscaled/frame{pos}.png"))
                     manager.residual_images_upscaled[pos] = d2x_upscaled
                     success = True
                 except:
                     print("it failed need to try again")
                     pass
 
-    t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 1))
-    #t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 2))
+    t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 2))
+    t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 2))
     # t3 = threading.Thread(target=waifu2x_thread, args=(3511, 2, 4))
     # t4 = threading.Thread(target=waifu2x_thread, args=(3512, 3, 4))
 
     t1.start()
-    #t2.start()
+    t2.start()
     # t3.start()
     # t4.start()
 
@@ -286,7 +286,7 @@ def part6():
                                           (BLEED * SCALE_FACTOR),
                                   other_y=residual.residual_y * (block_size + BLEED * 2) * SCALE_FACTOR +
                                           (BLEED * SCALE_FACTOR))
-        undone.save(f"pt6\\frame{pos}.png")
+        undone.save(f"C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\pt6\\frame{pos}.png")
 
 
 start_time = time.time()
