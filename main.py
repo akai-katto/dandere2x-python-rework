@@ -1,4 +1,5 @@
 import copy
+import gc
 import math
 import os.path
 import subprocess
@@ -123,10 +124,12 @@ def part3():
                           x, y,
                           x, y)
 
-        #print(len(missing_blocks))
         f1 = copy.deepcopy(f2)
         #f1.save(Path(f"pt2f1save/output{frame_pos}.png"))
         manager.missing_blocks[frame_pos] = missing_blocks
+
+        # Collect Garbage
+        manager.compressed_frames_array[frame_pos + 1] = None
 
 
 def part4():
@@ -140,6 +143,7 @@ def part4():
             time.sleep(0.0001)
 
         missing_blocks = manager.missing_blocks[pos]
+
         f1 = copy.deepcopy(manager.input_images_array[pos + 1])
 
         if len(missing_blocks) != 0:
@@ -175,6 +179,9 @@ def part4():
             manager.residual_blocks[pos] = []
 
         manager.residual_images[pos] = residual_image
+
+        # Collect Garbage
+        manager.input_images_array[pos] = None
         # residual_image.save(Path(f"residuals\\frame{pos}.png"))
 
 
@@ -231,13 +238,18 @@ def part5():
                 try:
                     print(f"position of {pos}")
                     d2x_image = manager.residual_images[pos]
+
                     d2x_upscaled = w2x_server1.upscale_d2x_frame(d2x_image)
                     #d2x_upscaled.save(Path(f"pt5_residuals_upscaled/frame{pos}.png"))
                     manager.residual_images_upscaled[pos] = d2x_upscaled
                     success = True
+
                 except:
                     print("it failed need to try again")
                     pass
+
+            # Collect Garbage
+            manager.residual_images[pos] = None
 
     t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 2))
     t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 2))
@@ -270,7 +282,7 @@ def part6():
 
         residual_undo = manager.residual_blocks[pos]
         missing_blocks = manager.missing_blocks[pos]
-        residual_image: D2xFrame = manager.residual_images_upscaled[pos]
+        residual_image: D2xFrame = copy.deepcopy(manager.residual_images_upscaled[pos])
 
         if len(missing_blocks) == 0:
             pass
@@ -286,7 +298,14 @@ def part6():
                                           (BLEED * SCALE_FACTOR),
                                   other_y=residual.residual_y * (block_size + BLEED * 2) * SCALE_FACTOR +
                                           (BLEED * SCALE_FACTOR))
-        undone.save(f"C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\pt6\\frame{pos}.png")
+
+        # Collect Garbage
+        manager.residual_images_upscaled[pos] = None
+        manager.missing_blocks[pos] = None
+
+        n = gc.collect()
+        print("Number of unreachable objects collected by GC:", n)
+        #undone.save(f"C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\pt6\\frame{pos}.png")
 
 
 start_time = time.time()
