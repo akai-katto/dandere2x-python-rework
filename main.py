@@ -123,9 +123,9 @@ def part3():
                           x, y,
                           x, y)
 
-        print(len(missing_blocks))
+        #print(len(missing_blocks))
         f1 = copy.deepcopy(f2)
-        # f1.save(Path(f"pt2f1save/output{frame_pos}.png"))
+        #f1.save(Path(f"pt2f1save/output{frame_pos}.png"))
         manager.missing_blocks[frame_pos] = missing_blocks
 
 
@@ -175,7 +175,7 @@ def part4():
             manager.residual_blocks[pos] = []
 
         manager.residual_images[pos] = residual_image
-#        residual_image.save(Path(f"residuals\\frame{pos}.png"))
+        # residual_image.save(Path(f"residuals\\frame{pos}.png"))
 
 
 # def run_iteration(position):
@@ -215,10 +215,10 @@ def part4():
 
 def part5():
 
-    def waifu2x_thread(port, start, iter_val):
+    def waifu2x_thread(receive_port, send_port, start, iter_val):
         print("starting thread 1")
 
-        w2x_server1 = W2xServer(port)
+        w2x_server1 = W2xServer(receive_port, send_port)
         w2x_server1.start()
 
         for pos in range(start, frame_count - 1, iter_val):
@@ -232,24 +232,25 @@ def part5():
                     print(f"position of {pos}")
                     d2x_image = manager.residual_images[pos]
                     d2x_upscaled = w2x_server1.upscale_d2x_frame(d2x_image)
+                    d2x_upscaled.save(Path(f"pt5_residuals_upscaled/frame{pos}.png"))
                     manager.residual_images_upscaled[pos] = d2x_upscaled
                     success = True
                 except:
                     print("it failed need to try again")
                     pass
 
-    t1 = threading.Thread(target=waifu2x_thread, args = (3509, 0, 2))
-    t2 = threading.Thread(target=waifu2x_thread, args=(3510, 1, 2))
+    t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 1))
+    #t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 2))
     # t3 = threading.Thread(target=waifu2x_thread, args=(3511, 2, 4))
     # t4 = threading.Thread(target=waifu2x_thread, args=(3512, 3, 4))
 
     t1.start()
-    t2.start()
+    #t2.start()
     # t3.start()
     # t4.start()
 
     t1.join()
-    t2.join()
+    #t2.join()
     # t3.join()
     # t4.join()
 

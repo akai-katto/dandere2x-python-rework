@@ -12,5 +12,5 @@ def upscale_file(input: Path, output: Path, scale_factor: int):
 
 if __name__ == "__main__":
     upscale_file(Path("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\outputs3\\here0.png"),
-                 Path("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\upscaled\\here0.png"),
+                 Path("/temp/upscaled\\here0.png"),
                  2)

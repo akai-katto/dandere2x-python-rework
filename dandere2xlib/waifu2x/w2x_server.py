@@ -78,7 +78,7 @@ if __name__ == "__main__":
     w2x_server = W2xServer(3509)
     w2x_server.start()
 
-    d2x_image = D2xFrame.from_file("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\inputs\\frame0.png")
+    d2x_image = D2xFrame.from_file("/temp/inputs\\frame0.png")
 
     d2x_upscaled1 = w2x_server.upscale_d2x_frame(d2x_image)
     # d2x_upscaled2 = w2x_server.upscale_d2x_frame(d2x_image)

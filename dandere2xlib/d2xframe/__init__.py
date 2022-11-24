@@ -204,7 +204,7 @@ class D2xFrame:
 
 if __name__ == "__main__":
 
-    d2x_image = D2xFrame.from_file("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\inputs\\frame0.png")
+    d2x_image = D2xFrame.from_file("/temp/inputs\\frame0.png")
 
     start = time.time()
     d2x_image.get_byte_array()

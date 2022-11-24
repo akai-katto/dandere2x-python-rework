@@ -197,7 +197,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/dandere2xlib/waifu2x/w2x_server.py</url>
-          <line>88</line>
+          <line>83</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
