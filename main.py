@@ -128,10 +128,6 @@ def part3():
         #f1.save(Path(f"pt2f1save/output{frame_pos}.png"))
         manager.missing_blocks[frame_pos] = missing_blocks
 
-        # Collect Garbage
-        manager.compressed_frames_array[frame_pos + 1] = None
-
-
 def part4():
     BUFFER = 5
     BLEED = 1
@@ -179,9 +175,6 @@ def part4():
             manager.residual_blocks[pos] = []
 
         manager.residual_images[pos] = residual_image
-
-        # Collect Garbage
-        manager.input_images_array[pos] = None
         # residual_image.save(Path(f"residuals\\frame{pos}.png"))
 
 
@@ -248,9 +241,6 @@ def part5():
                     print("it failed need to try again")
                     pass
 
-            # Collect Garbage
-            manager.residual_images[pos] = None
-
     t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 2))
     t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 2))
     # t3 = threading.Thread(target=waifu2x_thread, args=(3511, 2, 4))
@@ -302,10 +292,14 @@ def part6():
         # Collect Garbage
         manager.residual_images_upscaled[pos] = None
         manager.missing_blocks[pos] = None
+        manager.compressed_frames_array[pos] = None
+        manager.input_images_array[pos] = None
+        manager.residual_images[pos] = None
+        manager.residual_blocks[pos] = None
 
         n = gc.collect()
         print("Number of unreachable objects collected by GC:", n)
-        #undone.save(f"C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\pt6\\frame{pos}.png")
+        undone.save(f"C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\pt6\\frame{pos}.png")
 
 
 start_time = time.time()
