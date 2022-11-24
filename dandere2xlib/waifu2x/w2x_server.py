@@ -50,15 +50,16 @@ class W2xServer(threading.Thread):
         s.sendall(bytes(height, encoding='utf8'))
         print(s.recv(1))
 
-        chunked = divide_chunks(frame.get_byte_array(), 1000000)
+        s.send(frame.get_byte_array().ljust(32000000))
+        # chunked = divide_chunks(frame.get_byte_array(), 1000000)
+        #
+        # for chunk in chunked:
+        #     print("chunked")
+        #     s.send(chunk)
+        #     print(s.recv(1))
 
-        for chunk in chunked:
-            print("chunked")
-            s.send(chunk)
-            print(s.recv(1))
-
-        print("sending done")
-        s.send(b"done")
+        # print("sending done")
+        # s.send(b"done")
         s.close()
 
 

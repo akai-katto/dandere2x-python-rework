@@ -227,34 +227,34 @@ def part5():
                 time.sleep(0.001)
 
             success = False
-            while not success:
-                try:
-                    print(f"position of {pos}")
-                    d2x_image = manager.residual_images[pos]
+            # while not success:
+            #     try:
+            print(f"position of {pos}")
+            d2x_image = manager.residual_images[pos]
 
-                    d2x_upscaled = w2x_server1.upscale_d2x_frame(d2x_image)
-                    #d2x_upscaled.save(Path(f"pt5_residuals_upscaled/frame{pos}.png"))
-                    manager.residual_images_upscaled[pos] = d2x_upscaled
-                    success = True
-
-                except:
-                    print("it failed need to try again")
-                    pass
+            d2x_upscaled = w2x_server1.upscale_d2x_frame(d2x_image)
+            d2x_upscaled.save(Path(f"temp/pt5_residuals_upscaled/frame{pos}.png"))
+            manager.residual_images_upscaled[pos] = d2x_upscaled
+            success = True
+                #
+                # except:
+                #     print("it failed need to try again")
+                #     pass
 
     t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 2))
     t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 2))
-    # t3 = threading.Thread(target=waifu2x_thread, args=(3511, 2, 4))
-    # t4 = threading.Thread(target=waifu2x_thread, args=(3512, 3, 4))
+    #t3 = threading.Thread(target=waifu2x_thread, args=(3513,5514, 2, 3))
+#    t4 = threading.Thread(target=waifu2x_thread, args=(3515,3516, 3, 4))
 
     t1.start()
     t2.start()
-    # t3.start()
-    # t4.start()
+    #t3.start()
+#    t4.start()
 
     t1.join()
-    #t2.join()
-    # t3.join()
-    # t4.join()
+    t2.join()
+    #t3.join()
+#    t4.join()
 
 def part6():
     BLEED = 1
@@ -298,7 +298,7 @@ def part6():
         manager.residual_blocks[pos] = None
 
         n = gc.collect()
-        print("Number of unreachable objects collected by GC:", n)
+        #print("Number of unreachable objects collected by GC:", n)
         undone.save(f"C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\pt6\\frame{pos}.png")
 
 
