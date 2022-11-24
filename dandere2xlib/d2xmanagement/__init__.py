@@ -15,6 +15,8 @@ class D2xManagement:
 
     def __init__(self):
 
+        self.last_upscaled_frame = 0
+
         self.input_images_array: list[Union[D2xFrame, None]] = []
         for x in range(50000):
             self.input_images_array.append(None)

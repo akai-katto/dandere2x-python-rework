@@ -49,9 +49,14 @@ frame_count = 239
 
 
 def part1():
-    for x in range(frame_count):
+    for pos in range(frame_count):
+
+        while pos > manager.last_upscaled_frame + 60:
+            time.sleep(0.001)
+        print(f"on extracting frame {pos}")
+
         frame = extractor.get_frame()
-        manager.input_images_array[x] = frame
+        manager.input_images_array[pos] = frame
         # frame.save(Path(f"inputs\\frame{x}.png"))
 
 
@@ -227,34 +232,33 @@ def part5():
                 time.sleep(0.001)
 
             success = False
-            # while not success:
-            #     try:
-            print(f"position of {pos}")
-            d2x_image = manager.residual_images[pos]
+            while not success:
+                try:
+                    print(f"position of {pos}")
+                    d2x_image = manager.residual_images[pos]
 
-            d2x_upscaled = w2x_server1.upscale_d2x_frame(d2x_image)
-            d2x_upscaled.save(Path(f"temp/pt5_residuals_upscaled/frame{pos}.png"))
-            manager.residual_images_upscaled[pos] = d2x_upscaled
-            success = True
-                #
-                # except:
-                #     print("it failed need to try again")
-                #     pass
+                    d2x_upscaled = w2x_server1.upscale_d2x_frame(d2x_image)
+                    #d2x_upscaled.save(Path(f"temp/pt5_residuals_upscaled/frame{pos}.png"))
+                    manager.residual_images_upscaled[pos] = d2x_upscaled
+                    success = True
+                except:
+                    print("it failed need to try again")
+                    pass
 
-    t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 2))
-    t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 2))
-    #t3 = threading.Thread(target=waifu2x_thread, args=(3513,5514, 2, 3))
-#    t4 = threading.Thread(target=waifu2x_thread, args=(3515,3516, 3, 4))
+    t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 4))
+    t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 4))
+    t3 = threading.Thread(target=waifu2x_thread, args=(3513,5514, 2, 4))
+    t4 = threading.Thread(target=waifu2x_thread, args=(3515,3516, 3, 4))
 
     t1.start()
     t2.start()
-    #t3.start()
-#    t4.start()
+    t3.start()
+    t4.start()
 
     t1.join()
     t2.join()
-    #t3.join()
-#    t4.join()
+    t3.join()
+    t4.join()
 
 def part6():
     BLEED = 1
@@ -289,6 +293,8 @@ def part6():
                                   other_y=residual.residual_y * (block_size + BLEED * 2) * SCALE_FACTOR +
                                           (BLEED * SCALE_FACTOR))
 
+        manager.last_upscaled_frame = pos
+
         # Collect Garbage
         manager.residual_images_upscaled[pos] = None
         manager.missing_blocks[pos] = None
@@ -299,7 +305,7 @@ def part6():
 
         n = gc.collect()
         #print("Number of unreachable objects collected by GC:", n)
-        undone.save(f"C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\pt6\\frame{pos}.png")
+        #undone.save(f"C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\pt6\\frame{pos}.png")
 
 
 start_time = time.time()
