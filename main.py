@@ -247,18 +247,14 @@ def part5():
 
     t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 4))
     t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 4))
-    t3 = threading.Thread(target=waifu2x_thread, args=(3513,5514, 2, 4))
-    t4 = threading.Thread(target=waifu2x_thread, args=(3515,3516, 3, 4))
 
     t1.start()
     t2.start()
-    t3.start()
-    t4.start()
+
 
     t1.join()
     t2.join()
-    t3.join()
-    t4.join()
+
 
 def part6():
     BLEED = 1
