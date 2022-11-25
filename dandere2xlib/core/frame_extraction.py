@@ -1,14 +1,14 @@
 import logging
-import threading
 import time
 from pathlib import Path
 
+from threading import Thread
 from dandere2xlib.d2xmanagement import D2xManagement
 from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path, get_wait_delay
 from dandere2xlib.ffmpeg.VideoFrameExtractor import VideoFrameExtractor
 
 
-class FrameExtraction(threading.Thread):
+class FrameExtraction(Thread):
 
     def __init__(self, manager: D2xManagement, video_path: Path, width: int, height: int):
         super().__init__()
