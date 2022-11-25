@@ -38,17 +38,18 @@ def copy_from(A: np.ndarray, B: np.ndarray,
 
 
 total_active_processes = 0
-manager = D2xManagement()
-
-extractor = VideoFrameExtractor(ffmpeg_binary=Path("C:\\ffmpeg\\ffmpeg.exe"),
-                                input_video=Path("C:\\Users\\windw0z\\Desktop\\3.7\\workspace\\yn_moving.mkv"),
-                                width=1920,
-                                height=1080)
 block_size = 30
 frame_count = 239
 
+manager = D2xManagement(frame_count=frame_count)
 
 def part1():
+    extractor = VideoFrameExtractor(ffmpeg_binary=Path("C:\\ffmpeg\\ffmpeg.exe"),
+                                    input_video=Path("C:\\Users\\tylerpc\\Desktop\\3.7\\workspace\\yn_moving.mkv"),
+                                    optional_args=[],
+                                    width=1920,
+                                    height=1080)
+
     for pos in range(frame_count):
 
         while pos > manager.last_upscaled_frame + 60:
@@ -60,12 +61,32 @@ def part1():
         # frame.save(Path(f"inputs\\frame{x}.png"))
 
 
+# add noise to images
+def part1p2():
+    optional_args = ["-vf", "noise=c1s=8:c0f=u"]
+
+    extractor = VideoFrameExtractor(ffmpeg_binary=Path("C:\\ffmpeg\\ffmpeg.exe"),
+                                    input_video=Path("C:\\Users\\tylerpc\\Desktop\\3.7\\workspace\\yn_moving.mkv"),
+                                    optional_args=optional_args,
+                                    width=1920,
+                                    height=1080)
+
+    for pos in range(frame_count):
+
+        while pos > manager.last_upscaled_frame + 60:
+            time.sleep(0.001)
+        print(f"on extracting frame {pos}")
+
+        frame = extractor.get_frame()
+        manager.noised_images_array[pos] = frame
+
+
 def part2():
     for x in range(frame_count):
-        while manager.input_images_array[x] is None:
+        while manager.noised_images_array[x] is None:
             time.sleep(0.001)
 
-        frame = manager.input_images_array[x]
+        frame = manager.noised_images_array[x]
         compressed = copy.deepcopy(frame)
         compressed.compress_frame_for_computations(100)
         manager.compressed_frames_array[x] = compressed
@@ -78,13 +99,13 @@ def part3():
     f1 = D2xFrame(1920, 1080)
     for frame_pos in range(0, frame_count - 1):
 
-        while manager.input_images_array[frame_pos + 1] is None:
+        while manager.noised_images_array[frame_pos + 1] is None:
             time.sleep(0.0001)
 
         while manager.compressed_frames_array[frame_pos + 1] is None:
             time.sleep(0.0001)
 
-        f2 = copy.deepcopy(manager.input_images_array[frame_pos + 1])
+        f2 = copy.deepcopy(manager.noised_images_array[frame_pos + 1])
         f2_compressed = manager.compressed_frames_array[frame_pos + 1]
 
         array_subtracted_squared: np.array = (f2.frame_array - f1.frame_array) ** 2
@@ -120,9 +141,6 @@ def part3():
                 else:
                     missing_blocks.append((x * block_size, y * block_size))
 
-        # if len(missing_blocks) > (1920 / 30) * (1080 / 30) * .95:
-        #     missing_blocks = []
-
         for matched_block in matched_blocks:
             x, y = matched_block
             f2.copy_block(f1, block_size,
@@ -132,6 +150,7 @@ def part3():
         f1 = copy.deepcopy(f2)
         #f1.save(Path(f"pt2f1save/output{frame_pos}.png"))
         manager.missing_blocks[frame_pos] = missing_blocks
+
 
 def part4():
     BUFFER = 5
@@ -149,7 +168,7 @@ def part4():
 
         if len(missing_blocks) != 0:
 
-            if len(missing_blocks) == (1920 / 30) * (1080 / 30):
+            if len(missing_blocks) >= ((1920 / 30) * (1080 / 30)) * .95:
                 residual_image = f1
                 manager.residual_images[pos] = residual_image
                 manager.residual_blocks[pos] = []
@@ -245,12 +264,11 @@ def part5():
                     print("it failed need to try again")
                     pass
 
-    t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 4))
-    t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 4))
+    t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 2))
+    t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 2))
 
     t1.start()
     t2.start()
-
 
     t1.join()
     t2.join()
@@ -274,9 +292,9 @@ def part6():
         missing_blocks = manager.missing_blocks[pos]
         residual_image: D2xFrame = copy.deepcopy(manager.residual_images_upscaled[pos])
 
-        if len(missing_blocks) == 0:
+        if len(missing_blocks) == 0 and len(residual_undo) == 0:
             pass
-        elif residual_image.width != residual_image.height:
+        elif len(missing_blocks) != 0 and len(residual_undo) == 0:
             undone = residual_image
         else:
             for residual in residual_undo:
@@ -295,18 +313,22 @@ def part6():
         manager.residual_images_upscaled[pos] = None
         manager.missing_blocks[pos] = None
         manager.compressed_frames_array[pos] = None
+        manager.noised_images_array[pos] = None
         manager.input_images_array[pos] = None
         manager.residual_images[pos] = None
         manager.residual_blocks[pos] = None
 
         n = gc.collect()
         #print("Number of unreachable objects collected by GC:", n)
-        #undone.save(f"C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\pt6\\frame{pos}.png")
+        undone.save(f"temp\\pt6\\frame{pos}.png")
 
 
 start_time = time.time()
 t1 = threading.Thread(target=part1)
 t1.start()
+t1p2 = threading.Thread(target=part1p2)
+t1p2.start()
+
 t2 = threading.Thread(target=part2)
 t2.start()
 t3 = threading.Thread(target=part3)
@@ -319,6 +341,7 @@ t6 = threading.Thread(target=part6)
 t6.start()
 #
 t1.join()
+t1p2.join()
 t2.join()
 t3.join()
 t4.join()
