@@ -12,6 +12,7 @@ class VideoFrameExtractor:
     def __init__(self,
                  ffmpeg_binary: Path,
                  input_video: Path,
+                 optional_args,
                  width: int, height: int):
 
         self.__count: int = 0
@@ -23,7 +24,7 @@ class VideoFrameExtractor:
             str(ffmpeg_binary), "-vsync", "1", "-loglevel", "panic",
             "-i", str(input_video)
         ]
-
+        extraction_args.extend(optional_args)
         extraction_args.extend(["-vf", "noise=c1s=8:c0f=u", "-c:v", "rawvideo", "-f", "rawvideo",
                                 "-pix_fmt", "rgb24", "-an", "-"])
 

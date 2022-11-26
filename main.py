@@ -41,7 +41,7 @@ total_active_processes = 0
 block_size = 30
 frame_count = 239
 
-manager = D2xManagement(frame_count=frame_count)
+manager = D2xManagement()
 
 def part1():
     extractor = VideoFrameExtractor(ffmpeg_binary=Path("C:\\ffmpeg\\ffmpeg.exe"),

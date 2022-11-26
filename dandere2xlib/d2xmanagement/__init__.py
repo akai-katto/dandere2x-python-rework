@@ -1,5 +1,5 @@
 import sys
-from typing import Mapping, Set, Union
+from typing import Mapping, Set, Union, List
 
 from dandere2xlib.d2xframe import D2xFrame
 
@@ -21,6 +21,10 @@ class D2xManagement:
         for x in range(50000):
             self.input_images_array.append(None)
 
+        self.noised_images_array: list[Union[D2xFrame, None]] = []
+        for x in range(50000):
+            self.noised_images_array.append(None)
+
         self.compressed_frames_array = []
         for x in range(50000):
             self.compressed_frames_array.append(None)
@@ -29,7 +33,7 @@ class D2xManagement:
         for x in range(50000):
             self.missing_blocks.append(None)
 
-        self.residual_blocks: list[Union[D2xResidualCoordinate, None]] = []
+        self.residual_blocks: list[Union[List[D2xResidualCoordinate], None]] = []
         for x in range(50000):
             self.residual_blocks.append(None)
 
