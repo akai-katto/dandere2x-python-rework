@@ -1,6 +1,7 @@
 import subprocess
 from copy import copy
 from pathlib import Path
+from typing import List
 
 import numpy as np
 
@@ -12,6 +13,7 @@ class VideoFrameExtractor:
     def __init__(self,
                  ffmpeg_binary: Path,
                  input_video: Path,
+                 optional_args: List[str],
                  width: int, height: int):
 
         self.__count: int = 0
@@ -24,7 +26,8 @@ class VideoFrameExtractor:
             "-i", str(input_video)
         ]
 
-        extraction_args.extend(["-vf", "noise=c1s=8:c0f=u", "-c:v", "rawvideo", "-f", "rawvideo",
+        extraction_args.extend(optional_args)
+        extraction_args.extend(["-c:v", "rawvideo", "-f", "rawvideo",
                                 "-pix_fmt", "rgb24", "-an", "-"])
 
         self.ffmpeg = subprocess.Popen(extraction_args, stdout=subprocess.PIPE)

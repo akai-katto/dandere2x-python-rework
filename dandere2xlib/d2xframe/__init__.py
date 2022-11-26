@@ -48,7 +48,7 @@ class D2xFrame:
         @param file_path: Location of the file on disk
         """
 
-        image = imageio.imread(file_path).astype(np.uint8)
+        image = imageio.imread(file_path).astype(np.double)
         instantiated_class = cls(image.shape[0], image.shape[1])
         instantiated_class.frame_name = file_path
         instantiated_class.frame_array = copy.copy(image)
@@ -71,7 +71,7 @@ class D2xFrame:
         img_byte_arr.write(raw_bytes)
         img_byte_arr.seek(0)
 
-        image = imageio.imread(img_byte_arr, pilmode="RGB").astype(np.uint8)
+        image = imageio.imread(img_byte_arr, pilmode="RGB").astype(np.double)
         instantiated_class = cls(image.shape[0], image.shape[1])
         instantiated_class.frame_name = "loaded from bytes"
         instantiated_class.frame_array = copy.copy(image)
@@ -93,11 +93,27 @@ class D2xFrame:
         A_slices = tuple(map(slice, A_start, A_start + shape + 1))
         B[B_slices] = A[A_slices]
 
+    @staticmethod
+    def mse_from(A: np.ndarray, B: np.ndarray,
+                  A_start: Tuple[int, int], B_start: Tuple[int, int], B_end: Tuple[int, int]) -> float:
+        """
+        A_start is the index with respect to A of the upper left corner of the overlap
+        B_start is the index with respect to B of the upper left corner of the overlap
+        B_end is the index of with respect to B of the lower right corner of the overlap
+        """
+        A_start, B_start, B_end = map(np.asarray, [A_start, B_start, B_end])
+        shape = B_end - B_start
+        B_slices = tuple(map(slice, B_start, B_end + 1))
+        A_slices = tuple(map(slice, A_start, A_start + shape + 1))
+        Subtracted_Slices = B[B_slices] - A[A_slices]
+        return np.square(Subtracted_Slices).mean()
+
+
     # methods #
 
     def save(self, location: Path):
         save_image = self.get_pil_image()
-        save_image.save(location, format='BMP')
+        save_image.save(location, format='PNG')
 
     def save_detatch(self, location: Path):
         threading.Thread(target=self.save, args=[location]).start()
@@ -136,6 +152,22 @@ class D2xFrame:
         #self.check_if_block_operation_valid(frame_other, block_size, other_x, other_y, this_x, this_y)
 
         D2xFrame.copy_from(frame_other.frame_array, self.frame_array,
+                           (other_y, other_x), (this_y, this_x),
+                           (this_y + block_size - 1, this_x + block_size - 1))
+
+    def mse_block(self,
+                   frame_other: 'D2xFrame',
+                   block_size: int,
+                   other_x: int, other_y: int,
+                   this_x: int, this_y: int) -> float:
+        """
+        Check that we can validly copy a block before calling the numpy copy_from method. This way, detailed
+        errors are given, rather than numpy just throwing an un-informative error.
+        """
+        # Check if inputs are valid before calling numpy copy_from
+        #self.check_if_block_operation_valid(frame_other, block_size, other_x, other_y, this_x, this_y)
+
+        return D2xFrame.mse_from(frame_other.frame_array, self.frame_array,
                            (other_y, other_x), (this_y, this_x),
                            (this_y + block_size - 1, this_x + block_size - 1))
 
@@ -190,7 +222,8 @@ class D2xFrame:
         with tempfile.SpooledTemporaryFile(suffix=".jpg") as tf:
             pil_image.save(tf, quality=compression, format="JPEG")
             tf.seek(0)
-            self.frame_array: np.array = imageio.imread(tf).astype(np.uint8)
+            self.frame_array: np.array = imageio.imread(tf).astype(np.double)
+
 
     # Getters #
     @property
@@ -204,8 +237,8 @@ class D2xFrame:
 
 if __name__ == "__main__":
 
-    d2x_image = D2xFrame.from_file("/temp/inputs\\frame0.png")
-
+    d2x_image1 = D2xFrame.from_file("C:\\Users\\tylerpc\\Documents\\GitHub\\dandere2x-python-rework\\temp\\pt2f1save\\output0.png")
+    d2x_image2 = D2xFrame.from_file(
+        "C:\\Users\\tylerpc\\Documents\\GitHub\\dandere2x-python-rework\\temp\\pt2f1save\\output49.png")
     start = time.time()
-    d2x_image.get_byte_array()
-    print(time.time() - start)
+    print(d2x_image1.mse_block(d2x_image2, 2, 0, 0, 0, 0))

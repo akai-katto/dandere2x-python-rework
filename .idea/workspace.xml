@@ -33,11 +33,14 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/windw0z/Documents/GitHub/dandere2x-python-rework&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/tylerpc/Documents/GitHub/dandere2x-python-rework/dandere2xlib/waifu2x&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\tylerpc\Documents\GitHub\dandere2x-python-rework\dandere2xlib\waifu2x" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\dandere2xlib" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\temp" />
@@ -175,11 +178,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.w2x_server" />
         <item itemvalue="Python.__init__ (2)" />
+        <item itemvalue="Python.w2x_server" />
+        <item itemvalue="Python.__init__" />
         <item itemvalue="Python.__init__ (1)" />
         <item itemvalue="Python.upscale_prototype" />
-        <item itemvalue="Python.__init__" />
       </list>
     </recent_temporary>
   </component>

@@ -12,7 +12,7 @@ class W2xServer(threading.Thread):
     """
     Starts a waifu2x server up
     """
-    BINARY_LOCATION = Path("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-rework\\test_fork\\cmake-build-debug-visual-studio")
+    BINARY_LOCATION = Path("C:\\Users\\tylerpc\\Documents\\GitHub\\dandere2x-rework\\test_fork\\cmake-build-debug-visual-studio\\")
 
     def __init__(self, receive_port, send_port):
         threading.Thread.__init__(self, name="W2xServer")
@@ -31,7 +31,6 @@ class W2xServer(threading.Thread):
 
     def join(self, timeout=None):
         threading.Thread.join(self, timeout)
-
 
     def upscale_d2x_frame(self, frame: D2xFrame) -> D2xFrame:
         def divide_chunks(input_list, n):
@@ -81,12 +80,12 @@ if __name__ == "__main__":
     w2x_server = W2xServer(3509, 3510)
     w2x_server.start()
 
-    d2x_image = D2xFrame.from_file("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\inputs\\frame0.png")
+    d2x_image = D2xFrame.from_file("frame1.png")
 
     d2x_upscaled1 = w2x_server.upscale_d2x_frame(d2x_image)
     # d2x_upscaled2 = w2x_server.upscale_d2x_frame(d2x_image)
     #
-    d2x_upscaled1.save(Path("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\upscaled1.bmp"))
+    d2x_upscaled1.save(Path("upscaled1.bmp"))
     # d2x_upscaled2.save(Path("upscaled2.png"))
     #
     # print("hi2")

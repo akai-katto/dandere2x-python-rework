@@ -13,13 +13,18 @@ class D2xResidualCoordinate:
 
 class D2xManagement:
 
-    def __init__(self):
+    def __init__(self, frame_count: int):
 
+        self.frame_count = frame_count
         self.last_upscaled_frame = 0
 
         self.input_images_array: list[Union[D2xFrame, None]] = []
         for x in range(50000):
             self.input_images_array.append(None)
+
+        self.noised_images_array: list[Union[D2xFrame, None]] = []
+        for x in range(50000):
+            self.noised_images_array.append(None)
 
         self.compressed_frames_array = []
         for x in range(50000):
@@ -29,7 +34,7 @@ class D2xManagement:
         for x in range(50000):
             self.missing_blocks.append(None)
 
-        self.residual_blocks: list[Union[D2xResidualCoordinate, None]] = []
+        self.residual_blocks: list[Union[list[D2xResidualCoordinate], None]] = []
         for x in range(50000):
             self.residual_blocks.append(None)
 
@@ -46,4 +51,4 @@ class D2xManagement:
 
 
 if __name__ == "__main__":
-    test = D2xManagement()
+    test = D2xManagement(239)

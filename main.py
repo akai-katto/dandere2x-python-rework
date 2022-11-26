@@ -38,7 +38,7 @@ def copy_from(A: np.ndarray, B: np.ndarray,
 
 
 total_active_processes = 0
-block_size = 30
+block_size = 20
 frame_count = 239
 
 manager = D2xManagement(frame_count=frame_count)
@@ -52,11 +52,12 @@ def part1():
 
     for pos in range(frame_count):
 
-        while pos > manager.last_upscaled_frame + 60:
+        while pos > manager.last_upscaled_frame + manager.frame_count:
             time.sleep(0.001)
-        print(f"on extracting frame {pos}")
+        #print(f"on extracting frame {pos}")
 
         frame = extractor.get_frame()
+        frame.compress_frame_for_computations(95)
         manager.input_images_array[pos] = frame
         # frame.save(Path(f"inputs\\frame{x}.png"))
 
@@ -73,9 +74,10 @@ def part1p2():
 
     for pos in range(frame_count):
 
-        while pos > manager.last_upscaled_frame + 60:
+        while manager.input_images_array[pos] is None:
             time.sleep(0.001)
-        print(f"on extracting frame {pos}")
+
+        #print(f"on noised frame {pos}")
 
         frame = extractor.get_frame()
         manager.noised_images_array[pos] = frame
@@ -88,7 +90,7 @@ def part2():
 
         frame = manager.noised_images_array[x]
         compressed = copy.deepcopy(frame)
-        compressed.compress_frame_for_computations(100)
+        compressed.compress_frame_for_computations(99)
         manager.compressed_frames_array[x] = compressed
 
 
@@ -106,49 +108,35 @@ def part3():
             time.sleep(0.0001)
 
         f2 = copy.deepcopy(manager.noised_images_array[frame_pos + 1])
-        f2_compressed = manager.compressed_frames_array[frame_pos + 1]
-
-        array_subtracted_squared: np.array = (f2.frame_array - f1.frame_array) ** 2
-        compressed_subtracted_squared: np.array = (f2_compressed.frame_array - f2.frame_array) ** 2
-
-        matched_mean = np.einsum(
-            "ijklm->ik",
-            array_subtracted_squared.reshape(
-                int(1080 / block_size), block_size,
-                int(1920 / block_size), block_size,
-                -1
-            ),
-            dtype=np.float32,
-        )
-
-        compressed_mean = np.einsum(
-            "ijklm->ik",
-            compressed_subtracted_squared.reshape(
-                int(1080 / block_size), block_size,
-                int(1920 / block_size), block_size,
-                -1
-            ),
-            dtype=np.float32,
-        )
+        f2_compressed: D2xFrame = manager.compressed_frames_array[frame_pos + 1]
 
         matched_blocks = []
         missing_blocks = []
-        compared = matched_mean - compressed_mean
-        for y in range(int(1080 / block_size)):
-            for x in range(int(1920 / block_size)):
-                if compared[y][x] <= 0:
-                    matched_blocks.append((x * block_size, y * block_size))
-                else:
-                    missing_blocks.append((x * block_size, y * block_size))
+        for x in range(0, 1920, block_size):
+            for y in range(0, 1080, block_size):
 
-        for matched_block in matched_blocks:
-            x, y = matched_block
-            f2.copy_block(f1, block_size,
-                          x, y,
-                          x, y)
+                static_mse = f1.mse_block(f2, block_size, x, y, x, y)
+                compressed_mse = f2_compressed.mse_block(f2, block_size, x, y, x, y)
+
+                if static_mse <= compressed_mse:
+                    print("matched block")
+                    matched_blocks.append((x, y))
+                else:
+                    missing_blocks.append((x , y ))
+
+        if len(missing_blocks) >= ((1920 / block_size) * (1080 / block_size)) * .95:
+            print(f'skipping {frame_pos}')
+            missing_blocks = []
+            matched_blocks = []
+
+        # for matched_block in matched_blocks:
+        #     x, y = matched_block
+        #     f2.copy_block(f1, block_size,
+        #                   x, y,
+        #                   x, y)
 
         f1 = copy.deepcopy(f2)
-        #f1.save(Path(f"pt2f1save/output{frame_pos}.png"))
+        f1.save(Path(f"temp/pt2f1save/output{frame_pos}.png"))
         manager.missing_blocks[frame_pos] = missing_blocks
 
 
@@ -172,6 +160,7 @@ def part4():
                 residual_image = f1
                 manager.residual_images[pos] = residual_image
                 manager.residual_blocks[pos] = []
+                residual_image.save(Path(f"temp\\residuals\\frame{pos}.png"))
                 continue
 
             f1.create_buffered_image(BUFFER)
@@ -199,7 +188,7 @@ def part4():
             manager.residual_blocks[pos] = []
 
         manager.residual_images[pos] = residual_image
-        # residual_image.save(Path(f"residuals\\frame{pos}.png"))
+        residual_image.save(Path(f"temp\\residuals\\frame{pos}.png"))
 
 
 # def run_iteration(position):
@@ -336,7 +325,7 @@ t3.start()
 t4 = threading.Thread(target=part4)
 t4.start()
 t5 = threading.Thread(target=part5)
-t5.start()
+#t5.start()
 t6 = threading.Thread(target=part6)
 t6.start()
 #
@@ -345,7 +334,7 @@ t1p2.join()
 t2.join()
 t3.join()
 t4.join()
-t5.join()
+#t5.join()
 t6.join()
 
 #
