@@ -25,7 +25,7 @@ class VideoFrameExtractor:
             "-i", str(input_video)
         ]
         extraction_args.extend(optional_args)
-        extraction_args.extend(["-vf", "noise=c1s=8:c0f=u", "-c:v", "rawvideo", "-f", "rawvideo",
+        extraction_args.extend(["-c:v", "rawvideo", "-f", "rawvideo",
                                 "-pix_fmt", "rgb24", "-an", "-"])
 
         self.ffmpeg = subprocess.Popen(extraction_args, stdout=subprocess.PIPE)

@@ -133,7 +133,7 @@ def part3():
 
         matched_blocks = []
         missing_blocks = []
-        compared = matched_mean - compressed_mean
+        compared = (matched_mean * 5) - compressed_mean
         for y in range(int(1080 / block_size)):
             for x in range(int(1920 / block_size)):
                 if compared[y][x] <= 0:
@@ -148,7 +148,7 @@ def part3():
                           x, y)
 
         f1 = copy.deepcopy(f2)
-        #f1.save(Path(f"pt2f1save/output{frame_pos}.png"))
+        f1.save(Path(f"temp/pt2f1save/output{frame_pos}.png"))
         manager.missing_blocks[frame_pos] = missing_blocks
 
 
@@ -199,7 +199,7 @@ def part4():
             manager.residual_blocks[pos] = []
 
         manager.residual_images[pos] = residual_image
-        # residual_image.save(Path(f"residuals\\frame{pos}.png"))
+        residual_image.save(Path(f"temp\\residuals\\frame{pos}.png"))
 
 
 # def run_iteration(position):
