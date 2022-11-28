@@ -97,7 +97,7 @@ class D2xFrame:
 
     def save(self, location: Path):
         save_image = self.get_pil_image()
-        save_image.save(location, format='BMP')
+        save_image.save(location, format='PNG')
 
     def save_detatch(self, location: Path):
         threading.Thread(target=self.save, args=[location]).start()

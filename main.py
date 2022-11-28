@@ -37,28 +37,32 @@ def copy_from(A: np.ndarray, B: np.ndarray,
         raise ValueError
 
 
+WIDTH = 1280
+HEIGHT = 720
+
 total_active_processes = 0
-block_size = 30
-frame_count = 239
+block_size = 20
+frame_count = 866
 
 manager = D2xManagement()
 
+
 def part1():
     extractor = VideoFrameExtractor(ffmpeg_binary=Path("C:\\ffmpeg\\ffmpeg.exe"),
-                                    input_video=Path("C:\\Users\\tylerpc\\Desktop\\3.7\\workspace\\yn_moving.mkv"),
+                                    input_video=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\steal.mkv"),
                                     optional_args=[],
-                                    width=1920,
-                                    height=1080)
+                                    width=WIDTH,
+                                    height=HEIGHT)
 
     for pos in range(frame_count):
 
-        while pos > manager.last_upscaled_frame + 60:
+        while pos > manager.last_upscaled_frame + 120:
             time.sleep(0.001)
         print(f"on extracting frame {pos}")
 
         frame = extractor.get_frame()
         manager.input_images_array[pos] = frame
-        # frame.save(Path(f"inputs\\frame{x}.png"))
+        # frame.save(Path(f"temp\\inputs\\frame{pos}.png"))
 
 
 # add noise to images
@@ -66,14 +70,14 @@ def part1p2():
     optional_args = ["-vf", "noise=c1s=8:c0f=u"]
 
     extractor = VideoFrameExtractor(ffmpeg_binary=Path("C:\\ffmpeg\\ffmpeg.exe"),
-                                    input_video=Path("C:\\Users\\tylerpc\\Desktop\\3.7\\workspace\\yn_moving.mkv"),
+                                    input_video=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\steal.mkv"),
                                     optional_args=optional_args,
-                                    width=1920,
-                                    height=1080)
+                                    width=WIDTH,
+                                    height=HEIGHT)
 
     for pos in range(frame_count):
 
-        while pos > manager.last_upscaled_frame + 60:
+        while pos > manager.last_upscaled_frame + 120:
             time.sleep(0.001)
         print(f"on extracting frame {pos}")
 
@@ -96,7 +100,7 @@ def part3():
     while manager.input_images_array[0] is None:
         time.sleep(0.0001)
 
-    f1 = D2xFrame(1920, 1080)
+    f1 = D2xFrame(WIDTH, HEIGHT)
     for frame_pos in range(0, frame_count - 1):
 
         while manager.noised_images_array[frame_pos + 1] is None:
@@ -108,34 +112,36 @@ def part3():
         f2 = copy.deepcopy(manager.noised_images_array[frame_pos + 1])
         f2_compressed = manager.compressed_frames_array[frame_pos + 1]
 
-        array_subtracted_squared: np.array = (f2.frame_array - f1.frame_array) ** 2
-        compressed_subtracted_squared: np.array = (f2_compressed.frame_array - f2.frame_array) ** 2
+        array_subtracted_squared: np.array = \
+            (f2.frame_array.astype(np.double) - f1.frame_array.astype(np.double)) ** 2
+        compressed_subtracted_squared: np.array = \
+            (f2_compressed.frame_array.astype(np.double) - f2.frame_array.astype(np.double)) ** 2
 
         matched_mean = np.einsum(
             "ijklm->ik",
             array_subtracted_squared.reshape(
-                int(1080 / block_size), block_size,
-                int(1920 / block_size), block_size,
+                int(HEIGHT / block_size), block_size,
+                int(WIDTH / block_size), block_size,
                 -1
             ),
-            dtype=np.float32,
+            dtype=np.double,
         )
 
         compressed_mean = np.einsum(
             "ijklm->ik",
             compressed_subtracted_squared.reshape(
-                int(1080 / block_size), block_size,
-                int(1920 / block_size), block_size,
+                int(HEIGHT / block_size), block_size,
+                int(WIDTH / block_size), block_size,
                 -1
             ),
-            dtype=np.float32,
+            dtype=np.double,
         )
 
         matched_blocks = []
         missing_blocks = []
-        compared = (matched_mean * 5) - compressed_mean
-        for y in range(int(1080 / block_size)):
-            for x in range(int(1920 / block_size)):
+        compared = (matched_mean * 10) - compressed_mean
+        for y in range(int(HEIGHT / block_size)):
+            for x in range(int(WIDTH / block_size)):
                 if compared[y][x] <= 0:
                     matched_blocks.append((x * block_size, y * block_size))
                 else:
@@ -168,7 +174,7 @@ def part4():
 
         if len(missing_blocks) != 0:
 
-            if len(missing_blocks) >= ((1920 / 30) * (1080 / 30)) * .95:
+            if len(missing_blocks) >= ((WIDTH / block_size) * (HEIGHT / block_size)) * .85:
                 residual_image = f1
                 manager.residual_images[pos] = residual_image
                 manager.residual_blocks[pos] = []
@@ -199,7 +205,7 @@ def part4():
             manager.residual_blocks[pos] = []
 
         manager.residual_images[pos] = residual_image
-        residual_image.save(Path(f"temp\\residuals\\frame{pos}.png"))
+        # residual_image.save(Path(f"temp\\residuals\\frame{pos}.png"))
 
 
 # def run_iteration(position):
@@ -238,7 +244,6 @@ def part4():
 
 
 def part5():
-
     def waifu2x_thread(receive_port, send_port, start, iter_val):
         print("starting thread 1")
 
@@ -257,28 +262,37 @@ def part5():
                     d2x_image = manager.residual_images[pos]
 
                     d2x_upscaled = w2x_server1.upscale_d2x_frame(d2x_image)
-                    #d2x_upscaled.save(Path(f"temp/pt5_residuals_upscaled/frame{pos}.png"))
+                    # d2x_upscaled.save(Path(f"temp/pt5_residuals_upscaled/frame{pos}.png"))
                     manager.residual_images_upscaled[pos] = d2x_upscaled
                     success = True
                 except:
                     print("it failed need to try again")
                     pass
 
-    t1 = threading.Thread(target=waifu2x_thread, args = (3509, 3510, 0, 2))
+    t1 = threading.Thread(target=waifu2x_thread, args=(3509, 3510, 0, 2))
     t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 2))
+    # t3 = threading.Thread(target=waifu2x_thread, args=(3513, 3514, 2, 4))
+    # t4 = threading.Thread(target=waifu2x_thread, args=(3515, 3516, 3, 4))
 
     t1.start()
+    time.sleep(.5)
     t2.start()
+    # time.sleep(1)
+    # t3.start()
+    # time.sleep(1)
+    # t4.start()
 
     t1.join()
     t2.join()
+    # t3.join()
+    # t4.join()
 
 
 def part6():
     BLEED = 1
     SCALE_FACTOR = 2
 
-    undone = D2xFrame(3840, 2160)
+    undone = D2xFrame(WIDTH * 2, HEIGHT * 2)
     for pos in range(frame_count - 1):
         while manager.residual_blocks[pos] is None:
             time.sleep(0.0001)
@@ -319,8 +333,12 @@ def part6():
         manager.residual_blocks[pos] = None
 
         n = gc.collect()
-        #print("Number of unreachable objects collected by GC:", n)
+        # print("Number of unreachable objects collected by GC:", n)
         undone.save(f"temp\\pt6\\frame{pos}.png")
+
+
+def part7():
+    pass
 
 
 start_time = time.time()
