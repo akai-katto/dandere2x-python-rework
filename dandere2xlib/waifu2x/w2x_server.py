@@ -14,7 +14,7 @@ class W2xServer(threading.Thread):
     Starts a waifu2x server up
     """
     BINARY_LOCATION = Path("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-rework\\test_fork\\cmake-build-debug-visual-studio")
-    METADATA_MSG_SIZE: Final = 200
+    METADATA_MSG_SIZE: Final = 1000
     THIRTY_TWO_MB = 32000000
 
     def __init__(self, receive_port, send_port):
@@ -27,11 +27,11 @@ class W2xServer(threading.Thread):
 
     def run(self):
         print(str(self.executable_location))
-        # active_waifu2x_subprocess = subprocess.Popen(args=[str(self.executable_location),
-        #                                                    str(self.receive_port),
-        #                                                    str(self.send_port)],
-        #                                              cwd=str(self.BINARY_LOCATION))
-        # active_waifu2x_subprocess.wait()
+        active_waifu2x_subprocess = subprocess.Popen(args=[str(self.executable_location),
+                                                           str(self.receive_port),
+                                                           str(self.send_port)],
+                                                     cwd=str(self.BINARY_LOCATION))
+        active_waifu2x_subprocess.wait()
 
     def join(self, timeout=None):
         threading.Thread.join(self, timeout)
@@ -67,7 +67,16 @@ class W2xServer(threading.Thread):
         host = 'localhost'
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, self.send_port))
-        s.send(b"{\"noise\": 3 , \"scale\": 2 , \"tilesize\": 400, \"prepadding\": 18}".ljust(W2xServer.METADATA_MSG_SIZE - 1))
+        s.send(b"{"
+               b"\"noise\": 3 ,"
+               b" \"scale\": 2 ,"
+               b" \"tilesize\": 400,"
+               b" \"prepadding\": 18,"
+               b" \"gpuid\": 0,"
+               b" \"tta\": 0,"
+               b" \"param_path\": \"models/models-cunet/noise3_scale2.0x_model.param\","
+               b" \"model_path\": \"models/models-cunet/noise3_scale2.0x_model.bin\""
+               b"}".ljust(W2xServer.METADATA_MSG_SIZE - 1))
 
         s.send(b"s")
         length = int(s.recv(20))
