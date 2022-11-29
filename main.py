@@ -269,6 +269,8 @@ def part5():
                     print("it failed need to try again")
                     pass
 
+        w2x_server1.kill_server()
+
     t1 = threading.Thread(target=waifu2x_thread, args=(3509, 3510, 0, 2))
     t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 2))
     # t3 = threading.Thread(target=waifu2x_thread, args=(3513, 3514, 2, 4))

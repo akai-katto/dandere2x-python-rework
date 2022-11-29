@@ -46,7 +46,7 @@
       <recent name="C:\Users\tylerpc\Documents\GitHub\dandere2x-python-rework\dandere2xlib" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.w2x_server">
     <configuration name="__init__ (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="dandere2x-python-rework" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -175,8 +175,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.uint8test" />
         <item itemvalue="Python.w2x_server" />
+        <item itemvalue="Python.uint8test" />
         <item itemvalue="Python.__init__ (2)" />
         <item itemvalue="Python.webptest" />
         <item itemvalue="Python.__init__ (1)" />
