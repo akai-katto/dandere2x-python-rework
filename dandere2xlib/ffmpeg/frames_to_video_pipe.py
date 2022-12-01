@@ -1,11 +1,14 @@
 import logging
+import subprocess
 import threading
 import time
 from pathlib import Path
 from typing import List
 
+from dandere2xlib.core.dandere2x_session import Dandere2xSession
 from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path
+from dandere2xlib.utilities.yaml_utils import get_options_from_section
 
 
 class FramesToVideoPipe(threading.Thread):
@@ -14,18 +17,20 @@ class FramesToVideoPipe(threading.Thread):
     images to ffmpeg, thus removing the need for storing the processed images onto the disk.
     """
 
-    def __init__(self, output_video: Path):
-        threading.Thread.__init__(self, name="Pipe Thread")
-
-        self.output_video = output_video
+    def __init__(self,
+                 output_video: Path,
+                 dandere2x_session: Dandere2xSession):
+        threading.Thread.__init__(self, name="frames to video pipe")
         self.log = logging.getLogger()
+
+        self.dandere2x_session = dandere2x_session
+        self.output_video: Path = output_video
 
         # class specific
         self.ffmpeg_pipe_subprocess = None
-        self.alive = False
+        self.alive: bool = False
         self.images_to_pipe: List[D2xFrame] = []
-        self.buffer_limit = 20
-        self.lock_buffer = False
+        self.buffer_limit: int = 20
 
     def kill(self) -> None:
         self.log.info("Kill called.")
@@ -43,12 +48,7 @@ class FramesToVideoPipe(threading.Thread):
                 img = self.images_to_pipe.pop(0).get_pil_image()  # get the first image and remove it from list
                 img.save(self.ffmpeg_pipe_subprocess.stdin, format="jpeg", quality=100)
             else:
-                time.sleep(0.1)
-
-        # if the thread is killed for whatever reason, finish writing the remainder of the images to the video file.
-        while self.images_to_pipe:
-            pil_image = self.images_to_pipe.pop(0).get_pil_image()
-            pil_image.save(self.ffmpeg_pipe_subprocess.stdin, format="jpeg", quality=100)
+                time.sleep(0.01)
 
         self.ffmpeg_pipe_subprocess.stdin.close()
         self.ffmpeg_pipe_subprocess.wait()
@@ -70,39 +70,31 @@ class FramesToVideoPipe(threading.Thread):
 
     def _setup_pipe(self) -> None:
         self.log.info("Setting up pipe Called")
+
         # load variables..
-        output_no_sound = self.output_no_sound
-        frame_rate = str(self.context.frame_rate)
-        output_no_sound = output_no_sound
         ffmpeg_dir = get_ffmpeg_path()
-        dar = self.context.video_settings.dar
 
         # constructing the pipe command...
         ffmpeg_pipe_command = [ffmpeg_dir]
 
-        # no walrus operator sad
-        hw_accel = self.context.service_request.output_options["ffmpeg"]["pipe_video"]["-hwaccel"]
+        hw_accel = self.dandere2x_session.output_options["ffmpeg"]["pipe_video"]["-hwaccel"]
         if hw_accel is not None:
             ffmpeg_pipe_command.append("-hwaccel")
             ffmpeg_pipe_command.append(hw_accel)
 
-        ffmpeg_pipe_command.extend(["-r", frame_rate])
+        ffmpeg_pipe_command.extend(["-r", str(self.dandere2x_session.video_properties.video_settings.frame_rate)])
 
-        options = get_options_from_section(
-            self.context.service_request.output_options["ffmpeg"]["pipe_video"]['output_options'],
-            ffmpeg_command=True)
-        for item in options:
-            ffmpeg_pipe_command.append(item)
+        options = get_options_from_section(self.dandere2x_session.output_options["ffmpeg"]["pipe_video"]['output_options'],
+                                           ffmpeg_command=True)
 
-        ffmpeg_pipe_command.append("-r")
-        ffmpeg_pipe_command.append(frame_rate)
+        ffmpeg_pipe_command.extend(options)
 
-        ffmpeg_pipe_command.append(output_no_sound)
+        ffmpeg_pipe_command.append(str(self.output_video.absolute()))
 
-        # Starting the Pipe Command
-        console_output = open(self.context.console_output_dir + "pipe_output.txt", "w")
-        console_output.write(str(ffmpeg_pipe_command))
+        # # Starting the Pipe Command
+        # console_output = open(self.context.console_output_dir + "pipe_output.txt", "w")
+        # console_output.write(str(ffmpeg_pipe_command))
 
         self.log.info("ffmpeg_pipe_command %s" % str(ffmpeg_pipe_command))
-        self.ffmpeg_pipe_subprocess = subprocess.Popen(ffmpeg_pipe_command, stdin=subprocess.PIPE,
-                                                       stdout=console_output)
+        self.ffmpeg_pipe_subprocess = subprocess.Popen(ffmpeg_pipe_command,
+                                                       stdin=subprocess.PIPE)

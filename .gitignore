@@ -6,6 +6,8 @@ __pycache__/
 *.pyc
 *$py.class
 
+# for me
+externals/*
 temp/*
 
 # C extensions

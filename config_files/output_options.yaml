@@ -1,0 +1,79 @@
+realsr_ncnn_vulkan:
+  output_options:
+    -g: null
+    -load-proc-save_threads: null
+    -model-path: null
+    -t: 200  # note: if you get black images try lowering this tile argument to some lower value.
+    -verbose: null
+
+dandere2x:
+  bleed: 1
+  max_frames_ahead: 500
+
+dandere2x_cpp:
+  block_matching_arg: "exhaustive"
+  evaluator_arg: "mse"
+
+ffmpeg:
+  pre_process_video:
+    -hwaccel: auto
+    output_options:
+      -vf:
+        - " null"
+
+  convert_video_to_gif:
+    output_options:
+      -pix_fmt: "yuv420p"
+      -r: 15
+
+  pipe_video:
+    -hwaccel: auto
+    output_options:
+      -loglevel: panic
+      -y: -f
+      image2pipe: True
+      -i: '-'
+      -vcodec: libx264
+      -preset: medium
+      -qscale: 5
+      -crf: 15
+      -vf:
+        - ' deband=range=8:blur=false, pp7=qp=2:mode=medium'
+
+  migrate_audio:
+    output_options:
+      -c: copy
+      -y: True
+
+waifu2x_ncnn_vulkan:
+  output_options:
+    -g: null
+    -load-proc-save_threads: null
+    #    -m: models-upconv_7_anime_style_art_rgb
+    -t: 200  # note: if you get black images try lowering this tile argument to some lower value.
+    -verbose: null
+
+waifu2x_converter:
+  output_options:
+    --block-size: null
+    --disable-gpu: null
+    --force-OpenCL: true
+    --image-quality: null
+    --jobs: null
+    --mode: null
+    --model-dir: null
+    --output-format: null
+    --png-compression: null
+    --processor: null
+    --silent: true
+
+waifu2x_caffe:
+  output_options:
+    -batch_size: null
+    -crop_size: null
+    -gpu: null
+    -model_dir: null
+    -output_depth: null
+    -output_quality: null
+    -process: cudnn
+    -tta: null

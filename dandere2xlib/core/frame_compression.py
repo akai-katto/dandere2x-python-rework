@@ -7,7 +7,7 @@ from pathlib import Path
 from threading import Thread
 from dandere2xlib.d2xmanagement import D2xManagement
 from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path, get_wait_delay
-from dandere2xlib.ffmpeg.VideoFrameExtractor import VideoFrameExtractor
+from dandere2xlib.ffmpeg.video_frame_extractor import VideoFrameExtractor
 
 
 class FrameCompression(Thread):

@@ -11,9 +11,13 @@ from typing import Tuple
 
 import numpy as np
 from PIL import Image as im
+
+from dandere2xlib.core.dandere2x_session import get_dandere2x_session
 from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.d2xmanagement import D2xManagement, D2xResidualCoordinate
-from dandere2xlib.ffmpeg.VideoFrameExtractor import VideoFrameExtractor
+from dandere2xlib.ffmpeg.frames_to_video_pipe import FramesToVideoPipe
+from dandere2xlib.ffmpeg.video_frame_extractor import VideoFrameExtractor
+from dandere2xlib.utilities.dandere2x_utils import set_dandere2x_logger
 from dandere2xlib.waifu2x import upscale_file
 from dandere2xlib.waifu2x.w2x_server import W2xServer
 
@@ -42,11 +46,12 @@ HEIGHT = 720
 
 total_active_processes = 0
 block_size = 20
-frame_count = 866
+frame_count = 200
 
 manager = D2xManagement()
+dandere2x_session = get_dandere2x_session()
 
-
+set_dandere2x_logger("")
 def part1():
     extractor = VideoFrameExtractor(ffmpeg_binary=Path("C:\\ffmpeg\\ffmpeg.exe"),
                                     input_video=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\steal.mkv"),
@@ -294,7 +299,10 @@ def part6():
     BLEED = 1
     SCALE_FACTOR = 2
 
-    undone = D2xFrame(WIDTH * 2, HEIGHT * 2)
+    frames_to_pipe = FramesToVideoPipe(Path("temp\\outputvideo.mkv"), dandere2x_session)
+    frames_to_pipe.start()
+
+    current_frame = D2xFrame(WIDTH * 2, HEIGHT * 2)
     for pos in range(frame_count - 1):
         while manager.residual_blocks[pos] is None:
             time.sleep(0.0001)
@@ -311,11 +319,11 @@ def part6():
         if len(missing_blocks) == 0 and len(residual_undo) == 0:
             pass
         elif len(missing_blocks) != 0 and len(residual_undo) == 0:
-            undone = residual_image
+            current_frame = residual_image
         else:
             for residual in residual_undo:
                 residual: D2xResidualCoordinate = residual
-                undone.copy_block(frame_other=residual_image, block_size=block_size * SCALE_FACTOR,
+                current_frame.copy_block(frame_other=residual_image, block_size=block_size * SCALE_FACTOR,
                                   this_x=residual.x_start * 2,
                                   this_y=residual.y_start * 2,
                                   other_x=residual.residual_x * (block_size + BLEED * 2) * SCALE_FACTOR +
@@ -336,7 +344,9 @@ def part6():
 
         n = gc.collect()
         # print("Number of unreachable objects collected by GC:", n)
-        undone.save(f"temp\\pt6\\frame{pos}.png")
+        frames_to_pipe.save(current_frame)
+
+    frames_to_pipe.kill()
 
 
 def part7():
