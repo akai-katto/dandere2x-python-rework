@@ -28,11 +28,11 @@ class W2xServer(threading.Thread):
 
     def run(self):
         print(str(self.executable_location))
-        active_waifu2x_subprocess = subprocess.Popen(args=[str(self.executable_location),
-                                                           str(self.receive_port),
-                                                           str(self.send_port)],
-                                                     cwd=str(self.BINARY_LOCATION))
-        active_waifu2x_subprocess.wait()
+        # active_waifu2x_subprocess = subprocess.Popen(args=[str(self.executable_location),
+        #                                                    str(self.receive_port),
+        #                                                    str(self.send_port)],
+        #                                              cwd=str(self.BINARY_LOCATION))
+        # active_waifu2x_subprocess.wait()
 
     def join(self, timeout=None):
         threading.Thread.join(self, timeout)
@@ -49,6 +49,17 @@ class W2xServer(threading.Thread):
         host = 'localhost'
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, self.receive_port))
+        s.send(b"{"
+               b"\"noise\": 3 ,"
+               b" \"scale\": 2 ,"
+               b" \"tilesize\": 200,"
+               b" \"prepadding\": 18,"
+               b" \"gpuid\": 0,"
+               b" \"tta\": 0,"
+               b" \"param_path\": \"models/models-cunet/noise3_scale2.0x_model.param\","
+               b" \"model_path\": \"models/models-cunet/noise3_scale2.0x_model.bin\""
+               b"}".ljust(W2xServer.METADATA_MSG_SIZE - 1))
+        s.recv(1)
 
         width = str(frame.width).ljust(W2xServer.METADATA_MSG_SIZE - 1)
         height = str(frame.height).ljust(W2xServer.METADATA_MSG_SIZE - 1)
@@ -64,16 +75,6 @@ class W2xServer(threading.Thread):
         host = 'localhost'
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, self.send_port))
-        s.send(b"{"
-               b"\"noise\": 3 ,"
-               b" \"scale\": 2 ,"
-               b" \"tilesize\": 200,"
-               b" \"prepadding\": 18,"
-               b" \"gpuid\": 0,"
-               b" \"tta\": 0,"
-               b" \"param_path\": \"models/models-cunet/noise3_scale2.0x_model.param\","
-               b" \"model_path\": \"models/models-cunet/noise3_scale2.0x_model.bin\""
-               b"}".ljust(W2xServer.METADATA_MSG_SIZE - 1))
 
         s.send(b" ")
         length = int(s.recv(20))

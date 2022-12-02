@@ -40,7 +40,7 @@ def get_dandere2x_session() -> Dandere2xSession:
     with open("./config_files/executable_paths.yaml") as f:
         executable_paths = yaml.safe_load(f)
 
-    return Dandere2xSession(video_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\yn_small.mkv"),
+    return Dandere2xSession(video_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\shortvideo.mp4"),
                             scale_factor=2,
                             block_size=20,
                             quality=10,

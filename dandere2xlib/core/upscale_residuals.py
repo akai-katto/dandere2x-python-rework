@@ -51,20 +51,20 @@ class UpscaleResiduals(Thread):
 
             w2x_server1.kill_server()
 
-        t1 = threading.Thread(target=waifu2x_thread, args=(3509, 3510, 0, 2))
-        t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 2))
-        # t3 = threading.Thread(target=waifu2x_thread, args=(3513, 3514, 2, 4))
+        t1 = threading.Thread(target=waifu2x_thread, args=(3509, 3510, 0, 1))
+        # t2 = threading.Thread(target=waifu2x_thread, args=(3511, 3512, 1, 3))
+        # t3 = threading.Thread(target=waifu2x_thread, args=(3513, 3514, 2, 3))
         # t4 = threading.Thread(target=waifu2x_thread, args=(3515, 3516, 3, 4))
 
         t1.start()
-        time.sleep(.5)
-        t2.start()
+        # time.sleep(.5)
+        # t2.start()
         # time.sleep(1)
         # t3.start()
         # time.sleep(1)
         # t4.start()
 
         t1.join()
-        t2.join()
+        # t2.join()
         # t3.join()
         # t4.join()
