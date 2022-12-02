@@ -11,6 +11,8 @@ from dandere2xlib.utilities.dandere2x_utils import get_operating_system
 def get_frame_count_ffmpeg(ffmpeg_dir: Path, input_video: Path):
     assert get_operating_system() != "win32" or os.path.exists(ffmpeg_dir), "%s does not exist!" % ffmpeg_dir
 
+    # We apply vsync since we apply vsync for counting frames, as well as keeping the frame rate consistent.
+    # See video_frame_extractor.py
     execute = [
         ffmpeg_dir,
         "-vsync", str(1),

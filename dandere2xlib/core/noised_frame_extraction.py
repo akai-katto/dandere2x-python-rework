@@ -1,6 +1,4 @@
-import copy
 import logging
-
 import time
 
 from threading import Thread
@@ -12,7 +10,7 @@ from dandere2xlib.ffmpeg.video_frame_extractor import VideoFrameExtractor
 from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
 
 
-class FrameCompression(Thread):
+class NoisedFrameExtraction(Thread):
 
     def __init__(self, manager: D2xManagement, dandere2x_session: Dandere2xSession):
         super().__init__()
@@ -24,17 +22,16 @@ class FrameCompression(Thread):
                                                input_video=dandere2x_session.video_path,
                                                width=dandere2x_session.video_properties.corrected_video_width,
                                                height=dandere2x_session.video_properties.corrected_video_height,
-                                               dandere2x_session=dandere2x_session)
+                                               dandere2x_session=dandere2x_session,
+                                               optional_args=["-vf", "noise=c1s=8:c0f=u"])
         self.__loger = logging.getLogger()
 
     def run(self) -> None:
 
         for pos in range(self.dandere2x_session.video_properties.input_video_settings.frame_count):
 
-            while self.__manager.noised_images_array[pos] is None:
+            while pos > self.__manager.last_piped_frame + 60:
                 time.sleep(get_wait_delay())
 
-            frame = self.__manager.noised_images_array[pos]
-            compressed = copy.deepcopy(frame)
-            compressed.compress_frame_for_computations(100)
-            self.__manager.compressed_frames_array[pos] = compressed
+            frame = self.__extractor.get_frame()
+            self.__manager.noised_images_array[pos] = frame

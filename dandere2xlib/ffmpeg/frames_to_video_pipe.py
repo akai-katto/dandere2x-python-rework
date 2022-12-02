@@ -5,7 +5,7 @@ import time
 from pathlib import Path
 from typing import List
 
-from dandere2xlib.core.dandere2x_session import Dandere2xSession
+from dandere2xlib.d2xsession.__init__ import Dandere2xSession
 from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path
 from dandere2xlib.utilities.yaml_utils import get_options_from_section
@@ -82,7 +82,7 @@ class FramesToVideoPipe(threading.Thread):
             ffmpeg_pipe_command.append("-hwaccel")
             ffmpeg_pipe_command.append(hw_accel)
 
-        ffmpeg_pipe_command.extend(["-r", str(self.dandere2x_session.video_properties.video_settings.frame_rate)])
+        ffmpeg_pipe_command.extend(["-r", str(self.dandere2x_session.video_properties.input_video_settings.frame_rate)])
 
         options = get_options_from_section(self.dandere2x_session.output_options["ffmpeg"]["pipe_video"]['output_options'],
                                            ffmpeg_command=True)

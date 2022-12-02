@@ -1,36 +1,36 @@
 import logging
 import time
-from pathlib import Path
 
 from threading import Thread
+
+from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.d2xmanagement import D2xManagement
-from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path, get_wait_delay
+from dandere2xlib.utilities.dandere2x_utils import get_wait_delay
 from dandere2xlib.ffmpeg.video_frame_extractor import VideoFrameExtractor
+from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
 
 
 class FrameExtraction(Thread):
 
-    def __init__(self, manager: D2xManagement, video_path: Path, width: int, height: int):
+    def __init__(self, manager: D2xManagement, dandere2x_session: Dandere2xSession):
         super().__init__()
-        FFMPEG_PATH = get_ffmpeg_path()
+
+        self.dandere2x_session = dandere2x_session
 
         self.__manager = manager
-        self.__extractor = VideoFrameExtractor(ffmpeg_binary=Path(FFMPEG_PATH),
-                                               input_video=video_path,
-                                               width=width,
-                                               height=height)
+        self.__extractor = VideoFrameExtractor(ffmpeg_binary=load_executable_paths_yaml()['ffmpeg'],
+                                               input_video=dandere2x_session.video_path,
+                                               width=dandere2x_session.video_properties.corrected_video_width,
+                                               height=dandere2x_session.video_properties.corrected_video_height,
+                                               dandere2x_session=dandere2x_session)
         self.__loger = logging.getLogger()
 
-    def start(self) -> None:
-        block_size = 30
-        frame_count = 239
+    def run(self) -> None:
 
-        def part1():
-            for pos in range(frame_count):
+        for pos in range(self.dandere2x_session.video_properties.input_video_settings.frame_count):
 
-                while pos > self.__manager.last_upscaled_frame + 60:
-                    time.sleep(get_wait_delay())
+            while pos > self.__manager.last_piped_frame + 60:
+                time.sleep(get_wait_delay())
 
-                frame = self.__extractor.get_frame()
-                self.__manager.input_images_array[pos] = frame
-                # frame.save(Path(f"inputs\\frame{x}.png"))
+            frame = self.__extractor.get_frame()
+            self.__manager.input_images_array[pos] = frame

@@ -23,6 +23,7 @@ class Dandere2xSession:
 
         # Dandere2x Config Related
         self.output_options = output_options
+        self.executable_paths = executable_paths
 
         # Video Properties
         self.video_properties = Dandere2xVideoProperties(input_video=video_path, block_size=block_size)
@@ -33,19 +34,18 @@ def get_dandere2x_session() -> Dandere2xSession:
     :return: A testing version of dandere2x session.
     """
 
-    with open("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\config_files\\output_options.yaml") as f:
+    with open("./config_files/output_options.yaml") as f:
         output_options = yaml.safe_load(f)
 
-    with open("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\config_files\\executable_paths.yaml") as f:
+    with open("./config_files/executable_paths.yaml") as f:
         executable_paths = yaml.safe_load(f)
 
-    return Dandere2xSession(video_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\steal.mkv"),
+    return Dandere2xSession(video_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\yn_small.mkv"),
                             scale_factor=2,
-                            block_size=30,
+                            block_size=20,
                             quality=10,
                             output_options=output_options,
                             executable_paths=executable_paths)
-
 
 
 class Dandere2xVideoProperties:
@@ -55,11 +55,11 @@ class Dandere2xVideoProperties:
         self.input_video = input_video
         self.block_size = block_size
 
-        self.video_settings = VideoSettings(input_video)
+        self.input_video_settings = VideoSettings(input_video)
 
-        # todo
-        self.corrected_video_width = []
-        self.corrected_video_height = []
+        # We need to resize the input video in order for block matching to work.
+        self.corrected_video_width = self.input_video_settings.width
+        self.corrected_video_height = self.input_video_settings.height
         
 
 

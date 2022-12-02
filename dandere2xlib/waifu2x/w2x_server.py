@@ -23,6 +23,7 @@ class W2xServer(threading.Thread):
         self.receive_port = receive_port
         self.send_port = send_port
         self.executable_location = W2xServer.BINARY_LOCATION / "waifu2x-ncnn-vulkan.exe"
+        self.total_upscaled_images = 0
 
 
     def run(self):
@@ -44,10 +45,6 @@ class W2xServer(threading.Thread):
         s.recv(1)
 
     def upscale_d2x_frame(self, frame: D2xFrame) -> D2xFrame:
-        def divide_chunks(input_list, n):
-            for i in range(0, len(input_list), n):
-                yield input_list[i:i + n]
-
 
         host = 'localhost'
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -57,9 +54,9 @@ class W2xServer(threading.Thread):
         height = str(frame.height).ljust(W2xServer.METADATA_MSG_SIZE - 1)
 
         s.sendall(bytes(width, encoding='utf8'))
-        print(s.recv(1))
+        s.recv(1)
         s.sendall(bytes(height, encoding='utf8'))
-        print(s.recv(1))
+        s.recv(1)
 
         s.send(frame.get_byte_array().ljust(W2xServer.THIRTY_TWO_MB))
         s.close()
@@ -70,7 +67,7 @@ class W2xServer(threading.Thread):
         s.send(b"{"
                b"\"noise\": 3 ,"
                b" \"scale\": 2 ,"
-               b" \"tilesize\": 400,"
+               b" \"tilesize\": 200,"
                b" \"prepadding\": 18,"
                b" \"gpuid\": 0,"
                b" \"tta\": 0,"
@@ -78,29 +75,27 @@ class W2xServer(threading.Thread):
                b" \"model_path\": \"models/models-cunet/noise3_scale2.0x_model.bin\""
                b"}".ljust(W2xServer.METADATA_MSG_SIZE - 1))
 
-        s.send(b"s")
+        s.send(b" ")
         length = int(s.recv(20))
-        s.send(b"s")
-        all_bytes = s.recv(length)
+        s.send(b" ")
 
+        all_bytes = s.recv(length)
         d2x_frame = D2xFrame.from_bytes(all_bytes)
 
-        print("recieved image")
         s.close()
+        self.total_upscaled_images += 1
         return d2x_frame
 
 if __name__ == "__main__":
-    print('hi')
+
     w2x_server = W2xServer(3509, 3510)
     w2x_server.start()
     #w2x_server.kill_server()
-
     d2x_image = D2xFrame.from_file("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\residuals\\frame1.png")
 
+    total_upscaled_images = 0
     d2x_upscaled1 = w2x_server.upscale_d2x_frame(d2x_image)
-    # d2x_upscaled2 = w2x_server.upscale_d2x_frame(d2x_image)
-    #
-    #d2x_upscaled1.save(Path("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\upscaled1.png"))
-    # d2x_upscaled2.save(Path("upscaled2.png"))
-    #
-    # print("hi2")
+    #d2x_upscaled2 = w2x_server.upscale_d2x_frame(D2xFrame.from_file("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\residuals\\frame2.png"))
+
+    print(w2x_server.total_upscaled_images)
+    w2x_server.kill_server()
