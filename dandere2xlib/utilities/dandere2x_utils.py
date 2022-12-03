@@ -1,4 +1,5 @@
 import logging
+from typing import Tuple
 
 import colorlog
 from pathlib import Path
@@ -59,3 +60,29 @@ def set_dandere2x_logger(input_file_path: str) -> None:
     logger.setLevel(logging.INFO)
     logger.addHandler(handler)
     logger.info("Dandere2x Console Logger Set")
+
+
+def get_a_valid_input_resolution(width: int, height: int, block_size: int) -> Tuple[int, int]:
+    width_up = width
+    width_down = width
+
+    height_up = height
+    height_down = height
+
+    while width_up % block_size != 0:
+        width_up = width_up + 1
+
+    while width_down % block_size != 0:
+        width_down = width_down - 1
+
+    while height_up % block_size != 0:
+        height_up = height_up + 1
+
+    while height_down % block_size != 0:
+        height_down = height_down - 1
+
+    smaller_width = width_up if abs(width_up - width) < abs(width_down - width) else width_down
+
+    smaller_height = height_up if abs(height_up - height) < abs(height_down - height) else height_down
+
+    return smaller_width, smaller_height

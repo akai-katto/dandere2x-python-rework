@@ -46,34 +46,6 @@ ffmpeg:
       -y: True
 
 waifu2x_ncnn_vulkan:
-  output_options:
-    -g: null
-    -load-proc-save_threads: null
-    #    -m: models-upconv_7_anime_style_art_rgb
-    -t: 200  # note: if you get black images try lowering this tile argument to some lower value.
-    -verbose: null
-
-waifu2x_converter:
-  output_options:
-    --block-size: null
-    --disable-gpu: null
-    --force-OpenCL: true
-    --image-quality: null
-    --jobs: null
-    --mode: null
-    --model-dir: null
-    --output-format: null
-    --png-compression: null
-    --processor: null
-    --silent: true
-
-waifu2x_caffe:
-  output_options:
-    -batch_size: null
-    -crop_size: null
-    -gpu: null
-    -model_dir: null
-    -output_depth: null
-    -output_quality: null
-    -process: cudnn
-    -tta: null
+  model_name: "models-cunet"
+  tile_size: 200  # note: if you get black images try lowering this tile argument to some lower value.
+  pre_padding: 9
