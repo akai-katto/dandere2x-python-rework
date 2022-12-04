@@ -55,6 +55,6 @@ class PipeFinishedFramesToVideoAndCollectGarbage(Thread):
             self.__manager.finished_frames[pos] = None
 
             n = gc.collect()
-            print("Number of unreachable objects collected by GC:", n)
+            #print("Number of unreachable objects collected by GC:", n)
 
         frames_to_pipe.kill()

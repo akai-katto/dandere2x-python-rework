@@ -57,11 +57,11 @@ class W2xServer(threading.Thread):
         s.connect((host, self._receive_port))
 
         raw_bytes = "{" \
-                    f"\"noise\": {self.dandere2x_session.scale_factor} ," \
-                    " \"scale\": 2 ," \
+                    f"\"noise\": {self.dandere2x_session.noise_factor} ," \
+                    f" \"scale\": {self.dandere2x_session.scale_factor} ," \
                     f" \"tilesize\": {self._tile_size}," \
                     f" \"prepadding\": {self._pre_padding}," \
-                    F" \"gpuid\": {self._gpu_id}," \
+                    f" \"gpuid\": {self._gpu_id}," \
                     " \"tta\": 0," \
                     f" \"param_path\": \"models/{self._model_name}/noise{self._noise_factor}_scale2.0x_model.param\"," \
                     f" \"model_path\": \"models/{self._model_name}/noise{self._noise_factor}_scale2.0x_model.bin\"" \

@@ -48,4 +48,17 @@ ffmpeg:
 waifu2x_ncnn_vulkan:
   model_name: "models-cunet"
   tile_size: 200  # note: if you get black images try lowering this tile argument to some lower value.
-  pre_padding: 9
+  pre_padding: 18
+  client_ports:
+    client1:
+      receive_port: 43560
+      send_port: 43561
+    client2:
+      receive_port: 43562
+      send_port: 43563
+    client3:
+      receive_port: 43564
+      send_port: 43565
+    client4:
+      receive_port: 43566
+      send_port: 43567

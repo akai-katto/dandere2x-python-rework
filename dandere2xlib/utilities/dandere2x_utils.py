@@ -86,3 +86,16 @@ def get_a_valid_input_resolution(width: int, height: int, block_size: int) -> Tu
     smaller_height = height_up if abs(height_up - height) < abs(height_down - height) else height_down
 
     return smaller_width, smaller_height
+
+
+def check_if_port_is_being_used(port: int):
+    import socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # Try to connect to the given host and port
+    if sock.connect_ex(("localhost", port)) == 0:
+        sock.close()
+        return True
+    else:
+        sock.close()
+        return False

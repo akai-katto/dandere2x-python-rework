@@ -14,6 +14,7 @@ class Dandere2xSession:
                  noise_factor: int,
                  block_size: int,
                  quality: float,
+                 num_waifu2x_threads: int,
                  output_options: dict,
                  executable_paths: dict):
 
@@ -24,6 +25,7 @@ class Dandere2xSession:
         self.quality: float = quality
         self.scale_factor: int = scale_factor
         self.noise_factor: int = noise_factor
+        self.num_waifu2x_threads: int = num_waifu2x_threads
 
         # Dandere2x Config Related
         self.output_options = output_options
@@ -31,28 +33,6 @@ class Dandere2xSession:
 
         # Video Properties
         self.video_properties = Dandere2xVideoProperties(input_video=video_path, block_size=block_size)
-
-
-def get_dandere2x_session() -> Dandere2xSession:
-    """
-    :return: A testing version of dandere2x session.
-    """
-
-    with open("./config_files/output_options.yaml") as f:
-        output_options = yaml.safe_load(f)
-
-    with open("./config_files/executable_paths.yaml") as f:
-        executable_paths = yaml.safe_load(f)
-
-    return Dandere2xSession(video_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\yn_small.mkv"),
-                            output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\yn_small_2x.mkv"),
-                            scale_factor=2,
-                            noise_factor=3,
-                            block_size=30,
-                            quality=10,
-                            output_options=output_options,
-                            executable_paths=executable_paths)
-
 
 class Dandere2xVideoProperties:
 
