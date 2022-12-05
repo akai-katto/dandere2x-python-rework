@@ -3,16 +3,19 @@ from typing import Tuple
 
 import colorlog
 from pathlib import Path
-from platform import platform
+from sys import platform
 
+from colorlog import ColoredFormatter
 
 
 def get_ffmpeg_path() -> Path:
     # temporary, to replace later
+    print("DEPRECATE ME FFMPEG")
     return Path("C:\\ffmpeg\\ffmpeg.exe")
 
 def get_ffprobe_path() -> Path:
     # temporary, to replace later
+    print("DEPRECATE ME FFPROBE")
     return Path("C:\\ffmpeg\\ffprobe.exe")
 
 def get_wait_delay() -> float:
@@ -24,6 +27,8 @@ def get_operating_system():
         return 'linux'
     elif platform == "win32":
         return 'win32'
+    else:
+        raise Exception(f"invalid operating system: {platform}")
 
 def set_dandere2x_logger(input_file_path: str) -> None:
     """
@@ -99,3 +104,53 @@ def check_if_port_is_being_used(port: int):
     else:
         sock.close()
         return False
+
+def log_dandere2x_logo(logger_name: str) -> None:
+    log = logging.getLogger(logger_name)
+
+    log.info("------------------------------------------------------------------------------")
+    log.info("______                       _                        _____          _ ")
+    log.info("|  _  \                     | |                      / __  \        | |")
+    log.info("| | | |   __ _   _ __     __| |   ___   _ __    ___  `' / /' __  __ | |")
+    log.info("| | | |  / _` | | '_ \   / _` |  / _ \ | '__|  / _ \   / /   \ \/ / | |")
+    log.info("| |/ /  | (_| | | | | | | (_| | |  __/ | |    |  __/ ./ /___  >  <  |_|")
+    log.info("|___/    \__,_| |_| |_|  \__,_|  \___| |_|     \___| \_____/ /_/\_\ (_)")
+    log.info("                                                              pre-alpha")
+    log.info("Made with open-source love by akai_katto.")
+    log.info("------------------------------------------------------------------------------")
+
+def set_dandere2x_logger(logger_name: str) -> None:
+    """
+    Create the logging class to be format print statements the dandere2x way.
+
+    The formatted output resembles the following (roughly):
+        outputvid0.mkv 2020-08-01 16:03:39,455 INFO     __init__.py : Hewwooo
+        outputvid0.mkv 2020-08-01 16:03:39,456 WARNING  __init__.py : oh no, this is a  warning
+        outputvid0.mkv 2020-08-01 16:03:39,456 ERROR    __init__.py : oh no, an error has occured!
+    """
+    input_file_name = Path(logger_name).name + " "
+    color_log_format = input_file_name + "%(log_color)s%(asctime)-8s%(reset)s %(log_color)s%(levelname)-8s%(reset)s %(log_color)s%(filename)-8s%(reset)s %(log_color)s%(funcName)-8s%(reset)s: %(log_color)s%(message)s"
+
+    formatter = ColoredFormatter(
+        color_log_format,
+        datefmt=None,
+        reset=True,
+        log_colors={
+            'DEBUG': 'cyan',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'ERROR': 'red',
+            'CRITICAL': 'red,bg_white',
+        },
+        secondary_log_colors={},
+        style='%'
+    )
+
+    handler = colorlog.StreamHandler()
+    handler.setFormatter(formatter)
+
+    logger = colorlog.getLogger(name=logger_name)
+    logger.propagate = False
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(handler)
+    logger.info("Dandere2x Console Logger Set")

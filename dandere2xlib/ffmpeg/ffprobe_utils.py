@@ -35,8 +35,8 @@ def get_video_info(ffprobe_dir, input_video):
         input_video
     ]
     log = logging.getLogger()
-    log.info("Loading video meta-data with ffprobe.. this might take a while.")
-    log.info("Command: %s" % str(execute))
+    log.debug("Loading video meta-data with ffprobe.. this might take a while.")
+    log.debug("Command: %s" % str(execute))
 
     json_str = subprocess.run(execute, check=True, stdout=subprocess.PIPE).stdout
 

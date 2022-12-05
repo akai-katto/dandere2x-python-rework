@@ -8,6 +8,7 @@ from typing import Final
 
 from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.d2xsession import Dandere2xSession
+from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
 
 
 class W2xServer(threading.Thread):
@@ -25,7 +26,7 @@ class W2xServer(threading.Thread):
         self._gpu_id = gpu_id
         self._receive_port = receive_port
         self._send_port = send_port
-        self._waifu2x_location = Path(dandere2x_session.executable_paths["w2x_vulkan_server"])
+        self._waifu2x_location = Path(load_executable_paths_yaml()["w2x_vulkan_server"])
         self._executable_location = self._waifu2x_location / "waifu2x-ncnn-vulkan.exe"
 
         self._model_name = self.dandere2x_session.output_options["waifu2x_ncnn_vulkan"]["model_name"]

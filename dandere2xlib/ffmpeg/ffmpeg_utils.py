@@ -8,6 +8,7 @@ from pathlib import Path
 from dandere2xlib.utilities.dandere2x_utils import get_operating_system
 from dandere2xlib.utilities.yaml_utils import get_options_from_section
 
+
 def get_console_output(method_name: str, console_output_dir=None):
     if console_output_dir:
         assert type(console_output_dir) == str
@@ -17,6 +18,7 @@ def get_console_output(method_name: str, console_output_dir=None):
         return console_output
 
     return open(os.devnull, 'w')
+
 
 def get_frame_count_ffmpeg(ffmpeg_dir: Path, input_video: Path):
     assert get_operating_system() != "win32" or os.path.exists(ffmpeg_dir), "%s does not exist!" % ffmpeg_dir
@@ -45,8 +47,8 @@ def get_frame_count_ffmpeg(ffmpeg_dir: Path, input_video: Path):
 
 
 def migrate_tracks_contextless(ffmpeg_dir: Path,
-                               no_audio: Path,
-                               file_dir: Path,
+                               no_audio_file: Path,
+                               input_file: Path,
                                output_file: Path,
                                output_options: dict,
                                console_output_dir=None):
@@ -62,9 +64,9 @@ def migrate_tracks_contextless(ffmpeg_dir: Path,
 
     log = logging.getLogger()
 
-    migrate_tracks_command = [str(ffmpeg_dir.absolute),
-                              "-i", str(no_audio.absolute),
-                              "-i", str(file_dir.absolute()),
+    migrate_tracks_command = [str(ffmpeg_dir.absolute()),
+                              "-i", str(no_audio_file.absolute()),
+                              "-i", str(input_file.absolute()),
                               "-map", "0:v?",
                               "-map", "1:a?",
                               "-map", "1:s?",

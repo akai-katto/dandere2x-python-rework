@@ -2,11 +2,13 @@ import time
 from pathlib import Path
 
 from dandere2xlib.d2xframe import D2xFrame
+from dandere2xlib.ffmpeg.ffmpeg_utils import migrate_tracks_contextless
+from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
 from dandere2xlib.waifu2x.w2x_server import W2xServer
+from main import get_dandere2x_session
 
 
 def test_waifu2x():
-    from dandere2xlib.d2xsession import get_dandere2x_session
 
     dandere2x_session = get_dandere2x_session()
 
@@ -24,5 +26,17 @@ def test_waifu2x():
     w2x_server.kill_server()
 
 
+def test_migration_tracks():
+
+    session = get_dandere2x_session()
+
+    migrate_tracks_contextless(ffmpeg_dir=Path(load_executable_paths_yaml()["ffmpeg"]),
+                               no_audio_file=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\nosound.mp4"),
+                               input_file=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\shortvideo.mp4"),
+                               output_file=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\migrated.mp4"),
+                               output_options=session.output_options,
+                               console_output_dir=None)
+
 if __name__ == "__main__":
-    test_waifu2x()
+   # test_waifu2x()
+    test_migration_tracks()

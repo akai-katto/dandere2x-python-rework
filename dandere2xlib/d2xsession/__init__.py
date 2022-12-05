@@ -8,18 +8,18 @@ from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path, get_ffprobe_
 class Dandere2xSession:
 
     def __init__(self,
-                 video_path: Path,
+                 input_video_path: Path,
                  output_path: Path,
                  scale_factor: int,
                  noise_factor: int,
                  block_size: int,
                  quality: float,
                  num_waifu2x_threads: int,
-                 output_options: dict,
-                 executable_paths: dict):
+                 output_options: dict):
 
         # Video Related
-        self.video_path: Path = video_path
+        self.input_video_path: Path = input_video_path
+        self.no_sound_video_path: Path = input_video_path.parent / ("nosound" + input_video_path.suffix)
         self.output_video_path: Path = output_path
         self.block_size: int = block_size
         self.quality: float = quality
@@ -29,10 +29,9 @@ class Dandere2xSession:
 
         # Dandere2x Config Related
         self.output_options = output_options
-        self.executable_paths = executable_paths
 
         # Video Properties
-        self.video_properties = Dandere2xVideoProperties(input_video=video_path, block_size=block_size)
+        self.video_properties = Dandere2xVideoProperties(input_video=input_video_path, block_size=block_size)
 
 class Dandere2xVideoProperties:
 

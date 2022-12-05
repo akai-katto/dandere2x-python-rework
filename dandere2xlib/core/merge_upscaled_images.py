@@ -61,4 +61,4 @@ class MergeUpscaledImages(Thread):
                                                      * self._SCALE_FACTOR + (self._BLEED * self._SCALE_FACTOR))
 
             self.__manager.last_piped_frame = pos
-            self.__manager.finished_frames[pos] = current_frame
+            self.__manager.finished_frames[pos] = copy.copy(current_frame)

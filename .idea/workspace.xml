@@ -29,29 +29,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/windw0z/Documents/GitHub/dandere2x-python-rework/dandere2xlib/core&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/windw0z/Documents/GitHub/dandere2x-python-rework/externals/waifu2x-ncnn-vulkan-server",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\externals\waifu2x-ncnn-vulkan-server" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\dandere2xlib\core" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\config_files" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\dandere2xlib\ffmpeg" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\externals\waifu2x-ncnn-vulkan-server" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\dandere2xlib\dandere2x_session" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\dandere2xlib" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\temp" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework" />
-      <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\dandere2xlib\waifu2x" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.dandere2x_utils">
+  <component name="RunManager" selected="Python.main">
     <configuration name="dandere2x_utils" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="dandere2x-python-rework" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -180,9 +181,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test_cases" />
         <item itemvalue="Python.dandere2x_utils" />
         <item itemvalue="Python.gui" />
-        <item itemvalue="Python.test_cases" />
         <item itemvalue="Python.w2x_server" />
         <item itemvalue="Python.upscale_residuals" />
       </list>
