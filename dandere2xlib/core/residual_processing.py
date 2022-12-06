@@ -31,7 +31,7 @@ class ResidualProcessing(Thread):
         for pos in range(self._FRAME_COUNT - 1):
             while self.__manager.missing_blocks[pos] is None:
                 time.sleep(0.0001)
-            while self.__manager.input_images_array[pos] is None:
+            while self.__manager.input_images_array[pos+1] is None:
                 time.sleep(0.0001)
 
             missing_blocks = self.__manager.missing_blocks[pos]

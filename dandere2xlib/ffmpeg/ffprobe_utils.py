@@ -157,6 +157,7 @@ def get_frame_rate(ffprobe_dir, input_video):
 
     return return_string
 
+
 def is_variable_frame_rate(ffprobe_dir: str, input_video: str) -> bool:
 
     execute = [ffprobe_dir,
@@ -178,3 +179,15 @@ def is_variable_frame_rate(ffprobe_dir: str, input_video: str) -> bool:
     num, denom = avg_frame_rate.split("/")
     return denom != "1"
 
+
+def get_pix_fmt(ffprobe_dir: str, input_video) -> str:
+    """
+    Returns the pixel format of a video.
+    """
+    execute = [ffprobe_dir,
+               '-loglevel', 'error',
+               '-show_entries', 'stream=pix_fmt',
+               '-of', 'csv=p=0', input_video]
+
+    return_bytes = subprocess.run(execute, check=True, stdout=subprocess.PIPE).stdout
+    return return_bytes.decode("utf-8").strip()

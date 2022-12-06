@@ -46,7 +46,7 @@ class FramesToVideoPipe(threading.Thread):
         while self.alive:
             if len(self.images_to_pipe) > 0:
                 img = self.images_to_pipe.pop(0).get_pil_image()  # get the first image and remove it from list
-                img.save(self.ffmpeg_pipe_subprocess.stdin, format="jpeg", quality=100)
+                img.save(self.ffmpeg_pipe_subprocess.stdin, format="BMP")
             else:
                 time.sleep(0.01)
 
@@ -83,6 +83,7 @@ class FramesToVideoPipe(threading.Thread):
             ffmpeg_pipe_command.append(hw_accel)
 
         ffmpeg_pipe_command.extend(["-r", str(self.dandere2x_session.video_properties.input_video_settings.frame_rate)])
+        ffmpeg_pipe_command.extend(["-pix_fmt", self.dandere2x_session.video_properties.input_video_settings.pix_fmt])
 
         options = get_options_from_section(self.dandere2x_session.output_options["ffmpeg"]["pipe_video"]['output_options'],
                                            ffmpeg_command=True)

@@ -3,7 +3,8 @@ from fractions import Fraction
 from pathlib import Path
 
 from dandere2xlib.ffmpeg.ffmpeg_utils import get_frame_count_ffmpeg
-from dandere2xlib.ffmpeg.ffprobe_utils import get_video_info, get_width_height, get_frame_rate, get_aspect_ratio
+from dandere2xlib.ffmpeg.ffprobe_utils import get_video_info, get_width_height, get_frame_rate, get_aspect_ratio, \
+    get_pix_fmt
 from dandere2xlib.utilities.dandere2x_utils import get_ffprobe_path, get_ffmpeg_path
 from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
 
@@ -21,6 +22,7 @@ class VideoSettings:
 
         self.settings_json = get_video_info(self.ffprobe_dir, video_file)
         self.frame_count = int(get_frame_count_ffmpeg(ffmpeg_dir=self.ffmpeg_dir, input_video=video_file))
+        self.pix_fmt = get_pix_fmt(ffprobe_dir=self.ffprobe_dir, input_video=video_file)
 
         log.debug("setting json %s" % self.settings_json)
         # todo: This entire class can be removed and simplified into the 'except' clause,

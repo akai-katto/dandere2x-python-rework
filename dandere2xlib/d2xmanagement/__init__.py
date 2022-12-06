@@ -1,4 +1,5 @@
 import sys
+
 from typing import Mapping, Set, Union, List
 
 from dandere2xlib.d2xframe import D2xFrame
@@ -13,7 +14,7 @@ class D2xResidualCoordinate:
         self.residual_y = residual_y
 
 
-MAX_FRAMES = 5000000
+MAX_FRAMES = 50000000
 
 class D2xManagement:
 
