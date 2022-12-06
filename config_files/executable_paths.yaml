@@ -15,6 +15,9 @@
 ffprobe: "externals/ffprobe"
 ffmpeg: "externals/ffmpeg"
 
+# for debugging
+# w2x_vulkan_server: "C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-rework\\test_fork\\cmake-build-debug-mingw"
+w2x_vulkan_server: "externals/waifu2x-ncnn-vulkan-server"
 dandere2x_cpp: "externals/dandere2x_cpp"
 waifu2x_vulkan: "externals/waifu2x-ncnn-vulkan/waifu2x-ncnn-vulkan"
 realsr-ncnn-vulkan: "externals/realsr-ncnn-vulkan/realsr-ncnn-vulkan"

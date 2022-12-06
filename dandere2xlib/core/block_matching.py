@@ -24,12 +24,9 @@ class BlockMatching(Thread):
         self._BLOCK_SIZE = self.dandere2x_session.block_size
 
         self.__manager = manager
-        self.__loger = logging.getLogger()
+        self.__logger = logging.getLogger(dandere2x_session.input_video_path.name)
 
     def run(self) -> None:
-        # while self.__manager.input_images_array[0] is None:
-        #     time.sleep(0.0001)
-
         f1 = D2xFrame(self.dandere2x_session.video_properties.corrected_video_width,
                       self.dandere2x_session.video_properties.corrected_video_height)
 
@@ -40,8 +37,6 @@ class BlockMatching(Thread):
 
             while self.__manager.compressed_frames_array[frame_pos + 1] is None:
                 time.sleep(get_wait_delay())
-
-            print(f"noised on frame {frame_pos}")
 
             f2 = copy.deepcopy(self.__manager.noised_images_array[frame_pos + 1])
             f2_compressed = self.__manager.compressed_frames_array[frame_pos + 1]

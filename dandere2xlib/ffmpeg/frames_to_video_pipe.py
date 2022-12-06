@@ -8,7 +8,7 @@ from typing import List
 from dandere2xlib.d2xsession.__init__ import Dandere2xSession
 from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path
-from dandere2xlib.utilities.yaml_utils import get_options_from_section
+from dandere2xlib.utilities.yaml_utils import get_options_from_section, load_executable_paths_yaml
 
 
 class FramesToVideoPipe(threading.Thread):
@@ -72,7 +72,7 @@ class FramesToVideoPipe(threading.Thread):
         self.log.info("Setting up pipe Called")
 
         # load variables..
-        ffmpeg_dir = get_ffmpeg_path()
+        ffmpeg_dir = load_executable_paths_yaml()['ffmpeg']
 
         # constructing the pipe command...
         ffmpeg_pipe_command = [ffmpeg_dir]

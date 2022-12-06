@@ -51,7 +51,7 @@ def load_executable_paths_yaml() -> dict:
             config[key] = "ffprobe"
             continue
 
-        if get_operating_system() == "win32":
+        if get_operating_system() == "win32" and (key == "ffprobe" or key == "ffmpeg"):
             """ Modifications needed to take place if we're not unix-based """
             config[key] = config[key].replace("/", "\\")
             config[key] = config[key] + ".exe"

@@ -6,6 +6,18 @@ import sys
 from pathlib import Path
 
 from dandere2xlib.utilities.dandere2x_utils import get_operating_system
+from dandere2xlib.utilities.yaml_utils import get_options_from_section
+
+
+def get_console_output(method_name: str, console_output_dir=None):
+    if console_output_dir:
+        assert type(console_output_dir) == str
+
+        log_file = os.path.join(console_output_dir, method_name + "output.txt")
+        console_output = open(log_file, "w", encoding="utf8")
+        return console_output
+
+    return open(os.devnull, 'w')
 
 
 def get_frame_count_ffmpeg(ffmpeg_dir: Path, input_video: Path):
@@ -34,7 +46,10 @@ def get_frame_count_ffmpeg(ffmpeg_dir: Path, input_video: Path):
     return int(frame_count)
 
 
-def migrate_tracks_contextless(ffmpeg_dir: Path, no_audio: str, file_dir: str, output_file: str,
+def migrate_tracks_contextless(ffmpeg_dir: Path,
+                               no_audio_file: Path,
+                               input_file: Path,
+                               output_file: Path,
                                output_options: dict,
                                console_output_dir=None):
     """
@@ -49,9 +64,9 @@ def migrate_tracks_contextless(ffmpeg_dir: Path, no_audio: str, file_dir: str, o
 
     log = logging.getLogger()
 
-    migrate_tracks_command = [ffmpeg_dir,
-                              "-i", no_audio,
-                              "-i", file_dir,
+    migrate_tracks_command = [str(ffmpeg_dir.absolute()),
+                              "-i", str(no_audio_file.absolute()),
+                              "-i", str(input_file.absolute()),
                               "-map", "0:v?",
                               "-map", "1:a?",
                               "-map", "1:s?",
@@ -64,7 +79,7 @@ def migrate_tracks_contextless(ffmpeg_dir: Path, no_audio: str, file_dir: str, o
     for element in options:
         migrate_tracks_command.append(element)
 
-    migrate_tracks_command.extend([str(output_file)])
+    migrate_tracks_command.extend([str(output_file.absolute())])
 
     log.info("Migrating tracks %s " % convert(migrate_tracks_command))
 
