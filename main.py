@@ -113,7 +113,7 @@ def user_generate_dandere2x_session() -> Dandere2xSession:
 
 if __name__ == "__main__":
 
-    dandere2x_session = user_generate_dandere2x_session()
+    dandere2x_session = get_dandere2x_session()
     start = time.time()
     d2x = Dandere2x(dandere2x_session)
     d2x.process()

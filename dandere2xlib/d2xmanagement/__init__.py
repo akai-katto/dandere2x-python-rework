@@ -1,7 +1,8 @@
 import sys
 
-from typing import Mapping, Set, Union, List
 
+from typing import Mapping, Set, Union, List, Dict
+from collections import defaultdict
 from dandere2xlib.d2xframe import D2xFrame
 
 
@@ -22,37 +23,14 @@ class D2xManagement:
 
         self.last_piped_frame = 0
 
-        self.input_images_array: list[Union[D2xFrame, None]] = []
-        for x in range(MAX_FRAMES):
-            self.input_images_array.append(None)
-
-        self.noised_images_array: list[Union[D2xFrame, None]] = []
-        for x in range(MAX_FRAMES):
-            self.noised_images_array.append(None)
-
-        self.compressed_frames_array = []
-        for x in range(MAX_FRAMES):
-            self.compressed_frames_array.append(None)
-
-        self.missing_blocks = []
-        for x in range(MAX_FRAMES):
-            self.missing_blocks.append(None)
-
-        self.residual_blocks: list[Union[List[D2xResidualCoordinate], None]] = []
-        for x in range(MAX_FRAMES):
-            self.residual_blocks.append(None)
-
-        self.residual_images: list[Union[D2xFrame, None]] = []
-        for x in range(MAX_FRAMES):
-            self.residual_images.append(None)
-
-        self.residual_images_upscaled = []
-        for x in range(MAX_FRAMES):
-            self.residual_images_upscaled.append(None)
-
-        self.finished_frames: list[Union[D2xFrame, None]] = []
-        for x in range(MAX_FRAMES):
-            self.finished_frames.append(None)
+        self.input_images_array: Dict[Union[D2xFrame, None]] = defaultdict(lambda: None)
+        self.noised_images_array: Dict[Union[D2xFrame, None]] = defaultdict(lambda: None)
+        self.compressed_frames_array: Dict[Union[None, D2xFrame]] = defaultdict(lambda: None)
+        self.missing_blocks: Dict[Union[List[D2xResidualCoordinate], None]] = defaultdict(lambda: None)
+        self.residual_blocks: Dict[Union[List[D2xResidualCoordinate], None]] = defaultdict(lambda: None)
+        self.residual_images: Dict[Union[D2xFrame, None]] = defaultdict(lambda: None)
+        self.residual_images_upscaled: Dict[Union[D2xFrame, None]] = defaultdict(lambda: None)
+        self.finished_frames: Dict[Union[D2xFrame, None]] = defaultdict(lambda: None)
 
 
 if __name__ == "__main__":
