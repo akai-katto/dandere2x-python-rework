@@ -51,14 +51,18 @@ waifu2x_ncnn_vulkan:
   pre_padding: 18
   client_ports:
     client0:
+      gpuid: 0
       receive_port: 43560
       send_port: 43561
     client1:
+      gpuid: 0
       receive_port: 43562
       send_port: 43563
     client2:
+      gpuid: 0
       receive_port: 43564
       send_port: 43565
     client3:
+      gpuid: 0
       receive_port: 43566
       send_port: 43567

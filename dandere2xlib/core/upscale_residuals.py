@@ -25,10 +25,10 @@ class UpscaleResiduals(Thread):
         self.__manager = manager
         self.__logger = logging.getLogger(dandere2x_session.input_video_path.name)
 
-    def __waifu2x_thread(self, receive_port, send_port, start, iter_val):
+    def __waifu2x_thread(self, receive_port, send_port, gpuid,  start, iter_val):
         print("starting thread 1")
 
-        w2x_server = W2xServer(self.dandere2x_session, receive_port, send_port, 0)
+        w2x_server = W2xServer(self.dandere2x_session, receive_port, send_port, gpuid)
         w2x_server.start()
 
         for pos in range(start, self._FRAME_COUNT - 1, iter_val):
@@ -64,6 +64,7 @@ class UpscaleResiduals(Thread):
             t1 = threading.Thread(target=self.__waifu2x_thread,
                                   args=(ports['receive_port'],
                                         ports['send_port'],
+                                        ports['gpuid'],
                                         x,
                                         self.dandere2x_session.num_waifu2x_threads))
             list_of_threads.append(t1)

@@ -91,7 +91,7 @@ def user_generate_dandere2x_session() -> Dandere2xSession:
 
     log.info("Input your quality ratio. Ranges are [0-100]. Recommended is 80+")
     quality = int(input())
-    while quality not in range(0, 101):  # [0-100]
+    while quality not in range(0, 10000):  # [0-100]
         log.error("Invalid quality factor. Try again")
         quality = int(input())
 
@@ -113,7 +113,7 @@ def user_generate_dandere2x_session() -> Dandere2xSession:
 
 if __name__ == "__main__":
 
-    dandere2x_session = get_dandere2x_session()
+    dandere2x_session = user_generate_dandere2x_session()
     start = time.time()
     d2x = Dandere2x(dandere2x_session)
     d2x.process()
