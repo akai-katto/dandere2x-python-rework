@@ -6,7 +6,8 @@ import time
 from threading import Thread
 from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.d2xframe import D2xFrame
-from dandere2xlib.d2xmanagement import D2xManagement, D2xResidualCoordinate
+from dandere2xlib.d2xmanagement import D2xManagement
+from dandere2xlib.models.d2x_residual_coordinate import D2xResidualCoordinate
 
 
 class ResidualProcessing(Thread):

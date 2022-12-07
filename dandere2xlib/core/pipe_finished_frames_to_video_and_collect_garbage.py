@@ -9,10 +9,9 @@ from threading import Thread
 
 from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.d2xsession import Dandere2xSession
-from dandere2xlib.d2xmanagement import D2xManagement, D2xResidualCoordinate
+from dandere2xlib.d2xmanagement import D2xManagement
 from dandere2xlib.ffmpeg.frames_to_video_pipe import FramesToVideoPipe
 from dandere2xlib.utilities.dandere2x_utils import get_wait_delay
-from dandere2xlib.waifu2x.w2x_server import W2xServer
 
 
 class PipeFinishedFramesToVideoAndCollectGarbage(Thread):
