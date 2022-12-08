@@ -52,6 +52,23 @@ class W2xServer(threading.Thread):
         s.send(b"exit".ljust(W2xServer.METADATA_MSG_SIZE - 1))
         s.recv(1)
 
+    def get_prepadding(self):
+        scale_factor = min(self.dandere2x_session.scale_factor, 2)
+
+        if self._model_name == "models-cunet" and scale_factor == 2:
+            return 18
+        if self._model_name == "models-cunet" and scale_factor == 1:
+            return 28
+        else:
+            return 7
+
+    def get_scale_representation(self):
+        scale_factor = min(self.dandere2x_session.scale_factor, 2)
+        if scale_factor == 2:
+            return "_scale2.0x"
+        if scale_factor == 1:
+            return ""
+
     def upscale_d2x_frame(self, frame: D2xFrame) -> D2xFrame:
         host = 'localhost'
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -61,11 +78,11 @@ class W2xServer(threading.Thread):
                     f"\"noise\": {self.dandere2x_session.noise_factor} ," \
                     f" \"scale\": {self.dandere2x_session.scale_factor} ," \
                     f" \"tilesize\": {self._tile_size}," \
-                    f" \"prepadding\": {self._pre_padding}," \
+                    f" \"prepadding\": {self.get_prepadding()}," \
                     f" \"gpuid\": {self._gpu_id}," \
                     " \"tta\": 0," \
-                    f" \"param_path\": \"models/{self._model_name}/noise{self._noise_factor}_scale2.0x_model.param\"," \
-                    f" \"model_path\": \"models/{self._model_name}/noise{self._noise_factor}_scale2.0x_model.bin\"" \
+                    f" \"param_path\": \"models/{self._model_name}/noise{self._noise_factor}{self.get_scale_representation()}_model.param\"," \
+                    f" \"model_path\": \"models/{self._model_name}/noise{self._noise_factor}{self.get_scale_representation()}_model.bin\"" \
                     "}".ljust(W2xServer.METADATA_MSG_SIZE - 1)
 
         s.send(bytes(raw_bytes, "utf-8"))

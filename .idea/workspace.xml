@@ -45,11 +45,11 @@
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\dandere2xlib\ffmpeg" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\temp" />
+      <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\externals\waifu2x-ncnn-vulkan-server" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\dandere2xlib\dandere2x_session" />
       <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\dandere2xlib" />
-      <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework\temp" />
-      <recent name="C:\Users\windw0z\Documents\GitHub\dandere2x-python-rework" />
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
@@ -204,8 +204,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/test_cases.py</url>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/dandere2x/merge_upscaled_images.py</url>
+          <line>47</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/dandere2x/merge_upscaled_images.py</url>
+          <line>49</line>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

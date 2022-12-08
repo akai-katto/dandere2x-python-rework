@@ -4,11 +4,10 @@ from pathlib import Path
 
 import yaml
 
-from logging import getLogger
-from dandere2xlib.core import Dandere2x
+from dandere2x import Dandere2x
 from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.ffmpeg.video_settings import VideoSettings
-from dandere2xlib.utilities.dandere2x_utils import set_dandere2x_logger, log_dandere2x_logo, get_operating_system
+from dandere2xlib.utilities.dandere2x_utils import set_dandere2x_logger, log_dandere2x_logo
 
 set_dandere2x_logger(logger_name="root")
 logging.propagate = False
@@ -27,7 +26,7 @@ def get_dandere2x_session() -> Dandere2xSession:
 
     return Dandere2xSession(input_video_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\Test.mkv"),
                             output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\pp_test.mkv"),
-                            scale_factor=2,
+                            scale_factor=4,
                             noise_factor=3,
                             block_size=30,
                             quality=800,
@@ -74,9 +73,9 @@ def user_generate_dandere2x_session() -> Dandere2xSession:
     output_path = Path(input())
     log.info(f"Your output path is {str(output_path)}")
 
-    log.info("Input your scale factor. Valid inputs are 2, 4, 8")
+    log.info("Input your scale factor. Valid inputs are 1, 2, 4, 8")
     scale_factor = int(input())
-    while scale_factor not in [2, 4, 8]:
+    while scale_factor not in [1, 2, 4, 8]:
         log.error("Invalid scale factor. Try again")
         scale_factor = int(input())
 

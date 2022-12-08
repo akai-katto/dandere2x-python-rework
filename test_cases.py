@@ -15,7 +15,7 @@ def test_waifu2x():
     w2x_server = W2xServer(dandere2x_session=dandere2x_session, receive_port=3509, send_port=3510, gpu_id=0)
     w2x_server.start()
     #w2x_server.kill_server()
-    d2x_image = D2xFrame.from_file("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\residuals\\frame1.png")
+    d2x_image = D2xFrame.from_file("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\frame1.png")
 
     total_upscaled_images = 0
     start = time.time()
@@ -28,14 +28,15 @@ def test_waifu2x():
 
 def test_migration_tracks():
 
-    session = get_dandere2x_session()
-
-    migrate_tracks_contextless(ffmpeg_dir=Path(load_executable_paths_yaml()["ffmpeg"]),
-                               no_audio_file=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\nosound.mp4"),
-                               input_file=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\shortvideo.mp4"),
-                               output_file=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\migrated.mp4"),
-                               output_options=session.output_options,
-                               console_output_dir=None)
+    test_waifu2x()
+    # session = get_dandere2x_session()
+    #
+    # migrate_tracks_contextless(ffmpeg_dir=Path(load_executable_paths_yaml()["ffmpeg"]),
+    #                            no_audio_file=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\nosound.mp4"),
+    #                            input_file=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\shortvideo.mp4"),
+    #                            output_file=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\migrated.mp4"),
+    #                            output_options=session.output_options,
+    #                            console_output_dir=None)
 
 if __name__ == "__main__":
    # test_waifu2x()
