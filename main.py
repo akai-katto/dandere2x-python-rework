@@ -90,14 +90,14 @@ def user_generate_dandere2x_session() -> Dandere2xSession:
 
     log.info("Input your quality ratio. Ranges are [0-100]. Recommended is 80+")
     quality = int(input())
-    while quality not in range(0, 10000):  # [0-100]
+    while quality not in range(0, 10000):  # [0-100001]
         log.error("Invalid quality factor. Try again")
         quality = int(input())
 
     log.info("Input the number of waifu2x-ncnn-vulkan instances to use. Recommended 2. Maximum 4.")
     num_waifu2x_threads = int(input())
-    while num_waifu2x_threads not in range(0, 5):  # [0-100]
-        log.error("Invalid quality factor. Try again")
+    while num_waifu2x_threads not in range(0, 5):  # [0-4]
+        log.error("Invalid instances number. Try again")
         num_waifu2x_threads = int(input())
 
     return Dandere2xSession(input_video_path=video_path,
