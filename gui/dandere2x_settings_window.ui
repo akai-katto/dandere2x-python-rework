@@ -315,7 +315,7 @@
      </property>
     </item>
    </widget>
-   <widget class="QComboBox" name="combo_box_quality_waifu2x_settings_denoise_level">
+   <widget class="QComboBox" name="combo_box_waifu2x_settings_denoise_level">
     <property name="geometry">
      <rect>
       <x>170</x>

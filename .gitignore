@@ -9,6 +9,7 @@ __pycache__/
 # for me
 externals/*
 temp/*
+workspace/*
 
 # C extensions
 *.so

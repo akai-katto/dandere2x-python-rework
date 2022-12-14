@@ -50,6 +50,8 @@ class VideoSettings:
         for item in self.__dict__:
             log.debug("%s : %s" % (item, self.__dict__[item]))
 
+        self.seconds = self.frame_count / self.frame_rate
+
     def log_all_variables(self):
         log = logging.getLogger()
 
