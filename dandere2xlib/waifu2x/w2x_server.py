@@ -32,7 +32,6 @@ class W2xServer(threading.Thread):
         self._model_name = self.dandere2x_session.output_options["waifu2x_ncnn_vulkan"]["model_name"]
         self._noise_factor = self.dandere2x_session.noise_factor
         self._tile_size = self.dandere2x_session.output_options["waifu2x_ncnn_vulkan"]["tile_size"]
-        self._pre_padding = self.dandere2x_session.output_options["waifu2x_ncnn_vulkan"]["pre_padding"]
 
     def run(self):
         print(str(self._executable_location))

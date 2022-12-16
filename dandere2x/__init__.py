@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 from dandere2x.block_matching import BlockMatching
@@ -63,3 +64,5 @@ class Dandere2x:
                                    output_file=self.dandere2x_session.output_video_path,
                                    output_options=self.dandere2x_session.output_options,
                                    console_output_dir=None)
+
+        os.remove(self.dandere2x_session.no_sound_video_path)

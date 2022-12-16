@@ -40,7 +40,6 @@ class Dandere2xSettingsWindowImplementation(QMainWindow):
         settings['waifu2x_settings'] = {}
 
         settings['dandere2x_settings']['quality_coefficient'] = self.ui.combo_box_dandere2x_settings_quality_coeffecient.currentText()
-        print(self.ui.combo_box_dandere2x_settings_quality_coeffecient.currentText())
         settings['dandere2x_settings']['block_size'] = self.ui.combo_box_dandere2x_settings_block_size.currentText()
         settings['dandere2x_settings']['scale_factor'] = self.ui.combo_box_dandere2x_settings_scale_factor.currentText()
 

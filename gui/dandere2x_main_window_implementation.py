@@ -23,6 +23,8 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         with open("config_files/output_options.yaml") as f:
             output_options = yaml.safe_load(f)
 
+        output_options["waifu2x_ncnn_vulkan"]["model"] = self.settings_ui.ui.combo_box_waifu2x_settings_model.currentText()
+        output_options["waifu2x_ncnn_vulkan"]["tile_size"] = int(self.settings_ui.ui.combo_box_waifu2x_settings_tile_size.currentText())
         return Dandere2xSession(input_video_path=Path(self.input_file),
                                 output_path=Path(self.output_file),
                                 scale_factor=int(self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText()),
@@ -43,8 +45,8 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
         # Class Specific
         self.this_folder = os.getcwd()
-        self.input_file = ""
-        self.output_file = ""
+        self.input_file: Path = Path("")
+        self.output_file: Path = Path("")
         self.video_settings: VideoSettings = None
 
         # Initial Setup
@@ -99,8 +101,10 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
     # Refreshes
     def refresh_output_texts(self):
-        scale_factor = int(self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText())
+        if self.input_file == Path(""):
+            return
 
+        scale_factor = int(self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText())
         resolution = f"{self.video_settings.width * scale_factor}x{self.video_settings.height * scale_factor}"
         self.ui.label_output_name.setText(self._metadata_text_generator("Output File:", self.output_file.name, 36))
         self.ui.label_output_resolution.setText(self._metadata_text_generator("Output Res:", resolution, 36))

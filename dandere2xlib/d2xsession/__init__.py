@@ -19,7 +19,7 @@ class Dandere2xSession:
 
         # Video Related
         self.input_video_path: Path = input_video_path
-        self.no_sound_video_path: Path = input_video_path.parent / ("nosound" + input_video_path.suffix)
+        self.no_sound_video_path: Path = output_path.parent / ("nosound" + input_video_path.suffix)
         self.output_video_path: Path = output_path
         self.block_size: int = block_size
         self.quality: float = quality
