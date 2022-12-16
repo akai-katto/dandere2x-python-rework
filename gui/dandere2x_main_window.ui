@@ -160,7 +160,7 @@
     </property>
     <property name="font">
      <font>
-      <family>Courier New</family>
+      <family>Courier</family>
      </font>
     </property>
     <property name="text">
@@ -178,7 +178,7 @@
     </property>
     <property name="font">
      <font>
-      <family>Courier New</family>
+      <family>Courier</family>
      </font>
     </property>
     <property name="text">
@@ -196,7 +196,7 @@
     </property>
     <property name="font">
      <font>
-      <family>Courier New</family>
+      <family>Courier</family>
      </font>
     </property>
     <property name="text">
@@ -219,33 +219,33 @@
    <widget class="QLabel" name="label_output_resolution">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>240</x>
       <y>260</y>
-      <width>211</width>
+      <width>261</width>
       <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Courier New</family>
+      <family>Courier</family>
      </font>
     </property>
     <property name="text">
-     <string>Duration:           00:00:00</string>
+     <string>Duration:                   00:00:00</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_output_name">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>240</x>
       <y>240</y>
-      <width>211</width>
+      <width>261</width>
       <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Courier New</family>
+      <family>Courier</family>
      </font>
     </property>
     <property name="text">

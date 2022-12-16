@@ -2,11 +2,14 @@ import datetime
 import math
 import os
 import sys
+import time
 from pathlib import Path
 
+import yaml
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QFileDialog
 
+from dandere2x import Dandere2x
 from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.ffmpeg.video_settings import VideoSettings
 from gui.dandere2x_main_window import Ui_Dandere2xMainWindow
@@ -15,15 +18,18 @@ from gui.dandere2x_settings_window_implementation import Dandere2xSettingsWindow
 
 class Dandere2xMainWindowImplementation(QMainWindow):
 
+    def get_dandere2x_session_from_gui(self):
 
-    def construct_dandere2x_session_from_gui(self):
+        with open("config_files/output_options.yaml") as f:
+            output_options = yaml.safe_load(f)
+
         return Dandere2xSession(input_video_path=Path(self.input_file),
                                 output_path=Path(self.output_file),
-                                scale_factor=self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText(),
-                                noise_factor=self.settings_ui.ui.combo_box_waifu2x_settings_denoise_level.currentText(),
-                                block_size=self.settings_ui.ui.combo_box_dandere2x_settings_block_size.currentText(),
-                                quality=self.settings_ui.ui.combo_box_dandere2x_settings_quality_coeffecient,
-                                num_waifu2x_threads=num_waifu2x_threads,
+                                scale_factor=int(self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText()),
+                                noise_factor=int(self.settings_ui.ui.combo_box_waifu2x_settings_denoise_level.currentText()),
+                                block_size=int(self.settings_ui.ui.combo_box_dandere2x_settings_block_size.currentText()),
+                                quality=int(self.settings_ui.ui.combo_box_dandere2x_settings_quality_coeffecient.currentText()),
+                                num_waifu2x_threads=int(self.settings_ui.ui.combo_box_waifu2x_settings_waifu2x_processes.currentText()),
                                 output_options=output_options)
 
     def __init__(self):
@@ -51,6 +57,8 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.button_select_video.clicked.connect(self.button_press_select_file)
         self.ui.button_change_video.clicked.connect(self.button_press_select_file)
         self.ui.button_settings.clicked.connect(self.settings_ui.show)
+        self.ui.button_change_output.clicked.connect(self.press_change_output_button)
+        self.ui.button_upscale.clicked.connect(self.press_upscale_button)
 
     def pre_select_video_state(self):
 
@@ -94,13 +102,13 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         scale_factor = int(self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText())
 
         resolution = f"{self.video_settings.width * scale_factor}x{self.video_settings.height * scale_factor}"
-        self.ui.label_output_name.setText(self._metadata_text_generator("Output File:", self.output_file, 29))
-        self.ui.label_output_resolution.setText(self._metadata_text_generator("Output Res:", resolution, 29))
+        self.ui.label_output_name.setText(self._metadata_text_generator("Output File:", self.output_file.name, 36))
+        self.ui.label_output_resolution.setText(self._metadata_text_generator("Output Res:", resolution, 36))
 
     # Button Presses
     def button_press_select_file(self):
 
-        self.input_file = self._load_file()
+        self.input_file = Path(self._load_file())
 
         if self.input_file == '':
             return
@@ -117,16 +125,39 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.label_selected_video_frame_count.setText(self._metadata_text_generator("Frame Count:",
                                                                                        str(self.video_settings.frame_count),
                                                                                        21))
-        self.output_file = "temp_output.mkv"
+        self.output_file = Path(self.this_folder) / "temp_output.mkv"
         self.post_select_video_state()
 
+    def press_change_output_button(self):
+        save_file_name = self._change_file_name()
+        if save_file_name == '':  # don't change if nothing is selected
+            return
+
+        self.output_file = save_file_name
+
+        name_only = Path(self.output_file).name
+        self.ui.label_output_name.setText(self._metadata_text_generator("Output File:", name_only, 36))
+
+    def press_upscale_button(self):
+        dandere2x_session = self.get_dandere2x_session_from_gui()
+        start = time.time()
+        d2x = Dandere2x(dandere2x_session)
+        d2x.process()
+        print(f"end: {time.time() - start}")
 
     # Utilities
     def _load_file(self) -> str:
-        self.ui.w = QWidget()
-        self.ui.w.resize(320, 240)
-
         filename = QFileDialog.getOpenFileName(self, 'Open File', self.this_folder)
+        return filename[0]
+
+    def _change_file_name(self):
+        filter = "Images (*.mkv *.mp4)"
+
+        default_name = self.output_file
+        if self.output_file == '':
+            default_name = self.this_folder
+
+        filename = QFileDialog.getSaveFileName(self, 'Save File', default_name, filter)
         return filename[0]
 
     @staticmethod
