@@ -6,4 +6,4 @@ waifu2x_settings:
   denoise_level: '3'
   model: models-cunet
   tile_size: '200'
-  waifu2x_processes: '2'
+  waifu2x_processes: '1'

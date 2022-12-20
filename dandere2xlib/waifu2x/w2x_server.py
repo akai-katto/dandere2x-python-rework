@@ -107,11 +107,14 @@ class W2xServer(threading.Thread):
         s.sendall(bytes(height, encoding='utf8'))
         s.recv(1)
 
+        count = 0
         chunks = self.divide_chunks(frame.get_byte_array(), 65536)
         for chunk in chunks:
-            s.send(chunk)
+            count += 1
             s.recv(1)
+            s.send(chunk)
 
+        print(f"iteration count: {count}")
         s.send(b"done")
         s.recv(1)
 
@@ -134,15 +137,14 @@ class W2xServer(threading.Thread):
             # print(f"counter: {counter}")
             try:
                 recv = s.recv(65536)
+                s.send(b"a")
             except:
                 print("broke out using except")
                 break
-            try:
-                s.send(b"a")
-            except:
-                pass
             if recv != b"done":
                 all_bytes.extend(recv)
+            else:
+                print('recv is done')
         print(f"counter is {counter}")
         s.close()
 
