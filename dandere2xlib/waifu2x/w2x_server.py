@@ -18,6 +18,11 @@ class W2xServer(threading.Thread):
     METADATA_MSG_SIZE: Final = 1000
     THIRTY_TWO_MB = 32000000
 
+    @staticmethod
+    def divide_chunks(input_list, n):
+        for i in range(0, len(input_list), n):
+            yield input_list[i:i + n]
+
     def __init__(self, dandere2x_session: Dandere2xSession, receive_port, send_port, gpu_id):
         threading.Thread.__init__(self, name="W2xServer")
 
@@ -70,8 +75,15 @@ class W2xServer(threading.Thread):
 
     def upscale_d2x_frame(self, frame: D2xFrame) -> D2xFrame:
         host = 'localhost'
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((host, self._receive_port))
+
+        connected = False
+        while not connected:
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.connect((host, self._receive_port))
+                connected = True
+            except:
+                pass
 
         raw_bytes = "{" \
                     f"\"noise\": {self.dandere2x_session.noise_factor} ," \
@@ -95,21 +107,46 @@ class W2xServer(threading.Thread):
         s.sendall(bytes(height, encoding='utf8'))
         s.recv(1)
 
-        s.send(frame.get_byte_array().ljust(W2xServer.THIRTY_TWO_MB))
+        chunks = self.divide_chunks(frame.get_byte_array(), 65536)
+        for chunk in chunks:
+            s.send(chunk)
+            s.recv(1)
+
+        s.send(b"done")
+        s.recv(1)
+
         s.close()
 
-        host = 'localhost'
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((host, self._send_port))
+        connected = False
+        while not connected:
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.connect((host, self._send_port))
+                connected = True
+            except:
+                pass
 
-        s.send(b" ")
-        length = int(s.recv(20))
-        s.send(b" ")
+        counter = 0
+        all_bytes = bytearray()
+        recv = b""
+        while recv != b"done":
+            counter += 1
+            # print(f"counter: {counter}")
+            try:
+                recv = s.recv(65536)
+            except:
+                print("broke out using except")
+                break
+            try:
+                s.send(b"a")
+            except:
+                pass
+            if recv != b"done":
+                all_bytes.extend(recv)
+        print(f"counter is {counter}")
+        s.close()
 
-        all_bytes = s.recv(length)
         d2x_frame = D2xFrame.from_bytes(all_bytes)
-
-        s.close()
         return d2x_frame
 
 
