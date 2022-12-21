@@ -40,11 +40,11 @@ class W2xServer(threading.Thread):
 
     def run(self):
         print(str(self._executable_location))
-        active_waifu2x_subprocess = subprocess.Popen(args=[str(self._executable_location.absolute()),
-                                                           str(self._receive_port),
-                                                           str(self._send_port)],
-                                                     cwd=str(self._waifu2x_location.absolute()))
-        active_waifu2x_subprocess.wait()
+        # active_waifu2x_subprocess = subprocess.Popen(args=[str(self._executable_location.absolute()),
+        #                                                    str(self._receive_port),
+        #                                                    str(self._send_port)],
+        #                                              cwd=str(self._waifu2x_location.absolute()))
+        # active_waifu2x_subprocess.wait()
 
     def join(self, timeout=None):
         threading.Thread.join(self, timeout)
@@ -111,8 +111,8 @@ class W2xServer(threading.Thread):
         chunks = self.divide_chunks(frame.get_byte_array(), 65536)
         for chunk in chunks:
             count += 1
-            s.recv(1)
             s.send(chunk)
+            s.recv(1)
 
         print(f"iteration count: {count}")
         s.send(b"done")
