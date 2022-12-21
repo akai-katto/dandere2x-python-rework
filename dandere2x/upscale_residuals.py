@@ -26,11 +26,12 @@ class UpscaleResiduals(Thread):
         self.__logger = logging.getLogger(dandere2x_session.input_video_path.name)
 
     def __waifu2x_thread(self, receive_port, send_port, gpuid,  start, iter_val):
-        print("starting thread 1")
+        self.__logger.info(f"Starting waifu2x thread on {receive_port} and {send_port}.")
 
         w2x_server = W2xServer(self.dandere2x_session, receive_port, send_port, gpuid)
         w2x_server.start()
 
+        failed_upscale = 0
         for pos in range(start, self._FRAME_COUNT - 1, iter_val):
 
             while self.__manager.residual_images[pos] is None:
@@ -49,9 +50,11 @@ class UpscaleResiduals(Thread):
                 except:
                     self.__logger.warning(f"Warning, frame {pos} failed. Need to try again (this is normal, up to 3 "
                                           "times, then it is likely bugged.).")
-                    pass
+                    failed_upscale += 1
 
         w2x_server.kill_server()
+        self.__logger.info(f"Total failed upscaled images: {failed_upscale} (this is fine as long as the number is "
+                           f"small)")
 
     def run(self) -> None:
 
