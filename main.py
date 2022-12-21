@@ -30,7 +30,7 @@ def get_dandere2x_session() -> Dandere2xSession:
                             noise_factor=3,
                             block_size=30,
                             quality=100,
-                            num_waifu2x_threads=1,
+                            num_waifu2x_threads=3,
                             output_options=output_options)
 
 
