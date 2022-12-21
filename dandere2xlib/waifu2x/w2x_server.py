@@ -136,7 +136,7 @@ class W2xServer(threading.Thread):
             counter += 1
             # print(f"counter: {counter}")
             try:
-                recv = s.recv(65536)
+                recv = s.recv(32768)
             except:
                 print("broke out using except")
                 break
