@@ -62,7 +62,7 @@ class UpscaleResiduals(Thread):
 
         for x in range(self.dandere2x_session.num_waifu2x_threads):
 
-            ports = self.dandere2x_session.output_options['waifu2x_ncnn_vulkan']['client_ports'][f'client{x}']
+            ports = self.dandere2x_session.output_options['waifu2x_ncnn_vulkan']['client_ports'][f'session{self.dandere2x_session.session_id}'][f'client{x}']
 
             t1 = threading.Thread(target=self.__waifu2x_thread,
                                   args=(ports['receive_port'],

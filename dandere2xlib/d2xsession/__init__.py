@@ -1,3 +1,5 @@
+import uuid
+
 import yaml
 from pathlib import Path
 
@@ -8,6 +10,7 @@ from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path, get_ffprobe_
 class Dandere2xSession:
 
     def __init__(self,
+                 session_id: int,
                  input_video_path: Path,
                  output_path: Path,
                  scale_factor: int,
@@ -17,9 +20,12 @@ class Dandere2xSession:
                  num_waifu2x_threads: int,
                  output_options: dict):
 
+        # Session Related
+        self.session_id = session_id
+
         # Video Related
         self.input_video_path: Path = input_video_path
-        self.no_sound_video_path: Path = input_video_path.parent / ("nosound" + input_video_path.suffix)
+        self.no_sound_video_path: Path = input_video_path.parent / ("nosound" + str(uuid.uuid4()) + input_video_path.suffix)
         self.output_video_path: Path = output_path
         self.block_size: int = block_size
         self.quality: float = quality

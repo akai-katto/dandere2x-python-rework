@@ -14,13 +14,14 @@ def load_executable_paths_yaml() -> dict:
     import logging
     from pathlib import Path
     import sys
+    import main
 
     logger = logging.getLogger()
 
     # For some reason, detecting if python is frozen or not isn't working on pyinstaller (on my machine, at least).
     # This will cycle through the two options, if we're running as a python script, or if we're running as an
     # executable, and return whatever one works. I wish the frozen thing worked on my system
-    potential_main_paths = [os.path.dirname(os.path.abspath(sys.executable)), Path(path.abspath(sys.modules['__main__'].__file__)).parent]
+    potential_main_paths = [os.path.dirname(os.path.abspath(sys.executable)), Path(path.abspath(main.__file__)).parent]
 
     # This is acquired technical debt / my pyinstaller refuses to work by simply checking if it's frozen.
     for potential in potential_main_paths:
