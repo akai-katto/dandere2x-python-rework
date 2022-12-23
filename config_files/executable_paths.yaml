@@ -16,7 +16,8 @@ ffprobe: "externals/ffprobe"
 ffmpeg: "externals/ffmpeg"
 
 # for debugging
-w2x_vulkan_server: "C:\\Users\\windw0z\\Documents\\GitHub\\waifu2x-ncnn-vulkan-server\\src\\cmake-build-debug"
+w2x_vulkan_server: "/home/lin0x/Documents/Github/waifu2x-ncnn-vulkan-server/src/cmake-build-debug/"
+#w2x_vulkan_server: "C:\\Users\\windw0z\\Documents\\GitHub\\waifu2x-ncnn-vulkan-server\\src\\cmake-build-debug"
 #w2x_vulkan_server: "externals/waifu2x-ncnn-vulkan-server"
 dandere2x_cpp: "externals/dandere2x_cpp"
 waifu2x_vulkan: "externals/waifu2x-ncnn-vulkan/waifu2x-ncnn-vulkan"

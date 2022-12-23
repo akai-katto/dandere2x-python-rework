@@ -32,7 +32,7 @@ class W2xServer(threading.Thread):
         self._receive_port = receive_port
         self._send_port = send_port
         self._waifu2x_location = Path(load_executable_paths_yaml()["w2x_vulkan_server"])
-        self._executable_location = self._waifu2x_location / "waifu2x-ncnn-vulkan.exe"
+        self._executable_location = self._waifu2x_location / "waifu2x-ncnn-vulkan"
 
         self._model_name = self.dandere2x_session.output_options["waifu2x_ncnn_vulkan"]["model_name"]
         self._noise_factor = self.dandere2x_session.noise_factor
@@ -40,11 +40,11 @@ class W2xServer(threading.Thread):
 
     def run(self):
         print(str(self._executable_location))
-        active_waifu2x_subprocess = subprocess.Popen(args=[str(self._executable_location.absolute()),
-                                                           str(self._receive_port),
-                                                           str(self._send_port)],
-                                                     cwd=str(self._waifu2x_location.absolute()))
-        active_waifu2x_subprocess.wait()
+        # active_waifu2x_subprocess = subprocess.Popen(args=[str(self._executable_location.absolute()),
+        #                                                    str(self._receive_port),
+        #                                                    str(self._send_port)],
+        #                                              cwd=str(self._waifu2x_location.absolute()))
+        # active_waifu2x_subprocess.wait()
 
     def join(self, timeout=None):
         threading.Thread.join(self, timeout)
@@ -111,9 +111,9 @@ class W2xServer(threading.Thread):
         for chunk in chunks:
             s.recv(1)
             s.send(chunk)
-
-        s.send(b"done")
+        print("sending done")
         s.recv(1)
+        s.send(b"done")
 
         s.close()
 

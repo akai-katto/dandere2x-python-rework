@@ -24,7 +24,7 @@ def get_dandere2x_session() -> Dandere2xSession:
     with open("./config_files/executable_paths.yaml") as f:
         executable_paths = yaml.safe_load(f)
 
-    return Dandere2xSession(input_video_path=Path("workspace\\yn_moving.mkv"),
+    return Dandere2xSession(input_video_path=Path("workspace/yn_moving.mkv"),
                             output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\pp_test.mkv"),
                             scale_factor=2,
                             noise_factor=3,
