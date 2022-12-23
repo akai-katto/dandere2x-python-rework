@@ -27,13 +27,14 @@ def get_single_thread_test() -> Dandere2xSession:
     with open("./config_files/executable_paths.yaml") as f:
         executable_paths = yaml.safe_load(f)
 
-    return Dandere2xSession(input_video_path=Path("workspace/yn_moving.mkv"),
+    return Dandere2xSession(session_id=0,
+                            input_video_path=Path("workspace/yn_moving.mkv"),
                             output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\pp_test.mkv"),
                             scale_factor=2,
                             noise_factor=3,
                             block_size=30,
                             quality=100,
-                            num_waifu2x_threads=1,
+                            num_waifu2x_threads=4,
                             output_options=output_options)
 
 
@@ -49,8 +50,8 @@ def get_dandere2x_session0() -> Dandere2xSession:
         executable_paths = yaml.safe_load(f)
 
     return Dandere2xSession(session_id=0,
-                            input_video_path=Path("workspace\\split\\split_video0.mkv"),
-                            output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\pp_test0.mkv"),
+                            input_video_path=Path("workspace/split/split_video0.mkv"),
+                            output_path=Path("workspace/pp_test0.mkv"),
                             scale_factor=2,
                             noise_factor=3,
                             block_size=30,
@@ -70,8 +71,8 @@ def get_dandere2x_session1() -> Dandere2xSession:
         executable_paths = yaml.safe_load(f)
 
     return Dandere2xSession(session_id=1,
-                            input_video_path=Path("workspace\\split\\split_video1.mkv"),
-                            output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\pp_test1.mkv"),
+                            input_video_path=Path("workspace/split/split_video1.mkv"),
+                            output_path=Path("workspace/pp_test1.mkv"),
                             scale_factor=2,
                             noise_factor=3,
                             block_size=30,
@@ -91,8 +92,8 @@ def get_dandere2x_session2() -> Dandere2xSession:
         executable_paths = yaml.safe_load(f)
 
     return Dandere2xSession(session_id=2,
-                            input_video_path=Path("workspace\\split\\split_video2.mkv"),
-                            output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\pp_test2.mkv"),
+                            input_video_path=Path("workspace/split/split_video2.mkv"),
+                            output_path=Path("workspace/pp_test2.mkv"),
                             scale_factor=2,
                             noise_factor=3,
                             block_size=30,
@@ -181,6 +182,7 @@ def user_generate_dandere2x_session() -> Dandere2xSession:
 if __name__ == "__main__":
     start = time.time()
 
+    d2x0 = Thread(target=dandere2x_function, args=(get_single_thread_test(),))
     # d2x0 = Thread(target=dandere2x_function, args=(get_single_thread_test(),))
     # d2x0.start()
 
@@ -197,8 +199,5 @@ if __name__ == "__main__":
     # d2x0.join()
     # d2x1.join()
     # d2x2.join()
-    d2x0.join()
-    d2x1.join()
-    d2x2.join()
 
     print(f"end: {time.time() - start}")

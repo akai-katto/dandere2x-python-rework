@@ -6,6 +6,7 @@ import time
 from pathlib import Path
 from typing import Final
 
+import dandere2xlib.utilities.dandere2x_utils
 from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
@@ -119,7 +120,7 @@ class W2xServer(threading.Thread):
         s.sendall(bytes(height, encoding='utf8'))
         s.recv(1)
 
-        chunks = self.divide_chunks(frame.get_byte_array(), 8192)
+        chunks = self.divide_chunks(frame.get_byte_array(), 4096)
         for chunk in chunks:
             s.recv(1)
             s.send(chunk)
@@ -142,7 +143,7 @@ class W2xServer(threading.Thread):
         recv = b""
         while recv != b"done":
             counter += 1
-            recv = s.recv(8192)
+            recv = s.recv(4096)
             s.send(b"a")
             if recv != b"done":
                 all_bytes.extend(recv)
