@@ -49,19 +49,73 @@ waifu2x_ncnn_vulkan:
   model_name: "models-cunet"
   tile_size: 200  # note: if you get black images try lowering this tile argument to some lower value.
   client_ports:
-    client0:
-      gpuid: 0
-      receive_port: 43560
-      send_port: 43561
-    client1:
-      gpuid: 0
-      receive_port: 43562
-      send_port: 43563
-    client2:
-      gpuid: 0
-      receive_port: 43564
-      send_port: 43565
-    client3:
-      gpuid: 0
-      receive_port: 43566
-      send_port: 43567
+
+    session0:
+      client0:
+        gpuid: 0
+        receive_port: 43560
+        send_port: 43561
+      client1:
+        gpuid: 0
+        receive_port: 43562
+        send_port: 43563
+      client2:
+        gpuid: 0
+        receive_port: 43564
+        send_port: 43565
+      client3:
+        gpuid: 0
+        receive_port: 43566
+        send_port: 43567
+      client4:
+        gpuid: 0
+        receive_port: 33560
+        send_port: 33561
+      client5:
+        gpuid: 0
+        receive_port: 33562
+        send_port: 33563
+      client6:
+        gpuid: 0
+        receive_port: 33564
+        send_port: 33565
+      client7:
+        gpuid: 0
+        receive_port: 33566
+        send_port: 33567
+
+    session1:
+      client0:
+        gpuid: 0
+        receive_port: 43568
+        send_port: 43569
+      client1:
+        gpuid: 0
+        receive_port: 43510
+        send_port: 43511
+      client2:
+        gpuid: 0
+        receive_port: 43512
+        send_port: 43513
+      client3:
+        gpuid: 0
+        receive_port: 43514
+        send_port: 43515
+
+    session2:
+      client0:
+        gpuid: 0
+        receive_port: 43516
+        send_port: 43517
+      client1:
+        gpuid: 0
+        receive_port: 43518
+        send_port: 43519
+      client2:
+        gpuid: 0
+        receive_port: 43520
+        send_port: 43521
+      client3:
+        gpuid: 0
+        receive_port: 43522
+        send_port: 43523

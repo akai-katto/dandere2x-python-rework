@@ -1,6 +1,7 @@
 import logging
 import os
 from pathlib import Path
+from threading import Thread
 
 from dandere2x.block_matching import BlockMatching
 from dandere2x.frame_compression import FrameCompression
@@ -18,9 +19,10 @@ from dandere2xlib.utilities.dandere2x_utils import set_dandere2x_logger
 from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
 
 
-class Dandere2x:
+class Dandere2x(Thread):
 
     def __init__(self, dandere2x_session: Dandere2xSession):
+        super().__init__(name=f"session {dandere2x_session.session_id}")
         set_dandere2x_logger(dandere2x_session.input_video_path.name)
 
         manager = D2xManagement()
@@ -37,7 +39,7 @@ class Dandere2x:
         self._pipe_finished_frames_to_video_and_collect_garbage = PipeFinishedFramesToVideoAndCollectGarbage(manager,
                                                                                                              dandere2x_session)
 
-    def process(self):
+    def run(self):
         self.__logger.debug("Starting dandere2x threads")
 
         self._frame_extraction.start()

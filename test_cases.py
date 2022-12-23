@@ -5,12 +5,12 @@ from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.ffmpeg.ffmpeg_utils import migrate_tracks_contextless
 from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
 from dandere2xlib.waifu2x.w2x_server import W2xServer
-from main import get_dandere2x_session
+from main import get_dandere2x_session0
 
 
 def test_waifu2x():
 
-    dandere2x_session = get_dandere2x_session()
+    dandere2x_session = get_dandere2x_session0()
 
     w2x_server = W2xServer(dandere2x_session=dandere2x_session, receive_port=3509, send_port=3510, gpu_id=0)
     w2x_server.start()

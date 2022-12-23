@@ -37,14 +37,22 @@ class W2xServer(threading.Thread):
         self._model_name = self.dandere2x_session.output_options["waifu2x_ncnn_vulkan"]["model_name"]
         self._noise_factor = self.dandere2x_session.noise_factor
         self._tile_size = self.dandere2x_session.output_options["waifu2x_ncnn_vulkan"]["tile_size"]
+        self._alive = True
 
     def run(self):
         print(str(self._executable_location))
+
         active_waifu2x_subprocess = subprocess.Popen(args=[str(self._executable_location.absolute()),
                                                            str(self._receive_port),
                                                            str(self._send_port)],
                                                      cwd=str(self._waifu2x_location.absolute()))
         active_waifu2x_subprocess.wait()
+
+        poll = active_waifu2x_subprocess.poll()
+        if poll != 0:
+            print(f"Exit Code: {poll}")
+            print("WARNING WAIFU2x CRASHED UNEXPECTEDLY")
+            print(f"ports: {self._send_port} {self._receive_port}")
 
     def join(self, timeout=None):
         threading.Thread.join(self, timeout)
@@ -125,21 +133,17 @@ class W2xServer(threading.Thread):
             except:
                 pass
 
+        counter = 0
         all_bytes = bytearray()
         recv = b""
         while recv != b"done":
-            try:
-                recv = s.recv(8192)
-            except:
-                print("broke out using except")
-                break
-            try:
-                s.send(b"a")
-            except:
-                print("s.send() failed")
+            counter += 1
+            recv = s.recv(32768)
+            s.send(b"a")
             if recv != b"done":
                 all_bytes.extend(recv)
         s.close()
+        print(f"counter: {counter}")
 
         d2x_frame = D2xFrame.from_bytes(all_bytes)
         return d2x_frame

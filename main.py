@@ -1,10 +1,13 @@
 import logging
 import time
+from multiprocessing import Process
 from pathlib import Path
+from threading import Thread
 
 import yaml
 
 from dandere2x import Dandere2x
+from dandere2x.dandere2x_function import dandere2x_function
 from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.ffmpeg.video_settings import VideoSettings
 from dandere2xlib.utilities.dandere2x_utils import set_dandere2x_logger, log_dandere2x_logo
@@ -13,7 +16,7 @@ set_dandere2x_logger(logger_name="root")
 logging.propagate = False
 
 
-def get_dandere2x_session() -> Dandere2xSession:
+def get_single_thread_test() -> Dandere2xSession:
     """
     :return: A testing version of dandere2x session.
     """
@@ -31,6 +34,70 @@ def get_dandere2x_session() -> Dandere2xSession:
                             block_size=30,
                             quality=100,
                             num_waifu2x_threads=1,
+                            output_options=output_options)
+
+
+def get_dandere2x_session0() -> Dandere2xSession:
+    """
+    :return: A testing version of dandere2x session.
+    """
+
+    with open("./config_files/output_options.yaml") as f:
+        output_options = yaml.safe_load(f)
+
+    with open("./config_files/executable_paths.yaml") as f:
+        executable_paths = yaml.safe_load(f)
+
+    return Dandere2xSession(session_id=0,
+                            input_video_path=Path("workspace\\split\\split_video0.mkv"),
+                            output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\pp_test0.mkv"),
+                            scale_factor=2,
+                            noise_factor=3,
+                            block_size=30,
+                            quality=100,
+                            num_waifu2x_threads=2,
+                            output_options=output_options)
+
+def get_dandere2x_session1() -> Dandere2xSession:
+    """
+    :return: A testing version of dandere2x session.
+    """
+
+    with open("./config_files/output_options.yaml") as f:
+        output_options = yaml.safe_load(f)
+
+    with open("./config_files/executable_paths.yaml") as f:
+        executable_paths = yaml.safe_load(f)
+
+    return Dandere2xSession(session_id=1,
+                            input_video_path=Path("workspace\\split\\split_video1.mkv"),
+                            output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\pp_test1.mkv"),
+                            scale_factor=2,
+                            noise_factor=3,
+                            block_size=30,
+                            quality=100,
+                            num_waifu2x_threads=2,
+                            output_options=output_options)
+
+def get_dandere2x_session2() -> Dandere2xSession:
+    """
+    :return: A testing version of dandere2x session.
+    """
+
+    with open("./config_files/output_options.yaml") as f:
+        output_options = yaml.safe_load(f)
+
+    with open("./config_files/executable_paths.yaml") as f:
+        executable_paths = yaml.safe_load(f)
+
+    return Dandere2xSession(session_id=2,
+                            input_video_path=Path("workspace\\split\\split_video2.mkv"),
+                            output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\pp_test2.mkv"),
+                            scale_factor=2,
+                            noise_factor=3,
+                            block_size=30,
+                            quality=100,
+                            num_waifu2x_threads=2,
                             output_options=output_options)
 
 
@@ -100,7 +167,8 @@ def user_generate_dandere2x_session() -> Dandere2xSession:
         log.error("Invalid instances number. Try again")
         num_waifu2x_threads = int(input())
 
-    return Dandere2xSession(input_video_path=video_path,
+    return Dandere2xSession(session_id=0,
+                            input_video_path=video_path,
                             output_path=output_path,
                             scale_factor=scale_factor,
                             noise_factor=noise_factor,
@@ -111,9 +179,30 @@ def user_generate_dandere2x_session() -> Dandere2xSession:
 
 
 if __name__ == "__main__":
-
-    dandere2x_session = get_dandere2x_session()
     start = time.time()
-    d2x = Dandere2x(dandere2x_session)
-    d2x.process()
+
+    # d2x0 = Thread(target=dandere2x_function, args=(get_single_thread_test(),))
+    # d2x0.start()
+
+    d2x0 = Thread(target=dandere2x_function, args=(get_dandere2x_session0(),))
+    d2x0.start()
+
+    d2x1 = Thread(target=dandere2x_function, args=(get_dandere2x_session1(),))
+    d2x1.start()
+
+    d2x2 = Thread(target=dandere2x_function, args=(get_dandere2x_session2(),))
+    d2x2.start()
+    d2x1 = Dandere2x(get_dandere2x_session1())
+    d2x1.start()
+    d2x2 = Dandere2x(get_dandere2x_session2())
+    d2x2.start()
+    # #
+    #
+    # d2x0.join()
+    # d2x1.join()
+    # d2x2.join()
+    d2x0.join()
+    d2x1.join()
+    d2x2.join()
+
     print(f"end: {time.time() - start}")

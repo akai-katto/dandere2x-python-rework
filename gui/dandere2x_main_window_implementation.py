@@ -25,7 +25,8 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
         output_options["waifu2x_ncnn_vulkan"]["model"] = self.settings_ui.ui.combo_box_waifu2x_settings_model.currentText()
         output_options["waifu2x_ncnn_vulkan"]["tile_size"] = int(self.settings_ui.ui.combo_box_waifu2x_settings_tile_size.currentText())
-        return Dandere2xSession(input_video_path=Path(self.input_file),
+        return Dandere2xSession(session_id=0,
+                                input_video_path=Path(self.input_file),
                                 output_path=Path(self.output_file),
                                 scale_factor=int(self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText()),
                                 noise_factor=int(self.settings_ui.ui.combo_box_waifu2x_settings_denoise_level.currentText()),
@@ -146,7 +147,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         dandere2x_session = self.get_dandere2x_session_from_gui()
         start = time.time()
         d2x = Dandere2x(dandere2x_session)
-        d2x.process()
+        d2x.start()
         print(f"end: {time.time() - start}")
 
     # Utilities
