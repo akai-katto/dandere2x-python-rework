@@ -107,13 +107,12 @@ class W2xServer(threading.Thread):
         s.sendall(bytes(height, encoding='utf8'))
         s.recv(1)
 
-        chunks = self.divide_chunks(frame.get_byte_array(), 65536)
+        chunks = self.divide_chunks(frame.get_byte_array(), 8192)
         for chunk in chunks:
             s.recv(1)
             s.send(chunk)
-
-        s.send(b"done")
         s.recv(1)
+        s.send(b"done")
 
         s.close()
 
@@ -130,7 +129,7 @@ class W2xServer(threading.Thread):
         recv = b""
         while recv != b"done":
             try:
-                recv = s.recv(32768)
+                recv = s.recv(8192)
             except:
                 print("broke out using except")
                 break
