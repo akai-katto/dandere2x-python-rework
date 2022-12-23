@@ -192,10 +192,6 @@ if __name__ == "__main__":
 
     d2x2 = Thread(target=dandere2x_function, args=(get_dandere2x_session2(),))
     d2x2.start()
-    d2x1 = Dandere2x(get_dandere2x_session1())
-    d2x1.start()
-    d2x2 = Dandere2x(get_dandere2x_session2())
-    d2x2.start()
     # #
     #
     # d2x0.join()
