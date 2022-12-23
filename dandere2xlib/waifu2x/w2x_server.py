@@ -115,7 +115,7 @@ class W2xServer(threading.Thread):
         s.sendall(bytes(height, encoding='utf8'))
         s.recv(1)
 
-        chunks = self.divide_chunks(frame.get_byte_array(), 4096)
+        chunks = self.divide_chunks(frame.get_byte_array(), 8192)
         for chunk in chunks:
             s.recv(1)
             s.send(chunk)
@@ -138,12 +138,11 @@ class W2xServer(threading.Thread):
         recv = b""
         while recv != b"done":
             counter += 1
-            recv = s.recv(4096)
+            recv = s.recv(8192)
             s.send(b"a")
             if recv != b"done":
                 all_bytes.extend(recv)
         s.close()
-        print(f"counter: {counter}")
 
         d2x_frame = D2xFrame.from_bytes(all_bytes)
         return d2x_frame
