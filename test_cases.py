@@ -18,11 +18,10 @@ def test_waifu2x():
     d2x_image = D2xFrame.from_file("C:\\Users\\windw0z\\PycharmProjects\\asio_migration\\template.png")
 
     total_upscaled_images = 0
-    start = time.time()
-    d2x_upscaled1 = w2x_server.upscale_d2x_frame(d2x_image)
-    #d2x_upscaled1.save(Path("here.png"))
-    #d2x_upscaled2 = w2x_server.upscale_d2x_frame(D2xFrame.from_file("C:\\Users\\windw0z\\Documents\\GitHub\\dandere2x-python-rework\\temp\\residuals\\frame2.png"))
-    print(f"took {time.time() - start}")
+    for _ in range(1000):
+        start = time.time()
+        d2x_upscaled1 = w2x_server.upscale_d2x_frame(d2x_image)
+        print(f"took {time.time() - start}")
     w2x_server.kill_server()
 
 

@@ -42,19 +42,17 @@ class W2xServer(threading.Thread):
     def run(self):
         print(str(self._executable_location))
 
-        if self._alive:
-            active_waifu2x_subprocess = subprocess.Popen(args=[str(self._executable_location.absolute()),
-                                                               str(self._receive_port),
-                                                               str(self._send_port)],
-                                                         cwd=str(self._waifu2x_location.absolute()))
-            active_waifu2x_subprocess.wait()
+        active_waifu2x_subprocess = subprocess.Popen(args=[str(self._executable_location.absolute()),
+                                                           str(self._receive_port),
+                                                           str(self._send_port)],
+                                                     cwd=str(self._waifu2x_location.absolute()))
+        active_waifu2x_subprocess.wait()
 
-            poll = active_waifu2x_subprocess.poll()
-            if poll != 0:
-                print(f"Exit Code: {poll}")
-                print("WARNING WAIFU2x CRASHED UNEXPECTEDLY")
-                print(f"ports: {self._send_port} {self._receive_port}")
-                self.run()
+        poll = active_waifu2x_subprocess.poll()
+        if poll != 0:
+            print(f"Exit Code: {poll}")
+            print("WARNING WAIFU2x CRASHED UNEXPECTEDLY")
+            print(f"ports: {self._send_port} {self._receive_port}")
 
     def join(self, timeout=None):
         threading.Thread.join(self, timeout)
@@ -65,7 +63,6 @@ class W2xServer(threading.Thread):
         s.connect((host, self._receive_port))
         s.send(b"exit".ljust(W2xServer.METADATA_MSG_SIZE - 1))
         s.recv(1)
-        self._alive = False
 
     def get_prepadding(self):
         scale_factor = min(self.dandere2x_session.scale_factor, 2)
@@ -137,21 +134,18 @@ class W2xServer(threading.Thread):
             except:
                 pass
 
+        counter = 0
         all_bytes = bytearray()
         recv = b""
         while recv != b"done":
-            try:
-                recv = s.recv(32768)
-            except:
-                print("broke out using except")
-                break
-            try:
-                s.send(b"a")
-            except:
-                print("s.send() failed")
+            counter += 1
+            recv = s.recv(32768)
+            s.send(b"a")
+
             if recv != b"done":
                 all_bytes.extend(recv)
         s.close()
+        print(f"counter: {counter}")
 
         d2x_frame = D2xFrame.from_bytes(all_bytes)
         return d2x_frame
