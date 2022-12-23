@@ -32,7 +32,7 @@ class W2xServer(threading.Thread):
         self._receive_port = receive_port
         self._send_port = send_port
         self._waifu2x_location = Path(load_executable_paths_yaml()["w2x_vulkan_server"])
-        self._executable_location = self._waifu2x_location / "waifu2x-ncnn-vulkan"
+        self._executable_location = self._waifu2x_location / "waifu2x-ncnn-vulkan.exe"
 
         self._model_name = self.dandere2x_session.output_options["waifu2x_ncnn_vulkan"]["model_name"]
         self._noise_factor = self.dandere2x_session.noise_factor
@@ -107,11 +107,10 @@ class W2xServer(threading.Thread):
         s.sendall(bytes(height, encoding='utf8'))
         s.recv(1)
 
-        chunks = self.divide_chunks(frame.get_byte_array(), 1024)
+        chunks = self.divide_chunks(frame.get_byte_array(), 8192)
         for chunk in chunks:
             s.recv(1)
             s.send(chunk)
-        print("sending done")
         s.recv(1)
         s.send(b"done")
 
@@ -130,7 +129,7 @@ class W2xServer(threading.Thread):
         recv = b""
         while recv != b"done":
             try:
-                recv = s.recv(32768)
+                recv = s.recv(8192)
             except:
                 print("broke out using except")
                 break
