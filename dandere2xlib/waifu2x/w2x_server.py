@@ -138,7 +138,7 @@ class W2xServer(threading.Thread):
         recv = b""
         while recv != b"done":
             counter += 1
-            recv = s.recv(32768)
+            recv = s.recv(8192)
             s.send(b"a")
             if recv != b"done":
                 all_bytes.extend(recv)
