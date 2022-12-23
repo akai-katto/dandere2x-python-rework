@@ -27,9 +27,8 @@ def get_single_thread_test() -> Dandere2xSession:
     with open("./config_files/executable_paths.yaml") as f:
         executable_paths = yaml.safe_load(f)
 
-    return Dandere2xSession(session_id=0,
-                            input_video_path=Path("workspace\\yn_moving.mkv"),
-                            output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\pp_test0.mkv"),
+    return Dandere2xSession(input_video_path=Path("workspace/yn_moving.mkv"),
+                            output_path=Path("C:\\Users\\windw0z\\Desktop\\sample_videos\\pp_test.mkv"),
                             scale_factor=2,
                             noise_factor=3,
                             block_size=30,

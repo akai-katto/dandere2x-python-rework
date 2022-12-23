@@ -190,7 +190,7 @@ class D2xFrame:
         with tempfile.SpooledTemporaryFile(suffix=".jpg") as tf:
             pil_image.save(tf, quality=compression, format="JPEG")
             tf.seek(0)
-            self.frame_array: np.array = imageio.imread(tf).astype(np.uint8)
+            self.frame_array: np.array = imageio.imread(tf.read()).astype(np.uint8)
 
     # Getters #
     @property
