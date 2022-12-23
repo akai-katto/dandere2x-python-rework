@@ -40,11 +40,11 @@ class W2xServer(threading.Thread):
 
     def run(self):
         print(str(self._executable_location))
-        # active_waifu2x_subprocess = subprocess.Popen(args=[str(self._executable_location.absolute()),
-        #                                                    str(self._receive_port),
-        #                                                    str(self._send_port)],
-        #                                              cwd=str(self._waifu2x_location.absolute()))
-        # active_waifu2x_subprocess.wait()
+        active_waifu2x_subprocess = subprocess.Popen(args=[str(self._executable_location.absolute()),
+                                                           str(self._receive_port),
+                                                           str(self._send_port)],
+                                                     cwd=str(self._waifu2x_location.absolute()))
+        active_waifu2x_subprocess.wait()
 
     def join(self, timeout=None):
         threading.Thread.join(self, timeout)
@@ -107,7 +107,7 @@ class W2xServer(threading.Thread):
         s.sendall(bytes(height, encoding='utf8'))
         s.recv(1)
 
-        chunks = self.divide_chunks(frame.get_byte_array(), 65536)
+        chunks = self.divide_chunks(frame.get_byte_array(), 1024)
         for chunk in chunks:
             s.recv(1)
             s.send(chunk)
