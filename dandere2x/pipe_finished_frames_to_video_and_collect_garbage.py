@@ -26,6 +26,7 @@ class PipeFinishedFramesToVideoAndCollectGarbage(Thread):
         self._BLOCK_SIZE = self.dandere2x_session.block_size
         self._FRAME_COUNT = self.dandere2x_session.video_properties.input_video_settings.frame_count
 
+
         self.__manager = manager
         self.__logger = logging.getLogger(dandere2x_session.input_video_path.name)
 

@@ -34,7 +34,7 @@ def dandere2x_function(dandere2x_session: Dandere2xSession):
     upscale_residuals = UpscaleResiduals(manager, dandere2x_session)
     merge_upscaled_images = MergeUpscaledImages(manager, dandere2x_session)
     pipe_finished_frames_to_video_and_collect_garbage = PipeFinishedFramesToVideoAndCollectGarbage(manager,
-                                                                                                         dandere2x_session)
+                                                                                                   dandere2x_session)
 
     logger.debug("Starting dandere2x threads")
 
@@ -63,4 +63,4 @@ def dandere2x_function(dandere2x_session: Dandere2xSession):
                                output_options=dandere2x_session.output_options,
                                console_output_dir=None)
 
-    os.remove(dandere2x_session.no_sound_video_path)
+    # os.remove(dandere2x_session.no_sound_video_path)

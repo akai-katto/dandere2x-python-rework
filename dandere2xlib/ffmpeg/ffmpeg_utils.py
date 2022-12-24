@@ -46,6 +46,35 @@ def get_frame_count_ffmpeg(ffmpeg_dir: Path, input_video: Path):
     return int(frame_count)
 
 
+def concat_n_videos(ffmpeg_dir: str,
+                    temp_file_dir: str,
+                    list_of_files: list,
+                    output_file: str,
+                    console_output_dir = None) -> None:
+
+    import subprocess
+
+    file_list_text_file = os.path.join(temp_file_dir, "temp.txt")
+
+    file_template = "file " + "'" + "%s" + "'" + "\n"
+
+    # we need to create a text file for ffmpeg's concat function to work properly.
+    file = open(file_list_text_file, "w+")
+    for file_name in list_of_files:
+        file.write(file_template % file_name)
+    file.close()
+
+    concat_videos_command = [ffmpeg_dir,
+                             "-f", "concat",
+                             "-safe", "0",
+                             "-i", file_list_text_file]
+
+    concat_videos_command.extend([output_file])
+
+    console_output = get_console_output(__name__, console_output_dir)
+    subprocess.call(concat_videos_command, shell=False, stderr=console_output, stdout=console_output)
+
+
 def migrate_tracks_contextless(ffmpeg_dir: Path,
                                no_audio_file: Path,
                                input_file: Path,
