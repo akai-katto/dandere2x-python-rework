@@ -55,7 +55,7 @@ def get_dandere2x_session0() -> Dandere2xSession:
                             scale_factor=2,
                             noise_factor=3,
                             block_size=30,
-                            quality=100,
+                            quality=10,
                             num_waifu2x_threads=2,
                             output_options=output_options)
 
@@ -76,7 +76,7 @@ def get_dandere2x_session1() -> Dandere2xSession:
                             scale_factor=2,
                             noise_factor=3,
                             block_size=30,
-                            quality=100,
+                            quality=10,
                             num_waifu2x_threads=2,
                             output_options=output_options)
 
@@ -97,7 +97,7 @@ def get_dandere2x_session2() -> Dandere2xSession:
                             scale_factor=2,
                             noise_factor=3,
                             block_size=30,
-                            quality=100,
+                            quality=10,
                             num_waifu2x_threads=2,
                             output_options=output_options)
 
@@ -182,7 +182,9 @@ def user_generate_dandere2x_session() -> Dandere2xSession:
 if __name__ == "__main__":
     start = time.time()
 
-    d2x0 = Thread(target=dandere2x_function, args=(get_single_thread_test(),))
+    # d2x0 = Thread(target=dandere2x_function, args=(get_single_thread_test(),))
+    # d2x0.start()
+    # d2x0.join()
     # d2x0 = Thread(target=dandere2x_function, args=(get_single_thread_test(),))
     # d2x0.start()
 
@@ -196,8 +198,8 @@ if __name__ == "__main__":
     d2x2.start()
     # #
     #
-    # d2x0.join()
-    # d2x1.join()
-    # d2x2.join()
+    d2x0.join()
+    d2x1.join()
+    d2x2.join()
 
     print(f"end: {time.time() - start}")
