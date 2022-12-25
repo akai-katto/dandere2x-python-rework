@@ -29,7 +29,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         return Dandere2xSession(session_id=0,
                                 input_video_path=Path(self.input_file),
                                 output_path=Path(self.output_file),
-                                workspace=Path("/workspace/workingspace"),
+                                workspace=Path("./workspace/workingspace"),
                                 scale_factor=int(self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText()),
                                 noise_factor=int(self.settings_ui.ui.combo_box_waifu2x_settings_denoise_level.currentText()),
                                 block_size=int(self.settings_ui.ui.combo_box_dandere2x_settings_block_size.currentText()),
