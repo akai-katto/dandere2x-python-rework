@@ -16,6 +16,10 @@ dandere2x_cpp:
   evaluator_arg: "mse"
 
 ffmpeg:
+
+  divide_video:
+    -hwaccel: auto
+
   pre_process_video:
     -hwaccel: auto
     output_options:

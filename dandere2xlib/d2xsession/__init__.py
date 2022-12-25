@@ -55,6 +55,7 @@ class Dandere2xSession:
         for path in self.derived_paths:
             os.makedirs(path.absolute(), exist_ok=True)
 
+
 class Dandere2xVideoProperties:
 
     def __init__(self, input_video: Path, block_size: int):
