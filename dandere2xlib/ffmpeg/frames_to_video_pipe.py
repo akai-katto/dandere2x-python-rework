@@ -96,7 +96,7 @@ class FramesToVideoPipe(threading.Thread):
     def _setup_pipe(self, extension: int) -> None:
         self._log.info("Setting up pipe Called")
 
-        output_file = self._output_video.parent / f"{self._output_video.name.removesuffix(self._output_video.suffix)}_{extension}{self._output_video.suffix}"
+        output_file = self._output_video.parent / f"{self._output_video.stem}_{extension}{self._output_video.suffix}"
 
         # constructing the pipe command...
         ffmpeg_pipe_command = [self._FFMPEG_PATH]
