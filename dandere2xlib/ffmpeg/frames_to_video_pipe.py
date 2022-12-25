@@ -22,7 +22,7 @@ class FramesToVideoPipe(threading.Thread):
                  output_video: Path,
                  dandere2x_session: Dandere2xSession):
         threading.Thread.__init__(self, name="frames to video pipe")
-        self._log = logging.getLogger()
+        self._log = logging.getLogger(dandere2x_session.input_video_path.name)
 
         self._dandere2x_session = dandere2x_session
         self._PIPE_VIDEOS_MAX_FRAMES = self._dandere2x_session.output_options['dandere2x']['pipe_video_max_frames']
@@ -63,11 +63,10 @@ class FramesToVideoPipe(threading.Thread):
                     self.ffmpeg_pipe_subprocess.stdin.close()
                     self.ffmpeg_pipe_subprocess.wait()
                     self._setup_pipe(current_video)
-
                 img = self.images_to_pipe.pop(0).get_pil_image()  # get the first image and remove it from list
                 img.save(self.ffmpeg_pipe_subprocess.stdin, format="BMP")
             else:
-                time.sleep(0.01)
+                time.sleep(0.001)
 
         self.ffmpeg_pipe_subprocess.stdin.close()
         self.ffmpeg_pipe_subprocess.wait()
@@ -98,7 +97,6 @@ class FramesToVideoPipe(threading.Thread):
 
         output_file = self._output_video.parent /\
                       f"{self._output_video.name.removesuffix(self._output_video.suffix)}_{extension}{self._output_video.suffix}"
-
 
         # constructing the pipe command...
         ffmpeg_pipe_command = [self._FFMPEG_PATH]

@@ -120,7 +120,7 @@ class D2xFrame:
         self.__image_height = self.__image_height + buffer * 2
         self.frame_array = bleed_frame_array
 
-    def get_pil_image(self):
+    def get_pil_image(self) -> Image:
         return Image.fromarray(self.frame_array.astype(np.uint8))
 
     def copy_block(self,
