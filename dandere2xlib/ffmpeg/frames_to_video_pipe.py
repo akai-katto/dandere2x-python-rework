@@ -12,6 +12,7 @@ from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path
 from dandere2xlib.utilities.yaml_utils import get_options_from_section, load_executable_paths_yaml
 from dandere2xlib.ffmpeg.ffmpeg_utils import concat_n_videos
 
+
 class FramesToVideoPipe(threading.Thread):
     """
     The pipe class allows images (Frame.py) to be processed into a video directly. It does this by "piping"
@@ -95,8 +96,7 @@ class FramesToVideoPipe(threading.Thread):
     def _setup_pipe(self, extension: int) -> None:
         self._log.info("Setting up pipe Called")
 
-        output_file = self._output_video.parent /\
-                      f"{self._output_video.name.removesuffix(self._output_video.suffix)}_{extension}{self._output_video.suffix}"
+        output_file = self._output_video.parent / f"{self._output_video.name.removesuffix(self._output_video.suffix)}_{extension}{self._output_video.suffix}"
 
         # constructing the pipe command...
         ffmpeg_pipe_command = [self._FFMPEG_PATH]

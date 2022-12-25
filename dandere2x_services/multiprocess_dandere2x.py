@@ -41,7 +41,7 @@ class MultiProcessDandere2x(_Dandere2xServiceInterface):
         divide_video(ffmpeg_path=ffmpeg_path, ffprobe_path=ffprobe_path,
                      input_video=str(self._dandere2x_session.input_video_path),
                      output_options=self._dandere2x_session.output_options,
-                     divide=3,
+                     divide=self._dandere2x_session.output_options['dandere2x']['multiprocess_count'],
                      output_dir=str(self._divided_videos_path.absolute()))
 
         # Find all the split video files ffmpeg produced in the folder.
