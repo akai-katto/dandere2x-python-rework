@@ -10,7 +10,7 @@ from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.ffmpeg.ffmpeg_utils import divide_video, concat_n_videos, migrate_tracks_contextless, is_file_video
 
 
-class MultiProcessDandere2x(_Dandere2xServiceInterface):
+class MultiProcessDandere2xService(_Dandere2xServiceInterface):
 
     def __init__(self, dandere2x_session: Dandere2xSession):
         """
@@ -58,6 +58,7 @@ class MultiProcessDandere2x(_Dandere2xServiceInterface):
                                              block_size=self._dandere2x_session.block_size,
                                              quality=self._dandere2x_session.quality,
                                              num_waifu2x_threads=self._dandere2x_session.num_waifu2x_threads,
+                                             processing_type="singleprocess",
                                              output_options=self._dandere2x_session.output_options)
 
             self._divided_videos_upscaled.append(str(child_request.no_sound_video_file))

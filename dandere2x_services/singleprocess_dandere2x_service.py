@@ -7,7 +7,7 @@ from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.ffmpeg.ffmpeg_utils import migrate_tracks_contextless
 
 
-class SingleProcessDandere2x(_Dandere2xServiceInterface, ABC):
+class SingleProcessDandere2xService(_Dandere2xServiceInterface, ABC):
 
     def __init__(self, dandere2x_session: Dandere2xSession):
         super().__init__(dandere2x_session=dandere2x_session)

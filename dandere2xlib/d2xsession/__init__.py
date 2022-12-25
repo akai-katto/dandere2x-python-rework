@@ -21,6 +21,7 @@ class Dandere2xSession:
                  block_size: int,
                  quality: float,
                  num_waifu2x_threads: int,
+                 processing_type: str,
                  output_options: dict):
 
         # Session Related
@@ -35,6 +36,7 @@ class Dandere2xSession:
         self.scale_factor: int = scale_factor
         self.noise_factor: int = noise_factor
         self.num_waifu2x_threads: int = num_waifu2x_threads
+        self.processing_type = processing_type
 
         # Derived Paths
         self.no_sound_video_directory = workspace / "nosound"
