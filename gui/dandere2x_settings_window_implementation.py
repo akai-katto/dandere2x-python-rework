@@ -27,6 +27,8 @@ class Dandere2xSettingsWindowImplementation(QMainWindow):
         self.ui.combo_box_dandere2x_settings_quality_coeffecient.setCurrentText(settings['dandere2x_settings']['quality_coefficient'])
         self.ui.combo_box_dandere2x_settings_block_size.setCurrentText(settings['dandere2x_settings']['block_size'])
         self.ui.combo_box_dandere2x_settings_scale_factor.setCurrentText(settings['dandere2x_settings']['scale_factor'])
+        self.ui.combo_box_dandere2x_settings_process_type.setCurrentText(settings['dandere2x_settings']['processtype'])
+        self.ui.combo.combo_box_dandere2x_settings_multiprocess_thread_count(settings['dandere2x_settings']['multiprocess_thread_count'])
 
         self.ui.combo_box_waifu2x_settings_denoise_level.setCurrentText(settings['waifu2x_settings']['denoise_level'])
         self.ui.combo_box_waifu2x_settings_model.setCurrentText(settings['waifu2x_settings']['model'])
@@ -42,6 +44,8 @@ class Dandere2xSettingsWindowImplementation(QMainWindow):
         settings['dandere2x_settings']['quality_coefficient'] = self.ui.combo_box_dandere2x_settings_quality_coeffecient.currentText()
         settings['dandere2x_settings']['block_size'] = self.ui.combo_box_dandere2x_settings_block_size.currentText()
         settings['dandere2x_settings']['scale_factor'] = self.ui.combo_box_dandere2x_settings_scale_factor.currentText()
+        settings['dandere2x_settings']['processtype'] = self.ui.combo_box_dandere2x_settings_process_type.currentText()
+        settings['dandere2x_settings']['multiprocess_thread_count'] = self.ui.combo_box_dandere2x_settings_multiprocess_thread_count.currentText()
 
         settings['waifu2x_settings']['denoise_level'] = self.ui.combo_box_waifu2x_settings_denoise_level.currentText()
         settings['waifu2x_settings']['model'] = self.ui.combo_box_waifu2x_settings_model.currentText()

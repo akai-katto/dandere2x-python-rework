@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>340</width>
+    <width>370</width>
     <height>434</height>
    </rect>
   </property>
@@ -48,7 +48,7 @@
    <widget class="QComboBox" name="combo_box_dandere2x_settings_quality_coeffecient">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>200</x>
       <y>70</y>
       <width>161</width>
       <height>22</height>
@@ -111,7 +111,7 @@
    <widget class="QComboBox" name="combo_box_dandere2x_settings_block_size">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>200</x>
       <y>100</y>
       <width>161</width>
       <height>22</height>
@@ -157,7 +157,7 @@
    <widget class="QComboBox" name="combo_box_dandere2x_settings_scale_factor">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>200</x>
       <y>130</y>
       <width>161</width>
       <height>22</height>
@@ -247,7 +247,7 @@
    <widget class="QComboBox" name="combo_box_waifu2x_settings_model">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>200</x>
       <y>320</y>
       <width>161</width>
       <height>22</height>
@@ -275,7 +275,7 @@
    <widget class="QComboBox" name="combo_box_waifu2x_settings_tile_size">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>200</x>
       <y>350</y>
       <width>161</width>
       <height>22</height>
@@ -318,7 +318,7 @@
    <widget class="QComboBox" name="combo_box_waifu2x_settings_denoise_level">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>200</x>
       <y>290</y>
       <width>161</width>
       <height>22</height>
@@ -364,7 +364,7 @@
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>280</x>
       <y>0</y>
       <width>31</width>
       <height>41</height>
@@ -380,7 +380,7 @@
    <widget class="QPushButton" name="button_save">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>310</x>
       <y>10</y>
       <width>51</width>
       <height>24</height>
@@ -393,7 +393,7 @@
    <widget class="QComboBox" name="combo_box_waifu2x_settings_waifu2x_processes">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>200</x>
       <y>380</y>
       <width>161</width>
       <height>22</height>
@@ -436,10 +436,10 @@
      <string>Waifu2x Processes</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="combo_box_dandere2x_settings_processing_type">
+   <widget class="QComboBox" name="combo_box_dandere2x_settings_process_type">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>200</x>
       <y>160</y>
       <width>161</width>
       <height>22</height>
@@ -450,12 +450,12 @@
     </property>
     <item>
      <property name="text">
-      <string>singleprocessing</string>
+      <string>singleprocess</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>multiprocessing</string>
+      <string>multiprocess</string>
      </property>
     </item>
    </widget>
@@ -469,13 +469,13 @@
      </rect>
     </property>
     <property name="text">
-     <string>Processing Type</string>
+     <string>Process Type</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="combo_box_dandere2x_settings_multiprocessing_count">
+   <widget class="QComboBox" name="combo_box_dandere2x_settings_multiprocess_thread_count">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>200</x>
       <y>190</y>
       <width>161</width>
       <height>22</height>
@@ -500,12 +500,12 @@
      <rect>
       <x>10</x>
       <y>190</y>
-      <width>141</width>
+      <width>151</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Multiprocessing # Thread</string>
+     <string>Multiprocess Thread Count</string>
     </property>
    </widget>
   </widget>

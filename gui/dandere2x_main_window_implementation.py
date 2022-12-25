@@ -10,6 +10,7 @@ from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QFileDialog
 
 from dandere2x import Dandere2x
+from dandere2x_services.dandere2x_service_resolver import Dandere2xServiceResolver
 from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.ffmpeg.video_settings import VideoSettings
 from gui.dandere2x_main_window import Ui_Dandere2xMainWindow
@@ -34,7 +35,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
                                 block_size=int(self.settings_ui.ui.combo_box_dandere2x_settings_block_size.currentText()),
                                 quality=int(self.settings_ui.ui.combo_box_dandere2x_settings_quality_coeffecient.currentText()),
                                 num_waifu2x_threads=int(self.settings_ui.ui.combo_box_waifu2x_settings_waifu2x_processes.currentText()),
-                                processing_type="singleprocess",
+                                processing_type=self.settings_ui.ui.combo_box_dandere2x_settings_process_type.currentText(),
                                 output_options=output_options)
 
     def __init__(self):
@@ -148,8 +149,9 @@ class Dandere2xMainWindowImplementation(QMainWindow):
     def press_upscale_button(self):
         dandere2x_session = self.get_dandere2x_session_from_gui()
         start = time.time()
-        d2x = Dandere2x(dandere2x_session)
+        d2x = Dandere2xServiceResolver(dandere2x_session)
         d2x.start()
+        d2x.join()
         print(f"end: {time.time() - start}")
 
     # Utilities
