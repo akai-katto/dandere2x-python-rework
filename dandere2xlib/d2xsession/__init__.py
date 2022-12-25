@@ -42,8 +42,10 @@ class Dandere2xSession:
         self.no_sound_video_directory = workspace / "nosound"
         self.no_sound_video_file: Path = self.no_sound_video_directory / ("nosound" + str(uuid.uuid4()) + input_video_path.suffix)
         self.derived_paths = [self.workspace, self.no_sound_video_directory]
+
         # Dandere2x Config Related
         self.output_options = output_options
+        self.max_frames_ahead = output_options['dandere2x']['max_frames_ahead']
 
         # Video Properties
         self.video_properties = Dandere2xVideoProperties(input_video=input_video_path, block_size=block_size)

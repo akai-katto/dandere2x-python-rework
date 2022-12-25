@@ -30,7 +30,7 @@ class NoisedFrameExtraction(Thread):
 
         for pos in range(self.dandere2x_session.video_properties.input_video_settings.frame_count):
 
-            while pos > self.__manager.last_piped_frame + 60:
+            while pos > self.__manager.last_piped_frame + self.dandere2x_session.max_frames_ahead:
                 time.sleep(get_wait_delay())
 
             frame = self.__extractor.get_frame()
