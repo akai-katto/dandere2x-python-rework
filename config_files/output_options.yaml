@@ -10,7 +10,7 @@ dandere2x:
   bleed: 1
   max_frames_ahead: 500
   pipe_video_max_frames: 60
-  multiprocess_count: 3  # can only be [0-3]
+  multiprocess_thread_count: 3  # can only be [0-3]
 
 dandere2x_cpp:
   block_matching_arg: "exhaustive"
