@@ -39,12 +39,13 @@ class BlockMatching(Thread):
                 time.sleep(get_wait_delay())
 
             f2 = copy.deepcopy(self.__manager.noised_images_array[frame_pos + 1])
-            f2_compressed = self.__manager.compressed_frames_array[frame_pos + 1]
+            f2_compressed_raw = self.__manager.compressed_frames_array[frame_pos + 1]
+            f2_compressed = (f2_compressed_raw.frame_array.astype(np.double) + f2.frame_array.astype(np.double))/2
 
             array_subtracted_squared: np.array = \
-                (f2.frame_array.astype(np.double) - f1.frame_array.astype(np.double)) ** 2
+                np.power(f2.frame_array.astype(np.double) - f1.frame_array.astype(np.double), 2)
             compressed_subtracted_squared: np.array = \
-                (f2_compressed.frame_array.astype(np.double) - f2.frame_array.astype(np.double)) ** 2
+                np.power(f2_compressed - f2.frame_array.astype(np.double), 2)
 
             matched_mean = np.einsum(
                 "ijklm->ik",

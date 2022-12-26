@@ -24,6 +24,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         with open("config_files/output_options.yaml") as f:
             output_options = yaml.safe_load(f)
 
+        output_options["dandere2x"]["multiprocess_thread_count"] = int(self.settings_ui.ui.combo_box_dandere2x_settings_multiprocess_thread_count.currentText())
         output_options["waifu2x_ncnn_vulkan"]["model"] = self.settings_ui.ui.combo_box_waifu2x_settings_model.currentText()
         output_options["waifu2x_ncnn_vulkan"]["tile_size"] = int(self.settings_ui.ui.combo_box_waifu2x_settings_tile_size.currentText())
         return Dandere2xSession(session_id=0,
