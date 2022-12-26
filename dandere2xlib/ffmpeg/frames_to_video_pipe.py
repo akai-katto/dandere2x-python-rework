@@ -47,6 +47,7 @@ class FramesToVideoPipe(threading.Thread):
 
         self.alive = True
         self._setup_pipe(0)
+        total_piped_frames = 0
 
         current_video = 0
         piped_frames_in_video = 0
@@ -66,11 +67,20 @@ class FramesToVideoPipe(threading.Thread):
                     self._setup_pipe(current_video)
                 img = self.images_to_pipe.pop(0).get_pil_image()  # get the first image and remove it from list
                 img.save(self.ffmpeg_pipe_subprocess.stdin, format="BMP")
+                total_piped_frames +=1
             else:
                 time.sleep(0.001)
 
+        # if the thread is killed for whatever reason, finish writing the remainder of the images to the video file.
+        while self.images_to_pipe:
+            pil_image = self.images_to_pipe.pop(0).get_pil_image()
+            pil_image.save(self.ffmpeg_pipe_subprocess.stdin, format="BMP")
+            total_piped_frames += 1
+
         self.ffmpeg_pipe_subprocess.stdin.close()
         self.ffmpeg_pipe_subprocess.wait()
+
+        print(f"total piped frames {total_piped_frames}")
 
         concat_n_videos(ffmpeg_dir=self._FFMPEG_PATH,
                         temp_file_dir=str(self._output_video.parent),
