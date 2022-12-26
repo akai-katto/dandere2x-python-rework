@@ -40,7 +40,7 @@ class Dandere2xSession:
 
         # Derived Paths
         self.no_sound_video_directory = workspace / "nosound"
-        self.no_sound_video_file: Path = self.no_sound_video_directory / ("nosound" + str(uuid.uuid4()) + input_video_path.suffix)
+        self.no_sound_video_file: Path = self.no_sound_video_directory / ("nosound" + str(uuid.uuid4()) + output_path.suffix)
         self.derived_paths = [self.workspace, self.no_sound_video_directory]
 
         # Dandere2x Config Related
