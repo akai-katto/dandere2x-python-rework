@@ -3,7 +3,7 @@ dandere2x_settings:
   multiprocess_thread_count: '3'
   processtype: singleprocess
   quality_coefficient: '1'
-  scale_factor: '2'
+  scale_factor: '1'
 waifu2x_settings:
   denoise_level: '3'
   model: models-cunet

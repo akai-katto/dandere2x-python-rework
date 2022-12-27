@@ -161,13 +161,13 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         return filename[0]
 
     def _change_file_name(self):
-        filter = "Images (*.mkv *.mp4)"
+        filter = "*.mkv"
 
         default_name = self.output_file
         if self.output_file == '':
             default_name = self.this_folder
 
-        filename = QFileDialog.getSaveFileName(self, 'Save File', default_name, filter)
+        filename = QFileDialog.getSaveFileName(self, 'Save File', str(default_name), filter)
         return filename[0]
 
     @staticmethod

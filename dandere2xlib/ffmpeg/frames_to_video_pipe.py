@@ -10,7 +10,7 @@ from dandere2xlib.d2xsession.__init__ import Dandere2xSession
 from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path
 from dandere2xlib.utilities.yaml_utils import get_options_from_section, load_executable_paths_yaml
-from dandere2xlib.ffmpeg.ffmpeg_utils import concat_n_videos
+from dandere2xlib.ffmpeg.ffmpeg_utils import concat_n_videos, convert_mk4_to_mp4
 
 
 class FramesToVideoPipe(threading.Thread):
@@ -82,16 +82,24 @@ class FramesToVideoPipe(threading.Thread):
 
         print(f"total piped frames {total_piped_frames}")
 
+        # TLDR we cant concat mp4s, so we encode in MKV, then convert to mp4.
+        temp_video = self._output_video.parent / (self._output_video.stem + "_temp.mkv")
         concat_n_videos(ffmpeg_dir=self._FFMPEG_PATH,
                         temp_file_dir=str(self._output_video.parent),
                         list_of_files=self.__list_of_videos,
-                        output_file=str(self._output_video))
+                        output_file=str(temp_video))
 
-        for partial_video in self.__list_of_videos:
-            os.remove(partial_video)
+        if self._output_video.suffix == ".mp4":
+            print("converting")
+            convert_mk4_to_mp4(self._FFMPEG_PATH, temp_video, self._output_video)
+            # os.remove(temp_video)
+        else:
+            print("renaming")
+            os.rename(temp_video, self._output_video)
 
+        # for partial_video in self.__list_of_videos:
+        #     os.remove(partial_video)
 
-    # todo: Implement this without a 'while true'
     def save(self, frame):
         """
         Try to add an image to image_to_pipe buffer. If there's too many images in the buffer,

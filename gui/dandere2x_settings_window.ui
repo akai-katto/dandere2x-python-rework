@@ -59,57 +59,52 @@
     </property>
     <item>
      <property name="text">
-      <string>100</string>
+      <string>1</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>90</string>
+      <string>2</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>80</string>
+      <string>3</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>70</string>
+      <string>4</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>60</string>
+      <string>5</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>50</string>
+      <string>6</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>40</string>
+      <string>7</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>30</string>
+      <string>8</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>20</string>
+      <string>9</string>
      </property>
     </item>
     <item>
      <property name="text">
       <string>10</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>1</string>
      </property>
     </item>
    </widget>

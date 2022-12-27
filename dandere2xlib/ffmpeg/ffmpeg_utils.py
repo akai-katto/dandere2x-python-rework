@@ -21,6 +21,18 @@ def get_console_output(method_name: str, console_output_dir=None):
     return open(os.devnull, 'w')
 
 
+def convert_mk4_to_mp4(ffmpeg_dir: Path, input_video: Path, output_path: Path, console_output_dir=None):
+    execute = [ffmpeg_dir,
+               '-i', str(input_video.absolute()),
+               '-codec', 'copy',
+               str(output_path.absolute())]
+
+    print(" ".join(execute))
+
+    console_output = get_console_output(__name__, console_output_dir)
+    subprocess.call(execute, shell=False, stderr=console_output, stdout=console_output)
+
+
 def get_frame_count_ffmpeg(ffmpeg_dir: Path, input_video: Path):
     assert get_operating_system() != "win32" or os.path.exists(ffmpeg_dir), "%s does not exist!" % ffmpeg_dir
 
@@ -51,8 +63,7 @@ def concat_n_videos(ffmpeg_dir: str,
                     temp_file_dir: str,
                     list_of_files: list,
                     output_file: str,
-                    console_output_dir = None) -> None:
-
+                    console_output_dir=None) -> None:
     import subprocess
 
     file_list_text_file = os.path.join(temp_file_dir, "temp.txt")
@@ -166,6 +177,7 @@ def divide_video(ffmpeg_path: str, ffprobe_path: str,
     return_string = return_bytes.decode("utf-8")
 
     return return_string
+
 
 def is_file_video(ffprobe_dir: str, input_video: str):
     assert get_operating_system() != "win32" or os.path.exists(ffprobe_dir), "%s does not exist!" % ffprobe_dir
