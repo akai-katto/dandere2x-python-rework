@@ -159,7 +159,9 @@
      </rect>
     </property>
     <property name="font">
-     <font/>
+     <font>
+      <family>Courier New</family>
+     </font>
     </property>
     <property name="text">
      <string>File:   yn_moving.mkv</string>
@@ -175,7 +177,9 @@
      </rect>
     </property>
     <property name="font">
-     <font/>
+     <font>
+      <family>Courier New</family>
+     </font>
     </property>
     <property name="text">
      <string>Duration:                   00:00:00</string>
@@ -191,7 +195,9 @@
      </rect>
     </property>
     <property name="font">
-     <font/>
+     <font>
+      <family>Courier New</family>
+     </font>
     </property>
     <property name="text">
      <string>Frame Count:                 7545</string>
@@ -220,7 +226,9 @@
      </rect>
     </property>
     <property name="font">
-     <font/>
+     <font>
+      <family>Courier New</family>
+     </font>
     </property>
     <property name="text">
      <string>Duration:                   00:00:00</string>
@@ -236,7 +244,9 @@
      </rect>
     </property>
     <property name="font">
-     <font/>
+     <font>
+      <family>Courier New</family>
+     </font>
     </property>
     <property name="text">
      <string>Output:                a</string>
@@ -281,10 +291,12 @@
      </rect>
     </property>
     <property name="font">
-     <font/>
+     <font>
+      <family>Courier New</family>
+     </font>
     </property>
     <property name="text">
-     <string>Frame                   %d of %d</string>
+     <string>Frame       %d of %d</string>
     </property>
    </widget>
    <zorder>label_output_name</zorder>

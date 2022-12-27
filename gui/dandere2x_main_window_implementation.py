@@ -21,7 +21,7 @@ from gui.dandere2x_settings_window_implementation import Dandere2xSettingsWindow
 
 
 class QtDandere2xThread(QtCore.QThread):
-    finished = QtCore.pyqtSignal()
+    finished_signal = QtCore.pyqtSignal()
 
     def __init__(self,
                  parent,
@@ -38,7 +38,7 @@ class QtDandere2xThread(QtCore.QThread):
 
     def join(self):
         self.dandere2x_service.join()
-        self.finished.emit()
+        self.finished_signal.emit()
 
 
 class Dandere2xMainWindowImplementation(QMainWindow):
@@ -85,6 +85,8 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         # Subthreads
         upscale_frame_of_updater = QtUpscaleFrameOfUpdater(self)
         upscale_frame_of_updater.start()
+
+        self.dandere2x_thread: QtDandere2xThread = None
 
         # Initial Setup
         self.setup_icons()
@@ -142,10 +144,15 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
         self.refresh_output_texts()
 
-    def post_upscale_state(self):
+    def upscale_in_progress_state(self):
         self.ui.progresssBar_upscale_progress_bar.show()
         self.ui.label_upscale_frame_of.show()
         self.ui.button_upscale.hide()
+
+    def post_upscale_state(self):
+        self.ui.progresssBar_upscale_progress_bar.hide()
+        self.ui.label_upscale_frame_of.hide()
+        self.ui.button_upscale.show()
 
     # Refreshes
     def refresh_output_texts(self):
@@ -191,17 +198,20 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.label_output_name.setText(self.metadata_text_generator("Output File:", name_only, 36))
 
     def press_upscale_button(self):
+        self.dandere2x_gui_session_statistics = Dandere2xGuiSessionStatistics()
         dandere2x_session = self.get_dandere2x_session_from_gui()
 
-        self.thread = QtDandere2xThread(self, dandere2x_session, self.dandere2x_gui_session_statistics)
-        self.thread.start()
-        self.post_upscale_state()
+        self.dandere2x_thread = QtDandere2xThread(self, dandere2x_session, self.dandere2x_gui_session_statistics)
+        self.dandere2x_thread.start()
+        self.dandere2x_thread.finished_signal.connect(self.post_upscale_state)
+        self.upscale_in_progress_state()
 
         # start = time.time()
         # d2x = Dandere2xServiceResolver(dandere2x_session, self.dandere2x_gui_session_statistics)
         # d2x.start()
         # d2x.join()
         # print(f"end: {time.time() - start}")
+
 
     # Utilities
     def _load_file(self) -> str:
@@ -248,13 +258,13 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
 
     def run(self):
         while True:
+
             self.parent.ui.label_upscale_frame_of.setText(
                 self.parent.metadata_text_generator(
                     "Frame of:",
                     f"{self.parent.dandere2x_gui_session_statistics.current_frame}/{self.parent.dandere2x_gui_session_statistics.frame_count}",
-                    32))
+                    20))
 
-            ratio = int(self.parent.dandere2x_gui_session_statistics.current_frame / self.parent.dandere2x_gui_session_statistics.frame_count * 100)
+            ratio = max(1, int((self.parent.dandere2x_gui_session_statistics.current_frame / self.parent.dandere2x_gui_session_statistics.frame_count) * 100))
             self.parent.ui.progresssBar_upscale_progress_bar.setValue(ratio)
-
             time.sleep(0.5)
