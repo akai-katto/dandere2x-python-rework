@@ -5,6 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from dandere2xlib.ffmpeg.ffprobe_utils import get_seconds
 from dandere2xlib.utilities.dandere2x_utils import get_operating_system
 from dandere2xlib.utilities.yaml_utils import get_options_from_section
 
@@ -18,6 +19,18 @@ def get_console_output(method_name: str, console_output_dir=None):
         return console_output
 
     return open(os.devnull, 'w')
+
+
+def convert_mk4_to_mp4(ffmpeg_dir: Path, input_video: Path, output_path: Path, console_output_dir=None):
+    execute = [ffmpeg_dir,
+               '-i', str(input_video.absolute()),
+               '-codec', 'copy',
+               str(output_path.absolute())]
+
+    print(" ".join(execute))
+
+    console_output = get_console_output(__name__, console_output_dir)
+    subprocess.call(execute, shell=False, stderr=console_output, stdout=console_output)
 
 
 def get_frame_count_ffmpeg(ffmpeg_dir: Path, input_video: Path):
@@ -50,8 +63,7 @@ def concat_n_videos(ffmpeg_dir: str,
                     temp_file_dir: str,
                     list_of_files: list,
                     output_file: str,
-                    console_output_dir = None) -> None:
-
+                    console_output_dir=None) -> None:
     import subprocess
 
     file_list_text_file = os.path.join(temp_file_dir, "temp.txt")
@@ -118,6 +130,70 @@ def migrate_tracks_contextless(ffmpeg_dir: Path,
     log.info("Migrate Command: %s" % convert(migrate_tracks_command))
     subprocess.call(migrate_tracks_command, shell=False, stderr=console_output, stdout=console_output)
     log.info("Finished migrating to file: %s" % output_file)
+
+
+def divide_video(ffmpeg_path: str, ffprobe_path: str,
+                 input_video: str, output_options: dict,
+                 divide: int, output_dir: str):
+    """
+
+    Attempts to divide a video into N different segments, using the ffmpeg segment_time argument. See the reading
+    I referenced here: 
+        https://superuser.com/questions/692714/how-to-split-videos-with-ffmpeg-and-segment-times-option
+
+    Note that this will not perfectly divide the video into N different, equally sized chunks, but rather will cut them
+    where keyframes allow them to be split. 
+
+    Args:
+        ffmpeg_path: ffmpeg binary
+        ffprobe_path: ffprobe binary
+        input_video: File to be split
+        output_options: Dictionary containing the loaded ./config_files/output_options.yaml
+        divide: N divisions.
+        output_dir: Where to save split_video%d.mkv's. 
+
+    Returns:
+        Nothing, but split_video%d.mkv files will appear in output_dir.
+    """
+    import math
+
+    seconds = int(get_seconds(ffprobe_dir=ffprobe_path, input_video=input_video))
+    ratio = math.ceil(seconds / divide)
+    execute = [ffmpeg_path]
+
+    hw_accel = output_options["ffmpeg"]["divide_video"]["-hwaccel"]
+    if hw_accel is not None:
+        execute.append("-hwaccel")
+        execute.append(hw_accel)
+
+    execute.extend(["-i", input_video,
+                    "-f", "segment",
+                    "-segment_time", str(ratio),
+                    "-c", "copy"])
+
+    execute.append(os.path.join(output_dir, "split_video%d.mkv"))
+
+    return_bytes = subprocess.run(execute, check=True, stdout=subprocess.PIPE).stdout
+    return_string = return_bytes.decode("utf-8")
+
+    return return_string
+
+
+def is_file_video(ffprobe_dir: str, input_video: str):
+    assert get_operating_system() != "win32" or os.path.exists(ffprobe_dir), "%s does not exist!" % ffprobe_dir
+
+    execute = [
+        ffprobe_dir,
+        "-i", input_video,
+        "-v", "quiet"
+    ]
+
+    return_bytes = subprocess.run(execute, check=True, stdout=subprocess.PIPE).stdout
+
+    if "Invalid data found when processing input" in return_bytes.decode("utf-8"):
+        return False
+
+    return True
 
 
 if __name__ == "__main__":

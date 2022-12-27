@@ -10,6 +10,7 @@ from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QFileDialog
 
 from dandere2x import Dandere2x
+from dandere2x_services.dandere2x_service_resolver import Dandere2xServiceResolver
 from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.ffmpeg.video_settings import VideoSettings
 from gui.dandere2x_main_window import Ui_Dandere2xMainWindow
@@ -23,16 +24,19 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         with open("config_files/output_options.yaml") as f:
             output_options = yaml.safe_load(f)
 
+        output_options["dandere2x"]["multiprocess_thread_count"] = int(self.settings_ui.ui.combo_box_dandere2x_settings_multiprocess_thread_count.currentText())
         output_options["waifu2x_ncnn_vulkan"]["model"] = self.settings_ui.ui.combo_box_waifu2x_settings_model.currentText()
         output_options["waifu2x_ncnn_vulkan"]["tile_size"] = int(self.settings_ui.ui.combo_box_waifu2x_settings_tile_size.currentText())
         return Dandere2xSession(session_id=0,
                                 input_video_path=Path(self.input_file),
                                 output_path=Path(self.output_file),
+                                workspace=Path("./workspace/workingspace"),
                                 scale_factor=int(self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText()),
                                 noise_factor=int(self.settings_ui.ui.combo_box_waifu2x_settings_denoise_level.currentText()),
                                 block_size=int(self.settings_ui.ui.combo_box_dandere2x_settings_block_size.currentText()),
                                 quality=int(self.settings_ui.ui.combo_box_dandere2x_settings_quality_coeffecient.currentText()),
                                 num_waifu2x_threads=int(self.settings_ui.ui.combo_box_waifu2x_settings_waifu2x_processes.currentText()),
+                                processing_type=self.settings_ui.ui.combo_box_dandere2x_settings_process_type.currentText(),
                                 output_options=output_options)
 
     def __init__(self):
@@ -130,7 +134,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.label_selected_video_frame_count.setText(self._metadata_text_generator("Frame Count:",
                                                                                        str(self.video_settings.frame_count),
                                                                                        21))
-        self.output_file = Path(self.this_folder) / "temp_output.mkv"
+        self.output_file = Path(self.this_folder) / (self.input_file.stem + "_d2x" + ".mkv")
         self.post_select_video_state()
 
     def press_change_output_button(self):
@@ -146,8 +150,9 @@ class Dandere2xMainWindowImplementation(QMainWindow):
     def press_upscale_button(self):
         dandere2x_session = self.get_dandere2x_session_from_gui()
         start = time.time()
-        d2x = Dandere2x(dandere2x_session)
+        d2x = Dandere2xServiceResolver(dandere2x_session)
         d2x.start()
+        d2x.join()
         print(f"end: {time.time() - start}")
 
     # Utilities
@@ -156,13 +161,13 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         return filename[0]
 
     def _change_file_name(self):
-        filter = "Images (*.mkv *.mp4)"
+        filter = "*.mkv"
 
         default_name = self.output_file
         if self.output_file == '':
             default_name = self.this_folder
 
-        filename = QFileDialog.getSaveFileName(self, 'Save File', default_name, filter)
+        filename = QFileDialog.getSaveFileName(self, 'Save File', str(default_name), filter)
         return filename[0]
 
     @staticmethod

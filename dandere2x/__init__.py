@@ -26,7 +26,7 @@ class Dandere2x(Thread):
         set_dandere2x_logger(dandere2x_session.input_video_path.name)
 
         manager = D2xManagement()
-        self.dandere2x_session = dandere2x_session
+        self._dandere2x_session = dandere2x_session
         self.__logger = logging.getLogger(dandere2x_session.input_video_path.name)
 
         self._frame_extraction = FrameExtraction(manager, dandere2x_session)
@@ -40,6 +40,9 @@ class Dandere2x(Thread):
                                                                                                              dandere2x_session)
 
     def run(self):
+        self._dandere2x_session.clear_workspace()
+        self._dandere2x_session.create_paths()
+
         self.__logger.debug("Starting dandere2x threads")
 
         self._frame_extraction.start()
@@ -59,12 +62,3 @@ class Dandere2x(Thread):
         self._upscale_residuals.join()
         self._merge_upscaled_images.join()
         self._pipe_finished_frames_to_video_and_collect_garbage.join()
-
-        migrate_tracks_contextless(ffmpeg_dir=Path(load_executable_paths_yaml()["ffmpeg"]),
-                                   no_audio_file=self.dandere2x_session.no_sound_video_path,
-                                   input_file=self.dandere2x_session.input_video_path,
-                                   output_file=self.dandere2x_session.output_video_path,
-                                   output_options=self.dandere2x_session.output_options,
-                                   console_output_dir=None)
-
-        os.remove(self.dandere2x_session.no_sound_video_path)

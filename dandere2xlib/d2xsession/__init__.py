@@ -1,3 +1,5 @@
+import os
+import shutil
 import uuid
 
 import yaml
@@ -12,32 +14,51 @@ class Dandere2xSession:
     def __init__(self,
                  session_id: int,
                  input_video_path: Path,
+                 workspace: Path,
                  output_path: Path,
                  scale_factor: int,
                  noise_factor: int,
                  block_size: int,
                  quality: float,
                  num_waifu2x_threads: int,
+                 processing_type: str,
                  output_options: dict):
 
         # Session Related
         self.session_id = session_id
+        self.workspace = workspace
 
         # Video Related
         self.input_video_path: Path = input_video_path
-        self.no_sound_video_path: Path = input_video_path.parent / ("nosound" + str(uuid.uuid4()) + input_video_path.suffix)
         self.output_video_path: Path = output_path
         self.block_size: int = block_size
         self.quality: float = quality
         self.scale_factor: int = scale_factor
         self.noise_factor: int = noise_factor
         self.num_waifu2x_threads: int = num_waifu2x_threads
+        self.processing_type = processing_type
+
+        # Derived Paths
+        self.no_sound_video_directory = workspace / "nosound"
+        self.no_sound_video_file: Path = self.no_sound_video_directory / ("nosound" + str(uuid.uuid4()) + output_path.suffix)
+        self.derived_paths = [self.workspace, self.no_sound_video_directory]
 
         # Dandere2x Config Related
         self.output_options = output_options
+        self.max_frames_ahead = output_options['dandere2x']['max_frames_ahead']
 
         # Video Properties
         self.video_properties = Dandere2xVideoProperties(input_video=input_video_path, block_size=block_size)
+
+    def clear_workspace(self):
+        """Clear the contents of the self.workspace directory."""
+        if os.path.exists(self.workspace):
+            shutil.rmtree(self.workspace)
+
+    def create_paths(self):
+        for path in self.derived_paths:
+            os.makedirs(path.absolute(), exist_ok=True)
+
 
 class Dandere2xVideoProperties:
 

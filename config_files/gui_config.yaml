@@ -1,9 +1,11 @@
 dandere2x_settings:
   block_size: '30'
-  quality_coefficient: '100'
-  scale_factor: '2'
+  multiprocess_thread_count: '3'
+  processtype: singleprocess
+  quality_coefficient: '1'
+  scale_factor: '1'
 waifu2x_settings:
   denoise_level: '3'
   model: models-cunet
   tile_size: '200'
-  waifu2x_processes: '1'
+  waifu2x_processes: '2'

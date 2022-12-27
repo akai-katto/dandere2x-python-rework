@@ -32,7 +32,7 @@ class PipeFinishedFramesToVideoAndCollectGarbage(Thread):
 
     def run(self) -> None:
 
-        frames_to_pipe = FramesToVideoPipe(self.dandere2x_session.no_sound_video_path, self.dandere2x_session)
+        frames_to_pipe = FramesToVideoPipe(self.dandere2x_session.no_sound_video_file, self.dandere2x_session)
         frames_to_pipe.start()
 
         for pos in range(self._FRAME_COUNT - 1):

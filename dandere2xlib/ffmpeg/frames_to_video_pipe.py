@@ -10,7 +10,8 @@ from dandere2xlib.d2xsession.__init__ import Dandere2xSession
 from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path
 from dandere2xlib.utilities.yaml_utils import get_options_from_section, load_executable_paths_yaml
-from dandere2xlib.ffmpeg.ffmpeg_utils import concat_n_videos
+from dandere2xlib.ffmpeg.ffmpeg_utils import concat_n_videos, convert_mk4_to_mp4
+
 
 class FramesToVideoPipe(threading.Thread):
     """
@@ -22,7 +23,7 @@ class FramesToVideoPipe(threading.Thread):
                  output_video: Path,
                  dandere2x_session: Dandere2xSession):
         threading.Thread.__init__(self, name="frames to video pipe")
-        self._log = logging.getLogger()
+        self._log = logging.getLogger(dandere2x_session.input_video_path.name)
 
         self._dandere2x_session = dandere2x_session
         self._PIPE_VIDEOS_MAX_FRAMES = self._dandere2x_session.output_options['dandere2x']['pipe_video_max_frames']
@@ -63,11 +64,15 @@ class FramesToVideoPipe(threading.Thread):
                     self.ffmpeg_pipe_subprocess.stdin.close()
                     self.ffmpeg_pipe_subprocess.wait()
                     self._setup_pipe(current_video)
-
                 img = self.images_to_pipe.pop(0).get_pil_image()  # get the first image and remove it from list
                 img.save(self.ffmpeg_pipe_subprocess.stdin, format="BMP")
             else:
-                time.sleep(0.01)
+                time.sleep(0.001)
+
+        # if the thread is killed for whatever reason, finish writing the remainder of the images to the video file.
+        while self.images_to_pipe:
+            pil_image = self.images_to_pipe.pop(0).get_pil_image()
+            pil_image.save(self.ffmpeg_pipe_subprocess.stdin, format="BMP")
 
         self.ffmpeg_pipe_subprocess.stdin.close()
         self.ffmpeg_pipe_subprocess.wait()
@@ -75,13 +80,11 @@ class FramesToVideoPipe(threading.Thread):
         concat_n_videos(ffmpeg_dir=self._FFMPEG_PATH,
                         temp_file_dir=str(self._output_video.parent),
                         list_of_files=self.__list_of_videos,
-                        output_file=str(self._output_video))
+                        output_file=str(self._output_video.absolute()))
 
         for partial_video in self.__list_of_videos:
             os.remove(partial_video)
 
-
-    # todo: Implement this without a 'while true'
     def save(self, frame):
         """
         Try to add an image to image_to_pipe buffer. If there's too many images in the buffer,
@@ -96,9 +99,7 @@ class FramesToVideoPipe(threading.Thread):
     def _setup_pipe(self, extension: int) -> None:
         self._log.info("Setting up pipe Called")
 
-        output_file = self._output_video.parent /\
-                      f"{self._output_video.name.removesuffix(self._output_video.suffix)}_{extension}{self._output_video.suffix}"
-
+        output_file = self._output_video.parent / f"{self._output_video.stem}_{extension}{self._output_video.suffix}"
 
         # constructing the pipe command...
         ffmpeg_pipe_command = [self._FFMPEG_PATH]
