@@ -82,23 +82,13 @@ class FramesToVideoPipe(threading.Thread):
 
         print(f"total piped frames {total_piped_frames}")
 
-        # TLDR we cant concat mp4s, so we encode in MKV, then convert to mp4.
-        temp_video = self._output_video.parent / (self._output_video.stem + "_temp.mkv")
         concat_n_videos(ffmpeg_dir=self._FFMPEG_PATH,
                         temp_file_dir=str(self._output_video.parent),
                         list_of_files=self.__list_of_videos,
-                        output_file=str(temp_video))
+                        output_file=str(self._output_video.absolute()))
 
-        if self._output_video.suffix == ".mp4":
-            print("converting")
-            convert_mk4_to_mp4(self._FFMPEG_PATH, temp_video, self._output_video)
-            # os.remove(temp_video)
-        else:
-            print("renaming")
-            os.rename(temp_video, self._output_video)
-
-        # for partial_video in self.__list_of_videos:
-        #     os.remove(partial_video)
+        for partial_video in self.__list_of_videos:
+            os.remove(partial_video)
 
     def save(self, frame):
         """
