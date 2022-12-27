@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Statistics</string>
   </property>
   <widget class="QLabel" name="label">
    <property name="geometry">
@@ -24,8 +24,9 @@
    </property>
    <property name="font">
     <font>
-     <family>Courier</family>
+     <family>Courier New</family>
      <pointsize>19</pointsize>
+     <bold>true</bold>
     </font>
    </property>
    <property name="text">
@@ -43,7 +44,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Courier New</family>
+     <family>Courier</family>
     </font>
    </property>
    <property name="text">
@@ -61,7 +62,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Courier</family>
+     <family>Courier New</family>
     </font>
    </property>
    <property name="text">
@@ -79,7 +80,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Courier</family>
+     <family>Courier New</family>
     </font>
    </property>
    <property name="text">
@@ -97,11 +98,99 @@
    </property>
    <property name="font">
     <font>
-     <family>Courier</family>
+     <family>Courier New</family>
     </font>
    </property>
    <property name="text">
     <string>   9999</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>130</y>
+     <width>281</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Courier New</family>
+     <pointsize>19</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>D2x Statistics</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>165</y>
+     <width>156</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Courier New</family>
+    </font>
+   </property>
+   <property name="text">
+    <string>Recycled Pixels Ratio</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_d2x_statistics_recycled_pixels_ratio">
+   <property name="geometry">
+    <rect>
+     <x>235</x>
+     <y>165</y>
+     <width>56</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Courier New</family>
+    </font>
+   </property>
+   <property name="text">
+    <string>100.00%</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_d2x_statistics_saved_time">
+   <property name="geometry">
+    <rect>
+     <x>225</x>
+     <y>190</y>
+     <width>66</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font/>
+   </property>
+   <property name="text">
+    <string>00:00:00</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>190</y>
+     <width>156</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font/>
+   </property>
+   <property name="text">
+    <string>Saved Time</string>
    </property>
   </widget>
  </widget>

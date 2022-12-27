@@ -32,11 +32,13 @@ class SingleProcessDandere2xService(_Dandere2xServiceInterface, ABC):
 
     def handle_gui_session_statistics(self):
         if self._dandere2x_gui_session_statistics is not None:
-
             self._dandere2x_gui_session_statistics.frame_count = self.d2x.get_frame_count()
+
             while self.d2x.is_alive():
                 self._dandere2x_gui_session_statistics.current_frame = self.d2x.get_current_frame()
-                time.sleep(get_wait_delay())
+                self._dandere2x_gui_session_statistics.pixels_upscaled_count = self.d2x.get_upscaled_pixels_count()
+                self._dandere2x_gui_session_statistics.total_pixels_count = self.d2x.get_total_pixels_count()
+                time.sleep(0.01)
 
             self._dandere2x_gui_session_statistics.is_done = True
 

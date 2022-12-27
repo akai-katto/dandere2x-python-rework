@@ -65,6 +65,12 @@ class Dandere2x(Thread):
 
     # Metadata accessors
 
+    def get_upscaled_pixels_count(self):
+        return self._residual_processing.pixels_upscaled_count
+
+    def get_total_pixels_count(self):
+        return self._residual_processing.total_pixels_count
+
     def get_frame_count(self):
         return self._dandere2x_session.video_properties.input_video_settings.frame_count
 

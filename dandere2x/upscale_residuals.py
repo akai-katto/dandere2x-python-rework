@@ -25,6 +25,9 @@ class UpscaleResiduals(Thread):
         self.__manager = manager
         self.__logger = logging.getLogger(dandere2x_session.input_video_path.name)
 
+        # Interesting metadata
+        self.single_frame_upscale_time = 0
+
     def __waifu2x_thread(self, receive_port, send_port, gpuid,  start, iter_val):
         self.__logger.info(f"Starting waifu2x thread on {receive_port} and {send_port}.")
 
@@ -38,11 +41,10 @@ class UpscaleResiduals(Thread):
                 time.sleep(0.001)
 
             success = False
+            upscale_time = time.time()
             while not success:
                 try:
-                    # print(f"position of {pos}")
                     d2x_image = self.__manager.residual_images[pos]
-
                     d2x_upscaled = w2x_server.upscale_d2x_frame(d2x_image)
 
                     self.__manager.residual_images_upscaled[pos] = d2x_upscaled
@@ -52,6 +54,13 @@ class UpscaleResiduals(Thread):
                                           "times, then it is likely bugged.).")
                     failed_upscale += 1
 
+            total_time = time.time() - upscale_time
+
+            # record how long it took to upscale frame0, to use as metadata for front end
+            if pos == 0:
+                self.single_frame_upscale_time = total_time
+
+        # Once we're done upscaling all the images, yank the server to death.
         w2x_server.kill_server()
         self.__logger.info(f"Total failed upscaled images: {failed_upscale} (this is fine as long as the number is "
                            f"small)")
