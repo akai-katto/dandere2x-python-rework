@@ -36,7 +36,7 @@ def get_session() -> Dandere2xSession:
                             block_size=30,
                             quality=100,
                             num_waifu2x_threads=4,
-                            processing_type="multiprocess",
+                            processing_type="singleprocess",
                             output_options=output_options)
 
 
@@ -44,7 +44,17 @@ if __name__ == "__main__":
     start = time.time()
 
     session0 = get_session()
-    mpd2x0 = Dandere2xServiceResolver(session0)
+    mpd2x0 = Dandere2xServiceResolver(session0, None)
+    mpd2x0.start()
+    mpd2x0.join()
+
+    session0 = get_session()
+    mpd2x0 = Dandere2xServiceResolver(session0, None)
+    mpd2x0.start()
+    mpd2x0.join()
+
+    session0 = get_session()
+    mpd2x0 = Dandere2xServiceResolver(session0, None)
     mpd2x0.start()
     mpd2x0.join()
 

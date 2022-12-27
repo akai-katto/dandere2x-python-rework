@@ -8,16 +8,20 @@ from dandere2x import Dandere2x
 from dandere2x_services._dandere2x_service_interface import _Dandere2xServiceInterface
 from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.ffmpeg.ffmpeg_utils import divide_video, concat_n_videos, migrate_tracks_contextless, is_file_video
+from gui.dandere2_gui_session_statistics import Dandere2xGuiSessionStatistics
 
 
 class MultiProcessDandere2xService(_Dandere2xServiceInterface):
 
-    def __init__(self, dandere2x_session: Dandere2xSession):
+    def __init__(self,
+                 dandere2x_session: Dandere2xSession,
+                 dandere2x_gui_session_statistics: Dandere2xGuiSessionStatistics):
         """
         Uses multiple Dandere2xServiceThread to upscale a given file. It does this by attempting to split the video
         up into equal parts, then migrating each upscaled-split video into one complete video file.
         """
-        super().__init__(dandere2x_session=copy.copy(dandere2x_session))
+        super().__init__(dandere2x_session=copy.copy(dandere2x_session),
+                         dandere2x_gui_session_statistics=dandere2x_gui_session_statistics)
 
         assert is_file_video(ffprobe_dir=self._executable_paths['ffprobe'],
                              input_video=str(self._dandere2x_session.input_video_path.absolute())),\

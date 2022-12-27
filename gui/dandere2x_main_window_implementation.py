@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 
 import yaml
-from PyQt6 import QtCore
+from PyQt6 import QtCore, QtWidgets
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QFileDialog
 
@@ -79,12 +79,12 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.settings_ui: Dandere2xSettingsWindowImplementation = Dandere2xSettingsWindowImplementation(self)
         self.settings_ui.hide()
 
-        self.session_statistics_ui: Dandere2xSessionStatisticsImplementation = Dandere2xSessionStatisticsImplementation(self.dandere2x_gui_session_statistics)
+        self.session_statistics_ui: Dandere2xSessionStatisticsImplementation = Dandere2xSessionStatisticsImplementation(self)
         self.session_statistics_ui.hide()
 
         # Subthreads
-        upscale_frame_of_updater = QtUpscaleFrameOfUpdater(self)
-        upscale_frame_of_updater.start()
+        self.upscale_frame_of_updater = QtUpscaleFrameOfUpdater(self)
+        self.upscale_frame_of_updater.start()
 
         self.dandere2x_thread: QtDandere2xThread = None
 
@@ -145,6 +145,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.refresh_output_texts()
 
     def upscale_in_progress_state(self):
+
         self.ui.progresssBar_upscale_progress_bar.show()
         self.ui.label_upscale_frame_of.show()
         self.ui.button_upscale.hide()
@@ -257,8 +258,10 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
         self.parent = parent
 
     def run(self):
-        while True:
 
+        print("starting qtscaleframeupdator")
+
+        while True:
             self.parent.ui.label_upscale_frame_of.setText(
                 self.parent.metadata_text_generator(
                     "Frame of:",
@@ -266,5 +269,6 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
                     20))
 
             ratio = max(1, int((self.parent.dandere2x_gui_session_statistics.current_frame / self.parent.dandere2x_gui_session_statistics.frame_count) * 100))
+            ratio = int(min(100, ratio))
             self.parent.ui.progresssBar_upscale_progress_bar.setValue(ratio)
-            time.sleep(0.5)
+            time.sleep(0.001)
