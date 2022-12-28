@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>731</width>
-    <height>336</height>
+    <width>825</width>
+    <height>334</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>90</y>
+      <y>80</y>
       <width>121</width>
       <height>111</height>
      </rect>
@@ -33,8 +33,8 @@
    <widget class="QLabel" name="label_icon_save_video">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>90</y>
+      <x>342</x>
+      <y>80</y>
       <width>121</width>
       <height>111</height>
      </rect>
@@ -49,8 +49,8 @@
    <widget class="QLabel" name="label_icon_upscale">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>90</y>
+      <x>622</x>
+      <y>80</y>
       <width>131</width>
       <height>111</height>
      </rect>
@@ -81,7 +81,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>310</x>
+      <x>352</x>
       <y>240</y>
       <width>111</width>
       <height>41</height>
@@ -97,7 +97,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>632</x>
       <y>240</y>
       <width>111</width>
       <height>41</height>
@@ -110,7 +110,7 @@
    <widget class="QLabel" name="label_icon_settings">
     <property name="geometry">
      <rect>
-      <x>590</x>
+      <x>562</x>
       <y>7</y>
       <width>31</width>
       <height>41</height>
@@ -126,8 +126,8 @@
    <widget class="QPushButton" name="button_settings">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>15</y>
+      <x>717</x>
+      <y>10</y>
       <width>91</width>
       <height>24</height>
      </rect>
@@ -159,9 +159,7 @@
      </rect>
     </property>
     <property name="font">
-     <font>
-      <family>Courier New</family>
-     </font>
+     <font/>
     </property>
     <property name="text">
      <string>File:   yn_moving.mkv</string>
@@ -177,9 +175,7 @@
      </rect>
     </property>
     <property name="font">
-     <font>
-      <family>Courier New</family>
-     </font>
+     <font/>
     </property>
     <property name="text">
      <string>Duration:                   00:00:00</string>
@@ -195,9 +191,7 @@
      </rect>
     </property>
     <property name="font">
-     <font>
-      <family>Courier New</family>
-     </font>
+     <font/>
     </property>
     <property name="text">
      <string>Frame Count:                 7545</string>
@@ -206,7 +200,7 @@
    <widget class="QPushButton" name="button_change_output">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>362</x>
       <y>210</y>
       <width>91</width>
       <height>24</height>
@@ -219,16 +213,14 @@
    <widget class="QLabel" name="label_output_resolution">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>282</x>
       <y>260</y>
       <width>261</width>
       <height>20</height>
      </rect>
     </property>
     <property name="font">
-     <font>
-      <family>Courier New</family>
-     </font>
+     <font/>
     </property>
     <property name="text">
      <string>Duration:                   00:00:00</string>
@@ -237,16 +229,14 @@
    <widget class="QLabel" name="label_output_name">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>240</y>
+      <x>307</x>
+      <y>236</y>
       <width>261</width>
       <height>20</height>
      </rect>
     </property>
     <property name="font">
-     <font>
-      <family>Courier New</family>
-     </font>
+     <font/>
     </property>
     <property name="text">
      <string>Output:                a</string>
@@ -255,8 +245,8 @@
    <widget class="QPushButton" name="button_statistics">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>50</y>
+      <x>612</x>
+      <y>10</y>
       <width>91</width>
       <height>24</height>
      </rect>
@@ -265,38 +255,33 @@
      <string>Statistics</string>
     </property>
    </widget>
-   <widget class="QProgressBar" name="progresssBar_upscale_progress_bar">
-    <property name="geometry">
-     <rect>
-      <x>530</x>
-      <y>210</y>
-      <width>126</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>24</number>
-    </property>
-    <property name="textVisible">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_upscale_frame_of">
     <property name="geometry">
      <rect>
-      <x>520</x>
-      <y>235</y>
+      <x>634</x>
+      <y>232</y>
       <width>151</width>
       <height>31</height>
      </rect>
     </property>
     <property name="font">
-     <font>
-      <family>Courier New</family>
-     </font>
+     <font/>
     </property>
     <property name="text">
      <string>Frame       %d of %d</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_progress_bar">
+    <property name="geometry">
+     <rect>
+      <x>604</x>
+      <y>210</y>
+      <width>171</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>⬛⬛⬛⬛⬛⬛⬛⬜⬜⬜</string>
     </property>
    </widget>
    <zorder>label_output_name</zorder>
@@ -315,8 +300,8 @@
    <zorder>label_selected_video_frame_count</zorder>
    <zorder>button_change_output</zorder>
    <zorder>button_statistics</zorder>
-   <zorder>progresssBar_upscale_progress_bar</zorder>
    <zorder>label_upscale_frame_of</zorder>
+   <zorder>label_progress_bar</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

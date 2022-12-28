@@ -117,7 +117,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.button_change_output.hide()
 
     def pre_upscale_state(self):
-        self.ui.progresssBar_upscale_progress_bar.hide()
+        self.ui.label_progress_bar.hide()
         self.ui.label_upscale_frame_of.hide()
 
     def setup_icons(self):
@@ -146,12 +146,12 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
     def upscale_in_progress_state(self):
 
-        self.ui.progresssBar_upscale_progress_bar.show()
+        self.ui.label_progress_bar.show()
         self.ui.label_upscale_frame_of.show()
         self.ui.button_upscale.hide()
 
     def post_upscale_state(self):
-        self.ui.progresssBar_upscale_progress_bar.hide()
+        self.ui.label_progress_bar.hide()
         self.ui.label_upscale_frame_of.hide()
         self.ui.button_upscale.show()
 
@@ -257,6 +257,12 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
         super(QtUpscaleFrameOfUpdater, self).__init__(parent)
         self.parent = parent
 
+    @staticmethod
+    def get_progress_bar(percentage: int):
+        percent = round(percentage / 10)
+        progress_bar = "⬛" * percent + "⬜" * (10-percent)
+        return progress_bar
+
     def run(self):
 
         print("starting qtscaleframeupdator")
@@ -270,5 +276,5 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
 
             ratio = max(1, int((self.parent.dandere2x_gui_session_statistics.current_frame / self.parent.dandere2x_gui_session_statistics.frame_count) * 100))
             ratio = int(min(100, ratio))
-            self.parent.ui.progresssBar_upscale_progress_bar.setValue(ratio)
+            self.parent.ui.label_progress_bar.setText(self.get_progress_bar(ratio))
             time.sleep(0.001)
