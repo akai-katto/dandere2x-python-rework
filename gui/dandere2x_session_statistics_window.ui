@@ -24,7 +24,6 @@
    </property>
    <property name="font">
     <font>
-     <family>Courier New</family>
      <pointsize>19</pointsize>
      <bold>true</bold>
     </font>
@@ -43,9 +42,7 @@
     </rect>
    </property>
    <property name="font">
-    <font>
-     <family>Courier</family>
-    </font>
+    <font/>
    </property>
    <property name="text">
     <string>Current Frame</string>
@@ -61,9 +58,7 @@
     </rect>
    </property>
    <property name="font">
-    <font>
-     <family>Courier New</family>
-    </font>
+    <font/>
    </property>
    <property name="text">
     <string>Frames Remaining</string>
@@ -79,9 +74,7 @@
     </rect>
    </property>
    <property name="font">
-    <font>
-     <family>Courier New</family>
-    </font>
+    <font/>
    </property>
    <property name="text">
     <string>   9999</string>
@@ -97,9 +90,7 @@
     </rect>
    </property>
    <property name="font">
-    <font>
-     <family>Courier New</family>
-    </font>
+    <font/>
    </property>
    <property name="text">
     <string>   9999</string>
@@ -116,7 +107,6 @@
    </property>
    <property name="font">
     <font>
-     <family>Courier New</family>
      <pointsize>19</pointsize>
      <bold>true</bold>
     </font>
@@ -135,9 +125,7 @@
     </rect>
    </property>
    <property name="font">
-    <font>
-     <family>Courier New</family>
-    </font>
+    <font/>
    </property>
    <property name="text">
     <string>Recycled Pixels Ratio</string>
@@ -153,44 +141,10 @@
     </rect>
    </property>
    <property name="font">
-    <font>
-     <family>Courier New</family>
-    </font>
+    <font/>
    </property>
    <property name="text">
     <string>100.00%</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_d2x_statistics_saved_time">
-   <property name="geometry">
-    <rect>
-     <x>225</x>
-     <y>190</y>
-     <width>66</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font/>
-   </property>
-   <property name="text">
-    <string>00:00:00</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>190</y>
-     <width>156</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font/>
-   </property>
-   <property name="text">
-    <string>Saved Time</string>
    </property>
   </widget>
  </widget>

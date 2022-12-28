@@ -1,6 +1,8 @@
 import copy
 import glob
 import os
+import threading
+import time
 from pathlib import Path
 from typing import List
 
@@ -20,7 +22,7 @@ class MultiProcessDandere2xService(_Dandere2xServiceInterface):
         Uses multiple Dandere2xServiceThread to upscale a given file. It does this by attempting to split the video
         up into equal parts, then migrating each upscaled-split video into one complete video file.
         """
-        super().__init__(dandere2x_session=copy.copy(dandere2x_session),
+        super().__init__(dandere2x_session=dandere2x_session,
                          dandere2x_gui_session_statistics=dandere2x_gui_session_statistics)
 
         assert is_file_video(ffprobe_dir=self._executable_paths['ffprobe'],
@@ -68,16 +70,54 @@ class MultiProcessDandere2xService(_Dandere2xServiceInterface):
             self._divided_videos_upscaled.append(str(child_request.no_sound_video_file))
             self._child_threads.append(Dandere2x(child_request))
 
+    def handle_gui_session_statistics(self):
+        if self._dandere2x_gui_session_statistics is not None:
+
+            while True:
+
+                all_done = True
+                for thread in self._child_threads:
+                    if thread.is_alive():
+                        all_done = False
+
+                if all_done:
+                    print("breaking out")
+                    break
+
+                current_frame = 0
+                pixels_upscaled_count = 0
+                total_pixels_count = 0
+                total_frame_count = 0
+
+                for child in self._child_threads:
+                    current_frame += child.get_current_frame()
+                    pixels_upscaled_count += child.get_upscaled_pixels_count()
+                    total_pixels_count += child.get_total_pixels_count()
+                    total_frame_count += child.get_frame_count()
+
+                self._dandere2x_gui_session_statistics.current_frame = current_frame
+                self._dandere2x_gui_session_statistics.pixels_upscaled_count = pixels_upscaled_count
+                self._dandere2x_gui_session_statistics.total_pixels_count = total_pixels_count
+                self._dandere2x_gui_session_statistics.frame_count = total_frame_count
+                time.sleep(0.01)
+
+            self._dandere2x_gui_session_statistics.is_done = True
+
     def run(self):
+        start_time = time.time()
         self._pre_process()
 
         for request in self._child_threads:
             request.start()
 
+        threading.Thread(target=self.handle_gui_session_statistics).start()
+
         for request in self._child_threads:
             request.join()
 
         self._on_completion()
+        duration = time.time() - start_time
+        print(f"took {duration} to complete multiprocess")
 
     def _on_completion(self):
         """
