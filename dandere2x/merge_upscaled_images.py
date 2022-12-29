@@ -32,7 +32,7 @@ class MergeUpscaledImages(Thread):
     def run(self) -> None:
 
         current_frame = D2xFrame(self._WIDTH * self._SCALE_FACTOR, self._HEIGHT * self._SCALE_FACTOR)
-        for pos in range(self._FRAME_COUNT - 1):
+        for pos in range(self._FRAME_COUNT):
             while self.__manager.residual_blocks[pos] is None:
                 time.sleep(0.0001)
             while self.__manager.residual_images_upscaled[pos] is None:

@@ -30,16 +30,16 @@ class BlockMatching(Thread):
         f1 = D2xFrame(self.dandere2x_session.video_properties.corrected_video_width,
                       self.dandere2x_session.video_properties.corrected_video_height)
 
-        for frame_pos in range(0, self.dandere2x_session.video_properties.input_video_settings.frame_count - 1):
+        for frame_pos in range(0, self.dandere2x_session.video_properties.input_video_settings.frame_count ):
 
-            while self.__manager.noised_images_array[frame_pos + 1] is None:
+            while self.__manager.noised_images_array[frame_pos] is None:
                 time.sleep(get_wait_delay())
 
-            while self.__manager.compressed_frames_array[frame_pos + 1] is None:
+            while self.__manager.compressed_frames_array[frame_pos] is None:
                 time.sleep(get_wait_delay())
 
-            f2 = copy.deepcopy(self.__manager.noised_images_array[frame_pos + 1])
-            f2_compressed_raw = self.__manager.compressed_frames_array[frame_pos + 1]
+            f2 = copy.deepcopy(self.__manager.noised_images_array[frame_pos])
+            f2_compressed_raw = self.__manager.compressed_frames_array[frame_pos]
             f2_compressed = (f2_compressed_raw.frame_array.astype(np.double) + f2.frame_array.astype(np.double))/2
 
             array_subtracted_squared: np.array = \

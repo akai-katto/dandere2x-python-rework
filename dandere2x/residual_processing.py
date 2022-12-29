@@ -33,15 +33,15 @@ class ResidualProcessing(Thread):
         BUFFER = 5
         BLEED = 1
 
-        for pos in range(self._FRAME_COUNT - 1):
+        for pos in range(self._FRAME_COUNT):
             while self.__manager.missing_blocks[pos] is None:
                 time.sleep(0.0001)
-            while self.__manager.input_images_array[pos+1] is None:
+            while self.__manager.input_images_array[pos] is None:
                 time.sleep(0.0001)
 
             missing_blocks = self.__manager.missing_blocks[pos]
 
-            f1 = copy.deepcopy(self.__manager.input_images_array[pos + 1])
+            f1 = copy.deepcopy(self.__manager.input_images_array[pos])
 
             if len(missing_blocks) != 0:
 

@@ -35,7 +35,7 @@ class PipeFinishedFramesToVideoAndCollectGarbage(Thread):
         frames_to_pipe = FramesToVideoPipe(self.dandere2x_session.no_sound_video_file, self.dandere2x_session)
         frames_to_pipe.start()
 
-        for pos in range(self._FRAME_COUNT - 1):
+        for pos in range(self._FRAME_COUNT):
             while self.__manager.finished_frames[pos] is None:
                 time.sleep(get_wait_delay())
 
@@ -56,7 +56,9 @@ class PipeFinishedFramesToVideoAndCollectGarbage(Thread):
 
             n = gc.collect()
             #print("Number of unreachable objects collected by GC:", n)
-            self.__logger.info(f"Piped frame {pos} into output video.")
+            self.__logger.info(f"Piped frame {pos} of "
+                               f"{self.dandere2x_session.video_properties.input_video_settings.frame_count}"
+                               f" into output video.")
 
         frames_to_pipe.kill()
         frames_to_pipe.join()
