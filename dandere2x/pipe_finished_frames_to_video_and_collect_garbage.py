@@ -35,7 +35,7 @@ class PipeFinishedFramesToVideoAndCollectGarbage(Thread):
         frames_to_pipe = FramesToVideoPipe(self.dandere2x_session.no_sound_video_file, self.dandere2x_session)
         frames_to_pipe.start()
 
-        for pos in range(self._FRAME_COUNT - 1):
+        for pos in range(self._FRAME_COUNT):
             while self.__manager.finished_frames[pos] is None:
                 time.sleep(get_wait_delay())
 

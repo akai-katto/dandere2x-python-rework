@@ -35,7 +35,7 @@ class UpscaleResiduals(Thread):
         w2x_server.start()
 
         failed_upscale = 0
-        for pos in range(start, self._FRAME_COUNT - 1, iter_val):
+        for pos in range(start, self._FRAME_COUNT, iter_val):
 
             while self.__manager.residual_images[pos] is None:
                 time.sleep(0.001)
