@@ -76,13 +76,13 @@ class MultiProcessDandere2xService(_Dandere2xServiceInterface):
 
             while True:
 
+                # check to see if all threads are done
                 all_done = True
                 for thread in self._child_threads:
                     if thread.is_alive():
                         all_done = False
 
                 if all_done:
-                    print("breaking out")
                     break
 
                 current_frame = 0
@@ -140,4 +140,3 @@ class MultiProcessDandere2xService(_Dandere2xServiceInterface):
 
         for video in self.divided_videos:
             os.remove(video)
-        
