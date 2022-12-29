@@ -10,7 +10,7 @@ from dandere2xlib.d2xsession.__init__ import Dandere2xSession
 from dandere2xlib.d2xframe import D2xFrame
 from dandere2xlib.utilities.dandere2x_utils import get_ffmpeg_path
 from dandere2xlib.utilities.yaml_utils import get_options_from_section, load_executable_paths_yaml
-from dandere2xlib.ffmpeg.ffmpeg_utils import concat_n_videos, convert_mk4_to_mp4
+from dandere2xlib.ffmpeg.ffmpeg_utils import concat_n_videos
 
 
 class FramesToVideoPipe(threading.Thread):
