@@ -10,6 +10,7 @@ __pycache__/
 externals/*
 temp/*
 workspace/*
+.DS_Store
 
 # C extensions
 *.so
