@@ -132,7 +132,7 @@ class MultiProcessDandere2xService(_Dandere2xServiceInterface):
                         list_of_files=self._divided_videos_upscaled,
                         output_file=str(self._dandere2x_session.no_sound_video_file.absolute()))
 
-        migrate_tracks_contextless(ffmpeg_dir=Path(ffmpeg_path),
+        migrate_tracks_contextless(ffmpeg_dir=ffmpeg_path,
                                    no_audio_file=self._dandere2x_session.no_sound_video_file,
                                    input_file=self._dandere2x_session.input_video_path,
                                    output_file=self._dandere2x_session.output_video_path,

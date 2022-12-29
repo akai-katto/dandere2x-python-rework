@@ -21,19 +21,7 @@ def get_console_output(method_name: str, console_output_dir=None):
     return open(os.devnull, 'w')
 
 
-def convert_mk4_to_mp4(ffmpeg_dir: Path, input_video: Path, output_path: Path, console_output_dir=None):
-    execute = [ffmpeg_dir,
-               '-i', str(input_video.absolute()),
-               '-codec', 'copy',
-               str(output_path.absolute())]
-
-    print(" ".join(execute))
-
-    console_output = get_console_output(__name__, console_output_dir)
-    subprocess.call(execute, shell=False, stderr=console_output, stdout=console_output)
-
-
-def get_frame_count_ffmpeg(ffmpeg_dir: Path, input_video: Path):
+def get_frame_count_ffmpeg(ffmpeg_dir: str, input_video: Path):
     assert get_operating_system() != "win32" or os.path.exists(ffmpeg_dir), "%s does not exist!" % ffmpeg_dir
 
     # We apply vsync since we apply vsync for counting frames, as well as keeping the frame rate consistent.
@@ -87,7 +75,7 @@ def concat_n_videos(ffmpeg_dir: str,
     subprocess.call(concat_videos_command, shell=False, stderr=console_output, stdout=console_output)
 
 
-def migrate_tracks_contextless(ffmpeg_dir: Path,
+def migrate_tracks_contextless(ffmpeg_dir: str,
                                no_audio_file: Path,
                                input_file: Path,
                                output_file: Path,
@@ -105,7 +93,7 @@ def migrate_tracks_contextless(ffmpeg_dir: Path,
 
     log = logging.getLogger()
 
-    migrate_tracks_command = [str(ffmpeg_dir.absolute()),
+    migrate_tracks_command = [ffmpeg_dir,
                               "-i", str(no_audio_file.absolute()),
                               "-i", str(input_file.absolute()),
                               "-map", "0:v?",
@@ -132,9 +120,12 @@ def migrate_tracks_contextless(ffmpeg_dir: Path,
     log.info("Finished migrating to file: %s" % output_file)
 
 
-def divide_video(ffmpeg_path: str, ffprobe_path: str,
-                 input_video: str, output_options: dict,
-                 divide: int, output_dir: str):
+def divide_video(ffmpeg_path: str,
+                 ffprobe_path: str,
+                 input_video: str,
+                 output_options: dict,
+                 divide: int,
+                 output_dir: str):
     """
 
     Attempts to divide a video into N different segments, using the ffmpeg segment_time argument. See the reading
@@ -179,7 +170,8 @@ def divide_video(ffmpeg_path: str, ffprobe_path: str,
     return return_string
 
 
-def is_file_video(ffprobe_dir: str, input_video: str):
+def is_file_video(ffprobe_dir: str,
+                  input_video: str):
     assert get_operating_system() != "win32" or os.path.exists(ffprobe_dir), "%s does not exist!" % ffprobe_dir
 
     execute = [
