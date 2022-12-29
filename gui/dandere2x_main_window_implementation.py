@@ -185,7 +185,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.label_selected_video_frame_count.setText(self.metadata_text_generator("Frame Count:",
                                                                                       str(self.video_settings.frame_count),
                                                                                       21))
-        self.output_file = Path(self.this_folder) / "workspace" / (self.input_file.stem + "_d2x" + ".mkv")
+        self.output_file = Path(self.this_folder) / "workspace" / (self.input_file.stem + "_d2x" + self.input_file.suffix)
         self.post_select_video_state()
 
     def press_change_output_button(self):

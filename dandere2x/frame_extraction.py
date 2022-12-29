@@ -34,3 +34,6 @@ class FrameExtraction(Thread):
 
             frame = self.__extractor.get_frame()
             self.__manager.input_images_array[pos] = frame
+
+        self.__loger.info("FrameExtraction done")
+        self.__extractor.ffmpeg.kill()

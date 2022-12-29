@@ -35,3 +35,6 @@ class NoisedFrameExtraction(Thread):
 
             frame = self.__extractor.get_frame()
             self.__manager.noised_images_array[pos] = frame
+
+        self.__loger.info("NoisedFrameExtraction done")
+        self.__extractor.ffmpeg.kill()
