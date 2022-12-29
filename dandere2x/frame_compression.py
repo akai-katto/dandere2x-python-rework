@@ -20,11 +20,6 @@ class FrameCompression(Thread):
         self.dandere2x_session = dandere2x_session
 
         self.__manager = manager
-        self.__extractor = VideoFrameExtractor(ffmpeg_binary=load_executable_paths_yaml()['ffmpeg'],
-                                               input_video=dandere2x_session.input_video_path,
-                                               width=dandere2x_session.video_properties.corrected_video_width,
-                                               height=dandere2x_session.video_properties.corrected_video_height,
-                                               dandere2x_session=dandere2x_session)
         self.__loger = logging.getLogger()
 
     def run(self) -> None:

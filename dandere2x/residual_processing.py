@@ -15,6 +15,10 @@ class ResidualProcessing(Thread):
     def __init__(self, manager: D2xManagement, dandere2x_session: Dandere2xSession):
         super().__init__()
 
+        # Interesting metadata
+        self.pixels_upscaled_count = 0
+        self.total_pixels_count = 0
+
         self.dandere2x_session = dandere2x_session
 
         self._HEIGHT = self.dandere2x_session.video_properties.corrected_video_height
@@ -73,3 +77,7 @@ class ResidualProcessing(Thread):
                 self.__manager.residual_blocks[pos] = []
 
             self.__manager.residual_images[pos] = residual_image
+
+            # metadata
+            self.pixels_upscaled_count += residual_image.width * residual_image.height
+            self.total_pixels_count += f1.width * f1.height

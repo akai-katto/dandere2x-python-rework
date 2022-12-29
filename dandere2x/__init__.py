@@ -25,18 +25,18 @@ class Dandere2x(Thread):
         super().__init__(name=f"session {dandere2x_session.session_id}")
         set_dandere2x_logger(dandere2x_session.input_video_path.name)
 
-        manager = D2xManagement()
+        self._manager = D2xManagement()
         self._dandere2x_session = dandere2x_session
         self.__logger = logging.getLogger(dandere2x_session.input_video_path.name)
 
-        self._frame_extraction = FrameExtraction(manager, dandere2x_session)
-        self._noised_frame_extraction = NoisedFrameExtraction(manager, dandere2x_session)
-        self._frame_compression = FrameCompression(manager, dandere2x_session)
-        self._block_matching = BlockMatching(manager, dandere2x_session)
-        self._residual_processing = ResidualProcessing(manager, dandere2x_session)
-        self._upscale_residuals = UpscaleResiduals(manager, dandere2x_session)
-        self._merge_upscaled_images = MergeUpscaledImages(manager, dandere2x_session)
-        self._pipe_finished_frames_to_video_and_collect_garbage = PipeFinishedFramesToVideoAndCollectGarbage(manager,
+        self._frame_extraction = FrameExtraction(self._manager, dandere2x_session)
+        self._noised_frame_extraction = NoisedFrameExtraction(self._manager, dandere2x_session)
+        self._frame_compression = FrameCompression(self._manager, dandere2x_session)
+        self._block_matching = BlockMatching(self._manager, dandere2x_session)
+        self._residual_processing = ResidualProcessing(self._manager, dandere2x_session)
+        self._upscale_residuals = UpscaleResiduals(self._manager, dandere2x_session)
+        self._merge_upscaled_images = MergeUpscaledImages(self._manager, dandere2x_session)
+        self._pipe_finished_frames_to_video_and_collect_garbage = PipeFinishedFramesToVideoAndCollectGarbage(self._manager,
                                                                                                              dandere2x_session)
 
     def run(self):
@@ -62,3 +62,17 @@ class Dandere2x(Thread):
         self._upscale_residuals.join()
         self._merge_upscaled_images.join()
         self._pipe_finished_frames_to_video_and_collect_garbage.join()
+
+    # Metadata accessors
+
+    def get_upscaled_pixels_count(self):
+        return self._residual_processing.pixels_upscaled_count
+
+    def get_total_pixels_count(self):
+        return self._residual_processing.total_pixels_count
+
+    def get_frame_count(self):
+        return self._dandere2x_session.video_properties.input_video_settings.frame_count
+
+    def get_current_frame(self):
+        return self._manager.last_piped_frame

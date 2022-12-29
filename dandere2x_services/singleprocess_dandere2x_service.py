@@ -1,4 +1,6 @@
 import os
+import threading
+import time
 from abc import ABC
 from pathlib import Path
 
@@ -6,19 +8,39 @@ from dandere2x import Dandere2x
 from dandere2x_services._dandere2x_service_interface import _Dandere2xServiceInterface
 from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.ffmpeg.ffmpeg_utils import migrate_tracks_contextless
+from dandere2xlib.utilities.dandere2x_utils import get_wait_delay
+from gui.dandere2_gui_session_statistics import Dandere2xGuiSessionStatistics
 
 
 class SingleProcessDandere2xService(_Dandere2xServiceInterface, ABC):
 
-    def __init__(self, dandere2x_session: Dandere2xSession):
-        super().__init__(dandere2x_session=dandere2x_session)
+    def __init__(self,
+                 dandere2x_session: Dandere2xSession,
+                 dandere2x_gui_session_statistics: Dandere2xGuiSessionStatistics):
+        super().__init__(dandere2x_session=dandere2x_session,
+                         dandere2x_gui_session_statistics=dandere2x_gui_session_statistics)
+
+        self.d2x: Dandere2x = None
 
     def run(self):
         self._pre_process()
-        d2x = Dandere2x(self._dandere2x_session)
-        d2x.start()
-        d2x.join()
+        self.d2x = Dandere2x(self._dandere2x_session)
+        self.d2x.start()
+        threading.Thread(target=self.handle_gui_session_statistics).start()
+        self.d2x.join()
         self._on_completion()
+
+    def handle_gui_session_statistics(self):
+        if self._dandere2x_gui_session_statistics is not None:
+            self._dandere2x_gui_session_statistics.frame_count = self.d2x.get_frame_count()
+
+            while self.d2x.is_alive():
+                self._dandere2x_gui_session_statistics.current_frame = self.d2x.get_current_frame()
+                self._dandere2x_gui_session_statistics.pixels_upscaled_count = self.d2x.get_upscaled_pixels_count()
+                self._dandere2x_gui_session_statistics.total_pixels_count = self.d2x.get_total_pixels_count()
+                time.sleep(0.01)
+
+            self._dandere2x_gui_session_statistics.is_done = True
 
     def _pre_process(self):
         pass
