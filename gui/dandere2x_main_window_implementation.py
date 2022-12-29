@@ -45,7 +45,13 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
     def get_dandere2x_session_from_gui(self):
 
-        with open("config_files/output_options.yaml") as f:
+        application_path = None
+        if getattr(sys, 'frozen', False):
+            application_path = Path(os.path.dirname(sys.executable))
+        elif __file__:
+            application_path = Path(os.path.dirname(__file__))
+
+        with open(application_path / "config_files/output_options.yaml") as f:
             output_options = yaml.safe_load(f)
 
         output_options["dandere2x"]["multiprocess_thread_count"] = int(self.settings_ui.ui.combo_box_dandere2x_settings_multiprocess_thread_count.currentText())
