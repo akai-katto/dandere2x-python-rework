@@ -33,6 +33,7 @@ class MultiProcessDandere2xService(_Dandere2xServiceInterface):
         self._divided_videos_upscaled: List[str] = []
 
         self._divided_videos_path = self._dandere2x_session.workspace / "divided_videos"
+        self.divided_videos = []
 
     def _pre_process(self):
         self._dandere2x_session.clear_workspace()
@@ -51,12 +52,12 @@ class MultiProcessDandere2xService(_Dandere2xServiceInterface):
                      output_dir=str(self._divided_videos_path.absolute()))
 
         # Find all the split video files ffmpeg produced in the folder.
-        divided_re_encoded_videos = sorted(glob.glob(os.path.join(self._divided_videos_path, "*.mkv")))
+        self.divided_videos = sorted(glob.glob(os.path.join(self._divided_videos_path, "*.mkv")))
 
         # Create unique child_requests for each unique video, with the video being the input.
-        for x in range(0, len(divided_re_encoded_videos)):
+        for x in range(0, len(self.divided_videos)):
             child_request = Dandere2xSession(session_id=x,
-                                             input_video_path=Path(divided_re_encoded_videos[x]),
+                                             input_video_path=Path(self.divided_videos[x]),
                                              workspace=self._dandere2x_session.workspace / f"subworkspace{x}",
                                              output_path=self._dandere2x_session.output_video_path,
                                              scale_factor=self._dandere2x_session.scale_factor,
@@ -136,3 +137,7 @@ class MultiProcessDandere2xService(_Dandere2xServiceInterface):
                                    input_file=self._dandere2x_session.input_video_path,
                                    output_file=self._dandere2x_session.output_video_path,
                                    output_options=self._dandere2x_session.output_options)
+
+        for video in self.divided_videos:
+            os.remove(video)
+        
