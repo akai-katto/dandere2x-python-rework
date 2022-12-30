@@ -68,7 +68,7 @@ class MultiProcessDandere2xService(_Dandere2xServiceInterface):
                                              processing_type="singleprocess",
                                              output_options=self._dandere2x_session.output_options)
 
-            self._divided_videos_upscaled.append(str(child_request.no_sound_video_file))
+            self._divided_videos_upscaled.append(str(Path(child_request.no_sound_video_file.absolute())))
             self._child_threads.append(Dandere2x(child_request))
 
     def handle_gui_session_statistics(self):

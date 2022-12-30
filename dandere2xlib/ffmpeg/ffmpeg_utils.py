@@ -54,7 +54,7 @@ def concat_n_videos(ffmpeg_dir: str,
                     console_output_dir=None) -> None:
     import subprocess
 
-    file_list_text_file = os.path.join(temp_file_dir, "temp.txt")
+    file_list_text_file = Path(os.path.join(temp_file_dir, "temp.txt"))
 
     file_template = "file " + "'" + "%s" + "'" + "\n"
 
@@ -67,9 +67,12 @@ def concat_n_videos(ffmpeg_dir: str,
     concat_videos_command = [ffmpeg_dir,
                              "-f", "concat",
                              "-safe", "0",
-                             "-i", file_list_text_file]
+                             "-i", str(file_list_text_file.absolute())]
 
     concat_videos_command.extend([output_file])
+
+    log = logging.getLogger()
+    log.info(f"Concatenating videos... command is {' '.join(concat_videos_command)}")
 
     console_output = get_console_output(__name__, console_output_dir)
     subprocess.call(concat_videos_command, shell=False, stderr=console_output, stdout=console_output)
@@ -84,8 +87,6 @@ def migrate_tracks_contextless(ffmpeg_dir: str,
     """
     Add the audio tracks from the original video to the output video.
     """
-
-    log = logging.getLogger("root")
 
     # to remove
     def convert(lst):

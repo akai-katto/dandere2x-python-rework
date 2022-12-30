@@ -26,13 +26,7 @@ class Dandere2xSettingsWindowImplementation(QMainWindow):
 
     def load_settings(self):
 
-        application_path = None
-        if getattr(sys, 'frozen', False):
-            application_path = Path(os.path.dirname(sys.executable))
-        elif __file__:
-            application_path = Path(os.path.dirname(__file__))
-
-        with open(application_path / "config_files/gui_config.yaml", "r") as f:
+        with open("config_files/gui_config.yaml", "r") as f:
             settings = yaml.safe_load(f)
 
         self.ui.combo_box_dandere2x_settings_quality_coeffecient.setCurrentText(settings['dandere2x_settings']['quality_coefficient'])
