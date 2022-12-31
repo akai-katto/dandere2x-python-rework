@@ -59,7 +59,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="icons/icons.qrc">:/icons/hd-display.png</pixmap>
+     <pixmap resource="icons/icons.qrc">:/icons/2x.png</pixmap>
     </property>
    </widget>
    <widget class="QPushButton" name="button_select_video">
@@ -119,8 +119,8 @@
    <widget class="QPushButton" name="button_settings">
     <property name="geometry">
      <rect>
-      <x>727</x>
-      <y>10</y>
+      <x>4</x>
+      <y>4</y>
       <width>91</width>
       <height>24</height>
      </rect>
@@ -139,9 +139,7 @@
      </rect>
     </property>
     <property name="font">
-     <font>
-      <family>Segoe UI</family>
-     </font>
+     <font/>
     </property>
     <property name="text">
      <string>Change Video</string>
@@ -252,8 +250,8 @@
    <widget class="QPushButton" name="button_statistics">
     <property name="geometry">
      <rect>
-      <x>622</x>
-      <y>10</y>
+      <x>100</x>
+      <y>4</y>
       <width>91</width>
       <height>24</height>
      </rect>
@@ -272,9 +270,7 @@
      </rect>
     </property>
     <property name="font">
-     <font>
-      <family>Segoe UI</family>
-     </font>
+     <font/>
     </property>
     <property name="text">
      <string>Frame:</string>
@@ -303,12 +299,17 @@
      <rect>
       <x>4</x>
       <y>304</y>
-      <width>301</width>
+      <width>489</width>
       <height>17</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <italic>true</italic>
+     </font>
+    </property>
     <property name="text">
-     <string>Note: You need to use VLC player with Dandere2x!</string>
+     <string>Note: You need to use VLC (or any non-windows-media-player) with Dandere2x!</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_upscale_frame_of_rhs">
@@ -431,6 +432,19 @@
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
+   <widget class="QPushButton" name="button_about">
+    <property name="geometry">
+     <rect>
+      <x>194</x>
+      <y>4</y>
+      <width>91</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>About</string>
+    </property>
+   </widget>
    <zorder>label_output_name_lhs</zorder>
    <zorder>label_output_resolution_lhs</zorder>
    <zorder>label_selected_video_runtime_lhs</zorder>
@@ -455,6 +469,7 @@
    <zorder>label_selected_file_rhs</zorder>
    <zorder>label_selected_video_runtime_rhs</zorder>
    <zorder>label_selected_video_frame_count_rhs</zorder>
+   <zorder>button_about</zorder>
   </widget>
  </widget>
  <resources>

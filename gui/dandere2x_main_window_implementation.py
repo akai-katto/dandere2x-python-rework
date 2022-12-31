@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 
 import yaml
-from PyQt6 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets, QtGui
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QFileDialog
 
@@ -15,6 +15,7 @@ from dandere2xlib.d2xsession import Dandere2xSession
 from dandere2xlib.ffmpeg.video_settings import VideoSettings
 from dandere2xlib.utilities.dandere2x_utils import get_wait_delay
 from gui.dandere2_gui_session_statistics import Dandere2xGuiSessionStatistics
+from gui.dandere2x_about_implementation import Dandere2xAboutImplementation
 from gui.dandere2x_main_window import Ui_Dandere2xMainWindow
 from gui.dandere2x_session_statistics_implementation import Dandere2xSessionStatisticsImplementation
 from gui.dandere2x_settings_window_implementation import Dandere2xSettingsWindowImplementation
@@ -67,6 +68,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         super(Dandere2xMainWindowImplementation, self).__init__()
         self.ui = Ui_Dandere2xMainWindow()
         self.ui.setupUi(self)
+        self.setWindowIcon(QtGui.QIcon('gui/icons/d2x_ico.png'))
 
         # Class Specific
         self.this_folder = os.getcwd()
@@ -81,6 +83,9 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
         self.session_statistics_ui: Dandere2xSessionStatisticsImplementation = Dandere2xSessionStatisticsImplementation(self)
         self.session_statistics_ui.hide()
+
+        self.about_dandere2x_ui = Dandere2xAboutImplementation()
+        self.about_dandere2x_ui.hide()
 
         # Subthreads
         self.upscale_frame_of_updater = QtUpscaleFrameOfUpdater(self)
@@ -102,6 +107,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.button_change_output.clicked.connect(self.press_change_output_button)
         self.ui.button_upscale.clicked.connect(self.press_upscale_button)
         self.ui.button_statistics.clicked.connect(self.session_statistics_ui.show)
+        self.ui.button_about.clicked.connect(self.about_dandere2x_ui.show)
 
     def pre_select_video_state(self):
 
@@ -129,7 +135,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
     def setup_icons(self):
         self.ui.label_icon_load_video.setPixmap(QPixmap("gui/icons/load-action-floppy.png"))
         self.ui.label_icon_save_video.setPixmap(QPixmap("gui/icons/download-square-outline.png"))
-        self.ui.label_icon_upscale.setPixmap(QPixmap("gui/icons/hd-display.png"))
+        self.ui.label_icon_upscale.setPixmap(QPixmap("gui/icons/2x.png"))
 
     # Manipulations
     def post_select_video_state(self):
@@ -273,8 +279,6 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
         return progress_bar
 
     def run(self):
-
-        print("starting qtscaleframeupdator")
 
         while True:
             self.parent.ui.label_upscale_frame_of_rhs.setText(

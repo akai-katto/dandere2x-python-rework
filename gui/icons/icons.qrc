@@ -1,6 +1,7 @@
 <RCC>
   <qresource prefix="icons">
     <file>download-square-outline.png</file>
+    <file>2x.png</file>
     <file>hd-display.png</file>
     <file>load-action-floppy.png</file>
     <file>settings.png</file>
