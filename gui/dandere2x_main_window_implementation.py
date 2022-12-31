@@ -217,7 +217,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.output_file = save_file_name
 
         name_only = Path(self.output_file).name
-        self.ui.label_output_name.setText(self.metadata_text_generator("Output File:", name_only, 36))
+        self.ui.label_output_name_rhs.setText(name_only)
 
     def press_upscale_button(self):
         self.dandere2x_gui_session_statistics = Dandere2xGuiSessionStatistics()
@@ -243,27 +243,6 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
         filename = QFileDialog.getSaveFileName(self, 'Save File', str(default_name), filter)
         return filename[0]
-
-    @staticmethod
-    def metadata_text_generator(keyword: str, data: str, line_width: int):
-        """
-        Formats strings like this:
-        __metadata_text_generator("Video Name:", "some_video.mkv", 29)  --> "Video Name:        some_video.mkv"
-
-        Used in displaying metadata upon video selection.
-        """
-
-        consumed_space = len(keyword) + len(data)
-        unconsumed_space = line_width - consumed_space
-        if unconsumed_space <= 0:
-            DOT_DOT_DOT_LEN = 3
-
-            redacted_count = line_width - (len(keyword) + len(data)) - DOT_DOT_DOT_LEN - 1
-            data = "..." + data[-redacted_count:]
-
-        whitespace = line_width - (len(keyword) + len(data))  # re-compute white space if it changed
-        formatted_string = keyword + " " * whitespace + data
-        return formatted_string
 
 
 class QtUpscaleFrameOfUpdater(QtCore.QThread):
