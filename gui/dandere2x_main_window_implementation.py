@@ -45,7 +45,7 @@ class QtDandere2xThread(QtCore.QThread):
 class Dandere2xMainWindowImplementation(QMainWindow):
 
     def get_dandere2x_session_from_gui(self):
-        
+
         with open("config_files/output_options.yaml") as f:
             output_options = yaml.safe_load(f)
 
@@ -266,4 +266,4 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
             ratio = max(1, int((self.parent.dandere2x_gui_session_statistics.current_frame / self.parent.dandere2x_gui_session_statistics.frame_count) * 100))
             ratio = int(min(100, ratio))
             self.parent.ui.label_progress_bar.setText(self.get_progress_bar(ratio))
-            time.sleep(0.001)
+            time.sleep(0.1)

@@ -100,7 +100,7 @@ class MultiProcessDandere2xService(_Dandere2xServiceInterface):
                 self._dandere2x_gui_session_statistics.pixels_upscaled_count = pixels_upscaled_count
                 self._dandere2x_gui_session_statistics.total_pixels_count = total_pixels_count
                 self._dandere2x_gui_session_statistics.frame_count = total_frame_count
-                time.sleep(0.01)
+                time.sleep(0.00001)
 
             self._dandere2x_gui_session_statistics.is_done = True
 
