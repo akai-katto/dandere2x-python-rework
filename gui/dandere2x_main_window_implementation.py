@@ -106,19 +106,25 @@ class Dandere2xMainWindowImplementation(QMainWindow):
     def pre_select_video_state(self):
 
         # Select Input
-        self.ui.label_selected_file.hide()
-        self.ui.label_selected_video_runtime.hide()
-        self.ui.label_selected_video_frame_count.hide()
+        self.ui.label_selected_file_lhs.hide()
+        self.ui.label_selected_file_rhs.hide()
+        self.ui.label_selected_video_runtime_lhs.hide()
+        self.ui.label_selected_video_runtime_rhs.hide()
+        self.ui.label_selected_video_frame_count_lhs.hide()
+        self.ui.label_selected_video_frame_count_rhs.hide()
         self.ui.button_change_video.hide()
 
         # Select Output
-        self.ui.label_output_name.hide()
-        self.ui.label_output_resolution.hide()
+        self.ui.label_output_name_lhs.hide()
+        self.ui.label_output_name_rhs.hide()
+        self.ui.label_output_resolution_lhs.hide()
+        self.ui.label_output_resolution_rhs.hide()
         self.ui.button_change_output.hide()
 
     def pre_upscale_state(self):
         self.ui.label_progress_bar.hide()
-        self.ui.label_upscale_frame_of.hide()
+        self.ui.label_upscale_frame_of_lhs.hide()
+        self.ui.label_upscale_frame_of_rhs.hide()
 
     def setup_icons(self):
         self.ui.label_icon_load_video.setPixmap(QPixmap("gui/icons/load-action-floppy.png"))
@@ -129,16 +135,21 @@ class Dandere2xMainWindowImplementation(QMainWindow):
     def post_select_video_state(self):
 
         # Select Video
-        self.ui.label_selected_file.show()
-        self.ui.label_selected_video_runtime.show()
-        self.ui.label_selected_video_frame_count.show()
+        self.ui.label_selected_file_lhs.show()
+        self.ui.label_selected_file_rhs.show()
+        self.ui.label_selected_video_runtime_lhs.show()
+        self.ui.label_selected_video_runtime_rhs.show()
+        self.ui.label_selected_video_frame_count_lhs.show()
+        self.ui.label_selected_video_frame_count_rhs.show()
         self.ui.button_change_video.show()
         self.ui.button_select_video.hide()
 
         # Select Output
         self.ui.button_select_output.hide()
-        self.ui.label_output_name.show()
-        self.ui.label_output_resolution.show()
+        self.ui.label_output_name_lhs.show()
+        self.ui.label_output_name_rhs.show()
+        self.ui.label_output_resolution_lhs.show()
+        self.ui.label_output_resolution_rhs.show()
         self.ui.button_change_output.show()
         self.ui.button_upscale.setEnabled(True)
 
@@ -147,13 +158,19 @@ class Dandere2xMainWindowImplementation(QMainWindow):
     def upscale_in_progress_state(self):
 
         self.ui.label_progress_bar.show()
-        self.ui.label_upscale_frame_of.show()
+        self.ui.label_upscale_frame_of_lhs.show()
+        self.ui.label_upscale_frame_of_rhs.show()
         self.ui.button_upscale.hide()
+        self.ui.button_change_video.setEnabled(False)
+        self.ui.button_change_output.setEnabled(False)
 
     def post_upscale_state(self):
         self.ui.label_progress_bar.hide()
-        self.ui.label_upscale_frame_of.hide()
+        self.ui.label_upscale_frame_of_lhs.hide()
+        self.ui.label_upscale_frame_of_rhs.hide()
         self.ui.button_upscale.show()
+        self.ui.button_change_video.setEnabled(True)
+        self.ui.button_change_output.setEnabled(True)
 
     # Refreshes
     def refresh_output_texts(self):
@@ -162,29 +179,27 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
         scale_factor = int(self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText())
         resolution = f"{self.video_settings.width * scale_factor}x{self.video_settings.height * scale_factor}"
-        self.ui.label_output_name.setText(self.metadata_text_generator("Output File:", self.output_file.name, 36))
-        self.ui.label_output_resolution.setText(self.metadata_text_generator("Output Res:", resolution, 36))
+        self.ui.label_output_name_rhs.setText(self.output_file.name)
+        self.ui.label_output_resolution_rhs.setText(resolution)
 
     # Button Presses
     def button_press_select_file(self):
 
         self.input_file = Path(self._load_file())
 
-        if self.input_file == '':
+        if self.input_file == Path(''):
             return
 
         path, name = os.path.split(self.input_file)
 
         # File
-        self.ui.label_selected_file.setText(self.metadata_text_generator("File:", name, 21))
+        self.ui.label_selected_file_rhs.setText(name)
         # Duration
         self.video_settings = VideoSettings(Path(self.input_file))
         duration = str(datetime.timedelta(seconds=math.ceil(self.video_settings.seconds)))
-        self.ui.label_selected_video_runtime.setText(self.metadata_text_generator("Duration:", duration, 21))
+        self.ui.label_selected_video_runtime_rhs.setText(duration)
         # Frame Count
-        self.ui.label_selected_video_frame_count.setText(self.metadata_text_generator("Frame Count:",
-                                                                                      str(self.video_settings.frame_count),
-                                                                                      21))
+        self.ui.label_selected_video_frame_count_rhs.setText(str(self.video_settings.frame_count))
         self.output_file = Path(self.this_folder) / "workspace" / (self.input_file.stem + "_d2x" + self.input_file.suffix)
         self.post_select_video_state()
 
@@ -207,12 +222,6 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.dandere2x_thread.finished_signal.connect(self.post_upscale_state)
         self.upscale_in_progress_state()
 
-        # start = time.time()
-        # d2x = Dandere2xServiceResolver(dandere2x_session, self.dandere2x_gui_session_statistics)
-        # d2x.start()
-        # d2x.join()
-        # print(f"end: {time.time() - start}")
-
 
     # Utilities
     def _load_file(self) -> str:
@@ -220,7 +229,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         return filename[0]
 
     def _change_file_name(self):
-        filter = "*.mkv"
+        filter = f"*{Path(self.input_file).suffix}"
 
         default_name = self.output_file
         if self.output_file == '':
@@ -268,11 +277,8 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
         print("starting qtscaleframeupdator")
 
         while True:
-            self.parent.ui.label_upscale_frame_of.setText(
-                self.parent.metadata_text_generator(
-                    "Frame of:",
-                    f"{self.parent.dandere2x_gui_session_statistics.current_frame}/{self.parent.dandere2x_gui_session_statistics.frame_count}",
-                    20))
+            self.parent.ui.label_upscale_frame_of_rhs.setText(
+                    f"{self.parent.dandere2x_gui_session_statistics.current_frame}/{self.parent.dandere2x_gui_session_statistics.frame_count}")
 
             ratio = max(1, int((self.parent.dandere2x_gui_session_statistics.current_frame / self.parent.dandere2x_gui_session_statistics.frame_count) * 100))
             ratio = int(min(100, ratio))
