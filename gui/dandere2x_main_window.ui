@@ -13,12 +13,25 @@
   <property name="windowTitle">
    <string>Dandere2x</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QProgressBar {
+border: 2px solid rgba(33, 37, 43, 180);
+border-radius: 5px;
+text-align: center;
+background-color: rgba(33, 37, 43, 180);
+color: black;
+}
+</string>
+  </property>
+  <property name="animated">
+   <bool>true</bool>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label_icon_load_video">
     <property name="geometry">
      <rect>
       <x>64</x>
-      <y>62</y>
+      <y>54</y>
       <width>121</width>
       <height>111</height>
      </rect>
@@ -34,7 +47,7 @@
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>62</y>
+      <y>54</y>
       <width>121</width>
       <height>111</height>
      </rect>
@@ -50,7 +63,7 @@
     <property name="geometry">
      <rect>
       <x>624</x>
-      <y>62</y>
+      <y>54</y>
       <width>131</width>
       <height>111</height>
      </rect>
@@ -66,7 +79,7 @@
     <property name="geometry">
      <rect>
       <x>72</x>
-      <y>222</y>
+      <y>226</y>
       <width>111</width>
       <height>41</height>
      </rect>
@@ -85,7 +98,7 @@
     <property name="geometry">
      <rect>
       <x>358</x>
-      <y>222</y>
+      <y>226</y>
       <width>111</width>
       <height>41</height>
      </rect>
@@ -104,7 +117,7 @@
     <property name="geometry">
      <rect>
       <x>634</x>
-      <y>222</y>
+      <y>228</y>
       <width>111</width>
       <height>41</height>
      </rect>
@@ -133,7 +146,7 @@
     <property name="geometry">
      <rect>
       <x>74</x>
-      <y>186</y>
+      <y>190</y>
       <width>105</width>
       <height>24</height>
      </rect>
@@ -149,7 +162,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>222</y>
+      <y>226</y>
       <width>195</width>
       <height>16</height>
      </rect>
@@ -165,7 +178,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>242</y>
+      <y>246</y>
       <width>63</width>
       <height>16</height>
      </rect>
@@ -181,7 +194,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>262</y>
+      <y>266</y>
       <width>75</width>
       <height>16</height>
      </rect>
@@ -203,7 +216,7 @@
     <property name="geometry">
      <rect>
       <x>354</x>
-      <y>186</y>
+      <y>190</y>
       <width>119</width>
       <height>24</height>
      </rect>
@@ -219,7 +232,7 @@
     <property name="geometry">
      <rect>
       <x>288</x>
-      <y>240</y>
+      <y>244</y>
       <width>179</width>
       <height>20</height>
      </rect>
@@ -235,7 +248,7 @@
     <property name="geometry">
      <rect>
       <x>288</x>
-      <y>218</y>
+      <y>222</y>
       <width>57</width>
       <height>20</height>
      </rect>
@@ -264,7 +277,7 @@
     <property name="geometry">
      <rect>
       <x>604</x>
-      <y>214</y>
+      <y>220</y>
       <width>43</width>
       <height>31</height>
      </rect>
@@ -274,24 +287,6 @@
     </property>
     <property name="text">
      <string>Frame:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_progress_bar">
-    <property name="geometry">
-     <rect>
-      <x>602</x>
-      <y>190</y>
-      <width>185</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>⬛⬛⬛⬛⬛⬛⬛⬜⬜⬜</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -316,7 +311,7 @@
     <property name="geometry">
      <rect>
       <x>704</x>
-      <y>214</y>
+      <y>220</y>
       <width>75</width>
       <height>31</height>
      </rect>
@@ -335,7 +330,7 @@
     <property name="geometry">
      <rect>
       <x>348</x>
-      <y>218</y>
+      <y>222</y>
       <width>181</width>
       <height>20</height>
      </rect>
@@ -354,7 +349,7 @@
     <property name="geometry">
      <rect>
       <x>426</x>
-      <y>240</y>
+      <y>244</y>
       <width>103</width>
       <height>20</height>
      </rect>
@@ -376,7 +371,7 @@
     <property name="geometry">
      <rect>
       <x>88</x>
-      <y>222</y>
+      <y>226</y>
       <width>115</width>
       <height>16</height>
      </rect>
@@ -395,7 +390,7 @@
     <property name="geometry">
      <rect>
       <x>126</x>
-      <y>242</y>
+      <y>246</y>
       <width>77</width>
       <height>16</height>
      </rect>
@@ -414,7 +409,7 @@
     <property name="geometry">
      <rect>
       <x>128</x>
-      <y>262</y>
+      <y>266</y>
       <width>75</width>
       <height>16</height>
      </rect>
@@ -445,6 +440,25 @@
      <string>About</string>
     </property>
    </widget>
+   <widget class="QProgressBar" name="progressBar_frame_percentage">
+    <property name="geometry">
+     <rect>
+      <x>604</x>
+      <y>192</y>
+      <width>173</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="value">
+     <number>24</number>
+    </property>
+    <property name="textVisible">
+     <bool>false</bool>
+    </property>
+   </widget>
    <zorder>label_output_name_lhs</zorder>
    <zorder>label_output_resolution_lhs</zorder>
    <zorder>label_selected_video_runtime_lhs</zorder>
@@ -461,7 +475,6 @@
    <zorder>button_change_output</zorder>
    <zorder>button_statistics</zorder>
    <zorder>label_upscale_frame_of_lhs</zorder>
-   <zorder>label_progress_bar</zorder>
    <zorder>label</zorder>
    <zorder>label_upscale_frame_of_rhs</zorder>
    <zorder>label_output_name_rhs</zorder>
@@ -470,6 +483,7 @@
    <zorder>label_selected_video_runtime_rhs</zorder>
    <zorder>label_selected_video_frame_count_rhs</zorder>
    <zorder>button_about</zorder>
+   <zorder>progressBar_frame_percentage</zorder>
   </widget>
  </widget>
  <resources>
