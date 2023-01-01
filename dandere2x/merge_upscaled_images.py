@@ -61,5 +61,4 @@ class MergeUpscaledImages(Thread):
                                              other_y=residual.residual_y * (self._BLOCK_SIZE + self._BLEED * 2)
                                                      * self._SCALE_FACTOR + (self._BLEED * self._SCALE_FACTOR))
 
-            self.__manager.last_piped_frame = pos
             self.__manager.finished_frames[pos] = copy.deepcopy(current_frame)
