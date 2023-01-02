@@ -7,20 +7,26 @@ from typing import List
 
 from dandere2xlib.d2x_session import Dandere2xSession
 from dandere2xlib.d2x_management import D2xManagement
+from dandere2xlib.d2x_suspend_management import Dandere2xSuspendManagement
 from dandere2xlib.waifu2x.w2x_server import W2xServer
 
 
 class UpscaleResiduals(Thread):
 
-    def __init__(self, manager: D2xManagement, dandere2x_session: Dandere2xSession):
+    def __init__(self,
+                 manager:
+                 D2xManagement,
+                 dandere2x_session: Dandere2xSession,
+                 dandere2x_suspend_management: Dandere2xSuspendManagement):
         super().__init__()
 
-        self.dandere2x_session = dandere2x_session
+        self._dandere2x_session = dandere2x_session
+        self._dandere2x_suspend_management = dandere2x_suspend_management
 
-        self._HEIGHT = self.dandere2x_session.video_properties.corrected_video_height
-        self._WIDTH = self.dandere2x_session.video_properties.corrected_video_width
-        self._BLOCK_SIZE = self.dandere2x_session.block_size
-        self._FRAME_COUNT = self.dandere2x_session.video_properties.input_video_settings.frame_count
+        self._HEIGHT = self._dandere2x_session.video_properties.corrected_video_height
+        self._WIDTH = self._dandere2x_session.video_properties.corrected_video_width
+        self._BLOCK_SIZE = self._dandere2x_session.block_size
+        self._FRAME_COUNT = self._dandere2x_session.video_properties.input_video_settings.frame_count
 
         self.__manager = manager
         self.__logger = logging.getLogger(dandere2x_session.input_video_path.name)
@@ -31,13 +37,13 @@ class UpscaleResiduals(Thread):
     def __waifu2x_thread(self, receive_port, send_port, gpuid,  start, iter_val):
         self.__logger.info(f"Starting waifu2x thread on {receive_port} and {send_port}.")
 
-        w2x_server = W2xServer(self.dandere2x_session, receive_port, send_port, gpuid)
+        w2x_server = W2xServer(self._dandere2x_session, receive_port, send_port, gpuid)
         w2x_server.start()
 
         failed_upscale = 0
         for pos in range(start, self._FRAME_COUNT, iter_val):
 
-            while self.__manager.residual_images[pos] is None:
+            while self.__manager.residual_images[pos] is None or self._dandere2x_suspend_management.is_suspended():
                 time.sleep(0.001)
 
             success = False
@@ -69,16 +75,16 @@ class UpscaleResiduals(Thread):
 
         list_of_threads: List[Thread] = []
 
-        for x in range(self.dandere2x_session.num_waifu2x_threads):
+        for x in range(self._dandere2x_session.num_waifu2x_threads):
 
-            ports = self.dandere2x_session.output_options['waifu2x_ncnn_vulkan']['client_ports'][f'session{self.dandere2x_session.session_id}'][f'client{x}']
+            ports = self._dandere2x_session.output_options['waifu2x_ncnn_vulkan']['client_ports'][f'session{self._dandere2x_session.session_id}'][f'client{x}']
 
             t1 = threading.Thread(target=self.__waifu2x_thread,
                                   args=(ports['receive_port'],
                                         ports['send_port'],
                                         ports['gpuid'],
                                         x,
-                                        self.dandere2x_session.num_waifu2x_threads))
+                                        self._dandere2x_session.num_waifu2x_threads))
             list_of_threads.append(t1)
 
         for waifu2x_thread in list_of_threads:

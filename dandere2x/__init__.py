@@ -33,7 +33,7 @@ class Dandere2x(Thread):
         self._frame_compression = FrameCompression(self._manager, dandere2x_session)
         self._block_matching = BlockMatching(self._manager, dandere2x_session)
         self._residual_processing = ResidualProcessing(self._manager, dandere2x_session)
-        self._upscale_residuals = UpscaleResiduals(self._manager, dandere2x_session)
+        self._upscale_residuals = UpscaleResiduals(self._manager, dandere2x_session, dandere2x_suspend_management)
         self._merge_upscaled_images = MergeUpscaledImages(self._manager, dandere2x_session)
         self._pipe_finished_frames_to_video_and_collect_garbage =\
             PipeFinishedFramesToVideoAndCollectGarbage(self._manager, dandere2x_session, dandere2x_suspend_management)
