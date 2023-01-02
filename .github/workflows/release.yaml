@@ -36,7 +36,8 @@ jobs:
         run: |
           Invoke-WebRequest -Uri https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-windows.zip -OutFile waifu2x-ncnn-vulkan.zip
           Expand-Archive waifu2x-ncnn-vulkan.zip -DestinationPath waifu2x-ncnn-vulkan
-          Move-Item waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan dist\externals\waifu2x-ncnn-vulkan
+          ls -R 
+          Move-Item waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan-0.1.3-windows dist\externals\waifu2x-ncnn-vulkan
       - name: copy config_files over
         run: |
           Move-Item config_files\ dist\config_files\
