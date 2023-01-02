@@ -1,0 +1,28 @@
+name: GitHubActionsBuilds
+
+on: push
+
+jobs:
+  build_windows:
+    needs: generate_version_number
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install PyInstaller
+        run: pip3 install pyinstaller
+      - name: Pip install requirements
+        run: pip3 install -r src/requirements.txt
+      - name: Build to single executable
+        run: |
+          cd src
+          pyinstaller --onefile gui_driver.py
+      - name: ls
+        run: ls -R
+      - uses: actions/upload-artifact@v3
+        with:
+          name: dandere2x_windows
+          path: src/main.exe
+
