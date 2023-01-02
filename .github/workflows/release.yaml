@@ -24,7 +24,7 @@ jobs:
           python-version: '3.9'
       - name: Install PyInstaller
         run: pip3 install pyinstaller
-      - name: Pip install requirements
+#      - name: Pip install requirements
 #        run: pip3 install -r requirements.txt
 #      - name: Build to single executable
 #        run: |
