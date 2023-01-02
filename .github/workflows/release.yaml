@@ -19,33 +19,31 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-#      - uses: actions/setup-python@v4
-#        with:
-#          python-version: '3.9'
-#      - name: Install PyInstaller
-#        run: pip3 install pyinstaller
-#      - name: Pip install requirements
-#        run: pip3 install -r requirements.txt
-#      - name: Build to single executable
-#        run: |
-#          pyinstaller --onefile gui_driver.py
-      - name: make dist
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install PyInstaller
+        run: pip3 install pyinstaller
+      - name: Pip install requirements
+        run: pip3 install -r requirements.txt
+      - name: Build to single executable
         run: |
-          mkdir dist
+          pyinstaller --onefile gui_driver.py
       - name: download waifu2x-ncnn-vulkan-server and move to dist\externals
         run: |
           Invoke-WebRequest -Uri https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-windows.zip -OutFile waifu2x-ncnn-vulkan.zip
           Expand-Archive waifu2x-ncnn-vulkan.zip -DestinationPath waifu2x-ncnn-vulkan
           ls -R 
-          Move-Item D:\a\dandere2x-python-rework\dandere2x-python-rework\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan-0.1.3-windows D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
+          Move-Item D:\a\dandere2x-python-rework\dandere2x-python-rework\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan-0.1.3-windows D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\waifu2x-ncnn-vulkan
       - name: copy config_files over
         run: |
           Move-Item config_files\ dist\config_files\
       - name: ls
         run: ls -R
-      - name: compress dist
+      - name: rename dist and compress
         run: |
-          Compress-Archive -Path dist -destinationPath dandere2x.zip
+          Move-Item dist dandere2x_release
+          Compress-Archive -Path dandere2x_release -destinationPath dandere2x.zip
       - uses: actions/upload-artifact@v3
         with:
           name: dandere2x_windows
