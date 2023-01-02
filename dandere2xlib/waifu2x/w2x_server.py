@@ -105,8 +105,8 @@ class W2xServer(threading.Thread):
                     f" \"prepadding\": {self.get_prepadding()}," \
                     f" \"gpuid\": {self._gpu_id}," \
                     " \"tta\": 0," \
-                    f" \"param_path\": \"models/{self._model_name}/noise{self._noise_factor}{self.get_scale_representation()}_model.param\"," \
-                    f" \"model_path\": \"models/{self._model_name}/noise{self._noise_factor}{self.get_scale_representation()}_model.bin\"" \
+                    f" \"param_path\": \"{self._model_name}/noise{self._noise_factor}{self.get_scale_representation()}_model.param\"," \
+                    f" \"model_path\": \"{self._model_name}/noise{self._noise_factor}{self.get_scale_representation()}_model.bin\"" \
                     "}".ljust(W2xServer.METADATA_MSG_SIZE - 1)
 
         s.send(bytes(raw_bytes, "utf-8"))
