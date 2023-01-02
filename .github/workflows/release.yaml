@@ -3,6 +3,17 @@ name: GitHubActionsBuilds
 on: push
 
 jobs:
+  generate_version_number:
+    runs-on: ubuntu-latest
+    outputs:
+      build_number: ${{ steps.buildnumber.outputs.build_number }}
+    steps:
+      - name: Generate build number
+        id: buildnumber
+        uses: einaregilsson/build-number@v3
+        with:
+          token: ${{secrets.github_token}}
+
   build_windows:
     needs: generate_version_number
     runs-on: windows-latest
