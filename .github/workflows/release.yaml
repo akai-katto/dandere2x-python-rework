@@ -25,7 +25,7 @@ jobs:
       - name: Install PyInstaller
         run: pip3 install pyinstaller
       - name: Pip install requirements
-        run: pip3 install -r src/requirements.txt
+        run: pip3 install -r requirements.txt
       - name: Build to single executable
         run: |
           cd src
