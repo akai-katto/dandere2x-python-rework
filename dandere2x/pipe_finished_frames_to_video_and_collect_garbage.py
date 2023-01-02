@@ -7,24 +7,29 @@ from pathlib import Path
 
 from threading import Thread
 
-from dandere2xlib.d2xframe import D2xFrame
-from dandere2xlib.d2xsession import Dandere2xSession
-from dandere2xlib.d2xmanagement import D2xManagement
+from dandere2xlib.d2x_frame import D2xFrame
+from dandere2xlib.d2x_session import Dandere2xSession
+from dandere2xlib.d2x_management import D2xManagement
+from dandere2xlib.d2x_suspend_management import Dandere2xSuspendManagement
 from dandere2xlib.ffmpeg.frames_to_video_pipe import FramesToVideoPipe
 from dandere2xlib.utilities.dandere2x_utils import get_wait_delay
 
 
 class PipeFinishedFramesToVideoAndCollectGarbage(Thread):
 
-    def __init__(self, manager: D2xManagement, dandere2x_session: Dandere2xSession):
+    def __init__(self,
+                 manager: D2xManagement,
+                 dandere2x_session: Dandere2xSession,
+                 dandere2x_suspend_management: Dandere2xSuspendManagement):
         super().__init__()
 
-        self.dandere2x_session = dandere2x_session
+        self._dandere2x_session = dandere2x_session
+        self._dandere2x_suspend_management = dandere2x_suspend_management
 
-        self._HEIGHT = self.dandere2x_session.video_properties.corrected_video_height
-        self._WIDTH = self.dandere2x_session.video_properties.corrected_video_width
-        self._BLOCK_SIZE = self.dandere2x_session.block_size
-        self._FRAME_COUNT = self.dandere2x_session.video_properties.input_video_settings.frame_count
+        self._HEIGHT = self._dandere2x_session.video_properties.corrected_video_height
+        self._WIDTH = self._dandere2x_session.video_properties.corrected_video_width
+        self._BLOCK_SIZE = self._dandere2x_session.block_size
+        self._FRAME_COUNT = self._dandere2x_session.video_properties.input_video_settings.frame_count
 
 
         self.__manager = manager
@@ -32,11 +37,11 @@ class PipeFinishedFramesToVideoAndCollectGarbage(Thread):
 
     def run(self) -> None:
 
-        frames_to_pipe = FramesToVideoPipe(self.dandere2x_session.no_sound_video_file, self.dandere2x_session)
+        frames_to_pipe = FramesToVideoPipe(self._dandere2x_session.no_sound_video_file, self._dandere2x_session)
         frames_to_pipe.start()
 
         for pos in range(self._FRAME_COUNT):
-            while self.__manager.finished_frames[pos] is None:
+            while self.__manager.finished_frames[pos] is None or self._dandere2x_suspend_management.is_suspended():
                 time.sleep(get_wait_delay())
 
             piped_frame: D2xFrame = self.__manager.finished_frames[pos]
@@ -57,7 +62,7 @@ class PipeFinishedFramesToVideoAndCollectGarbage(Thread):
             n = gc.collect()
             #print("Number of unreachable objects collected by GC:", n)
             self.__logger.info(f"Piped frame {pos} of "
-                               f"{self.dandere2x_session.video_properties.input_video_settings.frame_count}"
+                               f"{self._dandere2x_session.video_properties.input_video_settings.frame_count}"
                                f" into output video.")
 
         frames_to_pipe.kill()

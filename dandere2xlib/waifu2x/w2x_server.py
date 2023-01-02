@@ -7,8 +7,8 @@ from pathlib import Path
 from typing import Final
 
 import dandere2xlib.utilities.dandere2x_utils
-from dandere2xlib.d2xframe import D2xFrame
-from dandere2xlib.d2xsession import Dandere2xSession
+from dandere2xlib.d2x_frame import D2xFrame
+from dandere2xlib.d2x_session import Dandere2xSession
 from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
 
 

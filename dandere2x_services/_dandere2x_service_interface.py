@@ -2,7 +2,8 @@ import time
 from abc import abstractmethod, ABC
 from threading import Thread
 
-from dandere2xlib.d2xsession import Dandere2xSession
+from dandere2xlib.d2x_session import Dandere2xSession
+from dandere2xlib.d2x_suspend_management import Dandere2xSuspendManagement
 from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
 from gui.dandere2_gui_session_statistics import Dandere2xGuiSessionStatistics
 
@@ -23,11 +24,13 @@ class _Dandere2xServiceInterface(Thread, ABC):
 
     def __init__(self,
                  dandere2x_session: Dandere2xSession,
-                 dandere2x_gui_session_statistics: Dandere2xGuiSessionStatistics)\
-            :
+                 dandere2x_gui_session_statistics: Dandere2xGuiSessionStatistics,
+                 dandere2x_suspend_management: Dandere2xSuspendManagement):
         super().__init__(name=str(dandere2x_session.input_video_path))
+
         self._dandere2x_session = dandere2x_session
         self._dandere2x_gui_session_statistics = dandere2x_gui_session_statistics
+        self._dandere2x_suspend_management = dandere2x_suspend_management
 
         self._executable_paths = load_executable_paths_yaml()
 

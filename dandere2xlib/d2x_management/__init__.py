@@ -2,7 +2,7 @@ import sys
 
 from typing import Mapping, Set, Union, List, Dict
 from collections import defaultdict
-from dandere2xlib.d2xframe import D2xFrame
+from dandere2xlib.d2x_frame import D2xFrame
 from dandere2xlib.models.d2x_residual_coordinate import D2xResidualCoordinate
 
 
