@@ -38,8 +38,8 @@ jobs:
 
   release_github:
     needs: [
-      generate_version_number
-    ]
+      generate_version_number,
+      build_windows]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
