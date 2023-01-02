@@ -41,6 +41,7 @@ jobs:
       generate_version_number,
       build_windows]
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
     - name: Download all artifacts
       uses: actions/download-artifact@v2
