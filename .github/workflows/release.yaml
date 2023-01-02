@@ -41,9 +41,6 @@ jobs:
       - name: copy config_files over
         run: |
           Move-Item config_files\ dist\config_files\
-      - name: copy config_files over
-        run: |
-          Move-Item config_files\ dist\config_files\
       - name: ls
         run: ls -R
       - name: compress dist
