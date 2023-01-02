@@ -11,7 +11,8 @@ from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QFileDialog
 
 from dandere2x_services.dandere2x_service_resolver import Dandere2xServiceResolver
-from dandere2xlib.d2xsession import Dandere2xSession
+from dandere2xlib.d2x_session import Dandere2xSession
+from dandere2xlib.d2x_suspend_management import Dandere2xSuspendManagement
 from dandere2xlib.ffmpeg.video_settings import VideoSettings
 from dandere2xlib.utilities.dandere2x_utils import get_wait_delay
 from gui.dandere2_gui_session_statistics import Dandere2xGuiSessionStatistics
@@ -27,11 +28,14 @@ class QtDandere2xThread(QtCore.QThread):
     def __init__(self,
                  parent,
                  dandere2x_session: Dandere2xSession,
-                 dandere2x_gui_session_statistics: Dandere2xGuiSessionStatistics):
+                 dandere2x_gui_session_statistics: Dandere2xGuiSessionStatistics,
+                 dandere2x_suspend_management: Dandere2xSuspendManagement):
         super(QtDandere2xThread, self).__init__(parent)
 
         self.dandere2x_session = dandere2x_session
-        self.dandere2x_service = Dandere2xServiceResolver(dandere2x_session, dandere2x_gui_session_statistics)
+        self.dandere2x_service = Dandere2xServiceResolver(dandere2x_session,
+                                                          dandere2x_gui_session_statistics,
+                                                          dandere2x_suspend_management)
 
     def run(self):
         self.dandere2x_service.start()
@@ -76,6 +80,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.output_file: Path = Path("")
         self.video_settings: VideoSettings = None
         self.dandere2x_gui_session_statistics = Dandere2xGuiSessionStatistics()
+        self.dandere2x_suspend_management = Dandere2xSuspendManagement()
 
         # Other UI's
         self.settings_ui: Dandere2xSettingsWindowImplementation = Dandere2xSettingsWindowImplementation(self)
@@ -108,6 +113,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.button_upscale.clicked.connect(self.press_upscale_button)
         self.ui.button_statistics.clicked.connect(self.session_statistics_ui.show)
         self.ui.button_about.clicked.connect(self.about_dandere2x_ui.show)
+        self.ui.button_suspend.clicked.connect(self.suspend_toggle)
 
     def pre_select_video_state(self):
 
@@ -128,9 +134,10 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.button_change_output.hide()
 
     def pre_upscale_state(self):
-        self.ui.label_progress_bar.hide()
+        self.ui.progressBar_frame_percentage.hide()
         self.ui.label_upscale_frame_of_lhs.hide()
         self.ui.label_upscale_frame_of_rhs.hide()
+        self.ui.button_suspend.hide()
 
     def setup_icons(self):
         self.ui.label_icon_load_video.setPixmap(QPixmap("gui/icons/load-action-floppy.png"))
@@ -163,20 +170,30 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
     def upscale_in_progress_state(self):
 
-        self.ui.label_progress_bar.show()
+        self.ui.progressBar_frame_percentage.show()
         self.ui.label_upscale_frame_of_lhs.show()
         self.ui.label_upscale_frame_of_rhs.show()
         self.ui.button_upscale.hide()
         self.ui.button_change_video.setEnabled(False)
         self.ui.button_change_output.setEnabled(False)
+        self.ui.button_suspend.show()
 
     def post_upscale_state(self):
-        self.ui.label_progress_bar.hide()
+        self.ui.progressBar_frame_percentage.hide()
         self.ui.label_upscale_frame_of_lhs.hide()
         self.ui.label_upscale_frame_of_rhs.hide()
         self.ui.button_upscale.show()
         self.ui.button_change_video.setEnabled(True)
         self.ui.button_change_output.setEnabled(True)
+        self.ui.button_suspend.hide()
+
+    def suspend_toggle(self):
+        if self.dandere2x_suspend_management.is_suspended():
+            self.ui.button_suspend.setText("Suspend")
+            self.dandere2x_suspend_management.unsuspend()
+        else:
+            self.ui.button_suspend.setText("Unsuspend")
+            self.dandere2x_suspend_management.suspend()
 
     # Refreshes
     def refresh_output_texts(self):
@@ -221,9 +238,13 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
     def press_upscale_button(self):
         self.dandere2x_gui_session_statistics = Dandere2xGuiSessionStatistics()
+        self.dandere2x_suspend_management = Dandere2xSuspendManagement()
         dandere2x_session = self.get_dandere2x_session_from_gui()
 
-        self.dandere2x_thread = QtDandere2xThread(self, dandere2x_session, self.dandere2x_gui_session_statistics)
+        self.dandere2x_thread = QtDandere2xThread(self,
+                                                  dandere2x_session,
+                                                  self.dandere2x_gui_session_statistics,
+                                                  self.dandere2x_suspend_management)
         self.dandere2x_thread.start()
         self.dandere2x_thread.finished_signal.connect(self.post_upscale_state)
         self.upscale_in_progress_state()
@@ -251,12 +272,6 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
         super(QtUpscaleFrameOfUpdater, self).__init__(parent)
         self.parent = parent
 
-    @staticmethod
-    def get_progress_bar(percentage: int):
-        percent = round(percentage / 10)
-        progress_bar = "⬛" * percent + "⬜" * (10-percent)
-        return progress_bar
-
     def run(self):
 
         while True:
@@ -265,5 +280,5 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
 
             ratio = max(1, int((self.parent.dandere2x_gui_session_statistics.current_frame / self.parent.dandere2x_gui_session_statistics.frame_count) * 100))
             ratio = int(min(100, ratio))
-            self.parent.ui.label_progress_bar.setText(self.get_progress_bar(ratio))
+            self.parent.ui.progressBar_frame_percentage.setValue(ratio)
             time.sleep(0.1)
