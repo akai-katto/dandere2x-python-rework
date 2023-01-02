@@ -28,12 +28,11 @@ jobs:
         run: pip3 install -r requirements.txt
       - name: Build to single executable
         run: |
-          cd src
           pyinstaller --onefile gui_driver.py
       - name: ls
         run: ls -R
       - uses: actions/upload-artifact@v3
         with:
           name: dandere2x_windows
-          path: src/main.exe
+          path: dist/main.exe
 
