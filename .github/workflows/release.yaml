@@ -34,5 +34,5 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: dandere2x_windows
-          path: dist/main.exe
+          path: dist/gui_driver.exe
 
