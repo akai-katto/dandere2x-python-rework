@@ -459,6 +459,25 @@ color: black;
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="button_suspend">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>634</x>
+      <y>252</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font/>
+    </property>
+    <property name="text">
+     <string>Suspend</string>
+    </property>
+   </widget>
    <zorder>label_output_name_lhs</zorder>
    <zorder>label_output_resolution_lhs</zorder>
    <zorder>label_selected_video_runtime_lhs</zorder>
@@ -484,6 +503,7 @@ color: black;
    <zorder>label_selected_video_frame_count_rhs</zorder>
    <zorder>button_about</zorder>
    <zorder>progressBar_frame_percentage</zorder>
+   <zorder>button_suspend</zorder>
   </widget>
  </widget>
  <resources>

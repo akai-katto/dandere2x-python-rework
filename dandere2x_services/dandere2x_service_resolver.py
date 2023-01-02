@@ -5,7 +5,8 @@ from typing import Type
 
 from dandere2x import Dandere2x
 from dandere2x_services._dandere2x_service_interface import _Dandere2xServiceInterface
-from dandere2xlib.d2xsession import Dandere2xSession
+from dandere2xlib.d2x_session import Dandere2xSession
+from dandere2xlib.d2x_suspend_management import Dandere2xSuspendManagement
 from dandere2xlib.ffmpeg.ffmpeg_utils import migrate_tracks_contextless
 from gui.dandere2_gui_session_statistics import Dandere2xGuiSessionStatistics
 
@@ -20,8 +21,9 @@ class Dandere2xServiceResolver(Thread):
 
     def __init__(self,
                  dandere2x_session: Dandere2xSession,
-                 dandere2x_gui_session_statistics: Dandere2xGuiSessionStatistics):
-        super().__init__()
+                 dandere2x_gui_session_statistics: Dandere2xGuiSessionStatistics,
+                 dandere2x_suspend_management: Dandere2xSuspendManagement):
+        super().__init__(name="Dandere2x Thread Resolver")
         self.dandere2x_session = dandere2x_session
 
         # discover which dandere2x-process the user wants to use.
@@ -29,7 +31,9 @@ class Dandere2xServiceResolver(Thread):
 
         # start a child-thread of the selected process.
         self._root_service_thread = anonymous_dandere2x_service(dandere2x_session=self.dandere2x_session,
-                                                                dandere2x_gui_session_statistics=dandere2x_gui_session_statistics)
+                                                                dandere2x_gui_session_statistics=dandere2x_gui_session_statistics,
+                                                                dandere2x_suspend_management=dandere2x_suspend_management)
+
 
     @staticmethod
     def _determine_process_type(session: Dandere2xSession) -> Type[_Dandere2xServiceInterface]:

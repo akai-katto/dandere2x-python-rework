@@ -11,7 +11,7 @@ from dandere2x import Dandere2x
 from dandere2x_services.multiprocess_dandere2x_service import MultiProcessDandere2xService
 from dandere2x_services.singleprocess_dandere2x_service import SingleProcessDandere2xService
 from dandere2x_services.dandere2x_service_resolver import Dandere2xServiceResolver
-from dandere2xlib.d2xsession import Dandere2xSession
+from dandere2xlib.d2x_session import Dandere2xSession
 from dandere2xlib.ffmpeg.video_settings import VideoSettings
 from dandere2xlib.utilities.dandere2x_utils import set_dandere2x_logger, log_dandere2x_logo
 

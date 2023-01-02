@@ -2,7 +2,7 @@ import threading
 import time
 from pathlib import Path
 
-from dandere2xlib.d2xframe import D2xFrame
+from dandere2xlib.d2x_frame import D2xFrame
 from dandere2xlib.ffmpeg.ffmpeg_utils import migrate_tracks_contextless
 from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
 from dandere2xlib.waifu2x.w2x_server import W2xServer

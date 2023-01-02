@@ -4,8 +4,8 @@ from pathlib import Path
 
 import numpy as np
 
-from dandere2xlib.d2xsession.__init__ import Dandere2xSession
-from dandere2xlib.d2xframe import D2xFrame
+from dandere2xlib.d2x_session.__init__ import Dandere2xSession
+from dandere2xlib.d2x_frame import D2xFrame
 from dandere2xlib.utilities.yaml_utils import get_options_from_section
 
 

@@ -1,6 +1,4 @@
 import logging
-import os
-from pathlib import Path
 from threading import Thread
 
 from dandere2x.block_matching import BlockMatching
@@ -8,20 +6,21 @@ from dandere2x.frame_compression import FrameCompression
 from dandere2x.frame_extraction import FrameExtraction
 from dandere2x.merge_upscaled_images import MergeUpscaledImages
 from dandere2x.noised_frame_extraction import NoisedFrameExtraction
-from dandere2x.pipe_finished_frames_to_video_and_collect_garbage import \
-    PipeFinishedFramesToVideoAndCollectGarbage
+from dandere2x.pipe_finished_frames_to_video_and_collect_garbage import PipeFinishedFramesToVideoAndCollectGarbage
 from dandere2x.residual_processing import ResidualProcessing
 from dandere2x.upscale_residuals import UpscaleResiduals
-from dandere2xlib.d2xmanagement import D2xManagement
-from dandere2xlib.d2xsession import Dandere2xSession
-from dandere2xlib.ffmpeg.ffmpeg_utils import migrate_tracks_contextless
+
+from dandere2xlib.d2x_suspend_management import Dandere2xSuspendManagement
+from dandere2xlib.d2x_management import D2xManagement
+from dandere2xlib.d2x_session import Dandere2xSession
 from dandere2xlib.utilities.dandere2x_utils import set_dandere2x_logger
-from dandere2xlib.utilities.yaml_utils import load_executable_paths_yaml
 
 
 class Dandere2x(Thread):
 
-    def __init__(self, dandere2x_session: Dandere2xSession):
+    def __init__(self,
+                 dandere2x_session: Dandere2xSession,
+                 dandere2x_suspend_management: Dandere2xSuspendManagement):
         super().__init__(name=f"session {dandere2x_session.session_id}")
         set_dandere2x_logger(dandere2x_session.input_video_path.name)
 
@@ -34,10 +33,10 @@ class Dandere2x(Thread):
         self._frame_compression = FrameCompression(self._manager, dandere2x_session)
         self._block_matching = BlockMatching(self._manager, dandere2x_session)
         self._residual_processing = ResidualProcessing(self._manager, dandere2x_session)
-        self._upscale_residuals = UpscaleResiduals(self._manager, dandere2x_session)
+        self._upscale_residuals = UpscaleResiduals(self._manager, dandere2x_session, dandere2x_suspend_management)
         self._merge_upscaled_images = MergeUpscaledImages(self._manager, dandere2x_session)
-        self._pipe_finished_frames_to_video_and_collect_garbage = PipeFinishedFramesToVideoAndCollectGarbage(self._manager,
-                                                                                                             dandere2x_session)
+        self._pipe_finished_frames_to_video_and_collect_garbage =\
+            PipeFinishedFramesToVideoAndCollectGarbage(self._manager, dandere2x_session, dandere2x_suspend_management)
 
     def run(self):
         self._dandere2x_session.clear_workspace()
