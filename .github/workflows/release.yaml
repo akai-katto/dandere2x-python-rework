@@ -31,8 +31,8 @@ jobs:
 #          pyinstaller --onefile gui_driver.py
       - name: download waifu2x-ncnn-vulkan-server
         run: |
-          wget https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-windows.zip
-          unzip waifu2x-ncnn-vulkan-0.1.3-windows.zip
+          Invoke-WebRequest -Uri https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-windows.zip -OutFile waifu2x-ncnn-vulkan.zip
+          7x x waifu2x-ncnn-vulkan.zip
       - name: ls
         run: ls -R
 #      - uses: actions/upload-artifact@v3
