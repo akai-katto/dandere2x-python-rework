@@ -36,3 +36,39 @@ jobs:
           name: dandere2x_windows
           path: dist/gui_driver.exe
 
+  release_github:
+    needs: [
+      generate_version_number
+    ]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: ./artifacts/
+
+    - name: Display structure of downloaded files
+      run: |
+        cd ./artifacts/
+        ls -R
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
+        release_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
+        body: |
+          ${{ github.event.head_commit.message }}
+        draft: false
+        prerelease: false
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
+        files: |
+          ./artifacts/dandere2x_windows/gui_driver.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
