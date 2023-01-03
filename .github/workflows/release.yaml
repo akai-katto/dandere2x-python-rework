@@ -13,7 +13,7 @@ jobs:
         uses: einaregilsson/build-number@v3
         with:
           token: ${{secrets.github_token}}
-#
+
 #  build_windows:
 #    needs: generate_version_number
 #    runs-on: windows-latest
@@ -72,15 +72,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v4
-#        with:
-#          python-version: '3.9'
-#      - name: Install PyInstaller
-#        run: pip3 install pyinstaller
-#      - name: Pip install requirements
-#        run: pip3 install -r requirements.txt
-#      - name: Build to single executable
-#        run: |
-#          pyinstaller --onefile gui_driver.py
+        with:
+          python-version: '3.9'
+      - name: Install PyInstaller
+        run: pip3 install pyinstaller
+      - name: Pip install requirements
+        run: pip3 install -r requirements.txt
+      - name: Build to single executable
+        run: |
+          pyinstaller --onefile gui_driver.py
       - name: mkdir dist
         run: mkdir dist
       - name: download waifu2x-ncnn-vulkan-server and move to dist\externals
@@ -113,41 +113,42 @@ jobs:
         with:
           name: dandere2x_macos
           path: dandere2x_macos.zip
-#
-#
-#  release_github:
-#    needs: [
-#      generate_version_number,
-#      build_windows]
-#    runs-on: ubuntu-latest
-#    if: github.ref == 'refs/heads/main'
-#    steps:
-#    - name: Download all artifacts
-#      uses: actions/download-artifact@v2
-#      with:
-#        path: ./artifacts/
-#
-#    - name: Display structure of downloaded files
-#      run: |
-#        cd ./artifacts/
-#        ls -R
-#    - name: Create Release
-#      id: create_release
-#      uses: actions/create-release@v1
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-#      with:
-#        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
-#        release_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
-#        body: |
-#          ${{ github.event.head_commit.message }}
-#        draft: true
-#        prerelease: true
-#    - name: Release
-#      uses: softprops/action-gh-release@v1
-#      with:
-#        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}-windows
-#        files: |
-#          ./artifacts/dandere2x_windows/dandere2x.zip
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  release_github:
+    needs: [
+      generate_version_number,
+      build_macos]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: ./artifacts/
+
+    - name: Display structure of downloaded files
+      run: |
+        cd ./artifacts/
+        ls -R
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
+        release_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
+        body: |
+          ${{ github.event.head_commit.message }}
+        draft: true
+        prerelease: true
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}-windows
+        files: |
+#          ./artifacts/dandere2x_windows/dandere2x_windows.zip
+          ./artifacts/dandere2x_windows/dandere2x_macos.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
