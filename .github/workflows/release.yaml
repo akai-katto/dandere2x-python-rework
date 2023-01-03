@@ -97,6 +97,7 @@ jobs:
       - name: copy config_files and gui_icons over
         run: |
           mv ./config_files/ dist/config_files/
+          mkdir -p ./dist/gui/icons
           mv ./gui/icons dist/gui/icons
       - name: copy over start script
         run: |
@@ -151,7 +152,7 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}-windows
+        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
         files: |
           ./artifacts/dandere2x_windows/dandere2x_windows.zip
           ./artifacts/dandere2x_macos/dandere2x_macos.zip
