@@ -87,22 +87,21 @@ jobs:
         run: |
           ls -R
           wget https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-macos.zip
-          mkdir dist/externals/
+          mkdir -p dist/externals/
           unzip waifu2x-ncnn-vulkan-0.1.3-macos.zip
           mv waifu2x-ncnn-vulkan-0.1.3-macos waifu2x-ncnn-vulkan-server
           mv waifu2x-ncnn-vulkan-server/ dist/externals/
           ls -R
       - name: copy config_files and gui_icons over
         run: |
-          mv config_files\ dist\config_files\
-          mkdir dist\gui\
-          mkdir dist\gui\icons
-          mv gui\icons dist\gui\icons
+          mv config_files/ dist/config_files/
+          mkdir -p dist/gui/icons
+          cp gui/icons dist/gui/icons
       - name: Download sample video and create workspace
         run: |
           wget https://github.com/akai-katto/dandere2x_externals_static/releases/download/0.02/yn_moving.mkv
-          mkdir dist\workspace
-          mv yn_moving.mkv dist\workspace
+          mkdir dist/workspace
+          mv yn_moving.mkv dist/workspace
 #
 #      - name: ls
 #        run: ls -R
