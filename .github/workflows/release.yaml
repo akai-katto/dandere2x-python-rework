@@ -35,12 +35,19 @@ jobs:
         run: |
           Invoke-WebRequest -Uri https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-windows.zip -OutFile waifu2x-ncnn-vulkan.zip
           Expand-Archive waifu2x-ncnn-vulkan.zip -DestinationPath waifu2x-ncnn-vulkan
-          ls -R 
           mkdir D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
-          Move-Item D:\a\dandere2x-python-rework\dandere2x-python-rework\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan-0.1.3-windows D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\waifu2x-ncnn-vulkan
-      - name: copy config_files over
+          Move-Item D:\a\dandere2x-python-rework\dandere2x-python-rework\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan-0.1.3-windows D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\waifu2x-ncnn-vulkan-server
+
+      - name: Download ffmpeg and ffprobe and move to dist\externals
+        run: |
+          Invoke-WebRequest -Uri https://github.com/ffbinaries/ffbinaries-prebuilt/releases/download/v4.4.1/ffmpeg-4.4.1-win-64.zip -OutFile ffmpeg-4.4.1-win-64.zip
+          Expand-Archive ffmpeg-4.4.1-win-64.zip D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
+          Invoke-WebRequest -Uri https://github.com/ffbinaries/ffbinaries-prebuilt/releases/download/v4.4.1/ffprobe-4.4.1-win-64.zip -OutFile ffprobe-4.4.1-win-64.zip
+          Expand-Archive ffprobe-4.4.1-win-64.zip D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
+      - name: copy config_files and gui_icons over
         run: |
           Move-Item config_files\ dist\config_files\
+          Move-Item gui\ dist\gui\
       - name: ls
         run: ls -R
       - name: rename dist and compress
