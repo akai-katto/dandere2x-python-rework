@@ -118,7 +118,7 @@ jobs:
   release_github:
     needs: [
       generate_version_number,
-      build_macos
+      build_macos,
       build_windows]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
