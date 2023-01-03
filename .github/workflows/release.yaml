@@ -148,6 +148,6 @@ jobs:
         tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}-windows
         files: |
           ./artifacts/dandere2x_windows/dandere2x_windows.zip
-          ./artifacts/dandere2x_windows/dandere2x_macos.zip
+          ./artifacts/dandere2x_macos/dandere2x_macos.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
