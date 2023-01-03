@@ -94,9 +94,9 @@ jobs:
           ls -R
       - name: copy config_files and gui_icons over
         run: |
-          mv config_files/ dist/config_files/
+          mv ./config_files/ dist/config_files/
           mkdir -p dist/gui/icons
-          cp gui/icons dist/gui/icons
+          cp ./gui/icons dist/gui/icons
       - name: Download sample video and create workspace
         run: |
           wget https://github.com/akai-katto/dandere2x_externals_static/releases/download/0.02/yn_moving.mkv
