@@ -108,7 +108,7 @@ jobs:
       - name: rename 'dist' and compress
         run: |
           mv dist dandere2x_macos
-          zip dandere2x_windows dandere2x_macos.zip
+          zip dandere2x_macos dandere2x_macos.zip
       - uses: actions/upload-artifact@v3
         with:
           name: dandere2x_macos
