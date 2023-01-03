@@ -98,7 +98,7 @@ jobs:
         run: |
           mv ./config_files/ dist/config_files/
           mkdir -p ./dist/gui/icons
-          mv ./gui/icons dist/gui/icons
+          mv ./gui/icons dist/gui/
       - name: copy over start script
         run: |
           mv ./bash_scripts/macos_start.sh  ./dist/dandere2x_start.sh
