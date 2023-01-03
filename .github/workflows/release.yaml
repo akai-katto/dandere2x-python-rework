@@ -70,22 +70,22 @@ jobs:
     needs: generate_version_number
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - name: Install PyInstaller
-        run: pip3 install pyinstaller
-      - name: Pip install requirements
-        run: pip3 install -r requirements.txt
-      - name: Build to single executable
-        run: |
-          pyinstaller --onefile gui_driver.py
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-python@v4
+#        with:
+#          python-version: '3.9'
+#      - name: Install PyInstaller
+#        run: pip3 install pyinstaller
+#      - name: Pip install requirements
+#        run: pip3 install -r requirements.txt
+#      - name: Build to single executable
+#        run: |
+#          pyinstaller --onefile gui_driver.py
 #      - name: mkdir dist
 #        run: mkdir dist
       - name: download waifu2x-ncnn-vulkan-server and move to dist\externals
         run: |
-          wget https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-windows.zip waifu2x-ncnn-vulkan.zip
+          wget https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-macos.zip waifu2x-ncnn-vulkan.zip
           unzip waifu2x-ncnn-vulkan.zip waifu2x-ncnn-vulkan
           mkdir D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
           ls -R
