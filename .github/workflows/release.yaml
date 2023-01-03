@@ -87,7 +87,7 @@ jobs:
         run: |
           ls -R
           wget https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-macos.zip
-          mkdir dist/externals/waifu2x-ncnn-vulkan/
+          mkdir dist/externals/
           unzip waifu2x-ncnn-vulkan-0.1.3-macos.zip dist/externals/waifu2x-ncnn-vulkan/*
           ls -R
 #
