@@ -1,0 +1,13 @@
+*** WHENEVER YOU DOWNLOAD A NEW RELEASE OF DANDERE2X, YOU MUST FIRST ***
+
+
+1) Command+click 'dandere2x' file. "Open" the file. Give it a few seconds, and it should crash. 
+2) Navigate to the 'externals/waifu2x-ncnn-vulkan/' folder. Command+click waifu2x-ncnn-vulkan'. The program will crash.
+
+What these steps is it allows your mac operating system to allow dandere2x + waifu2x-ncnn-vulkan to run, from a permissions perspective.
+
+** TO RUN ONCE YOU COMPLETED THE FOLLOWING COMMANDS **
+
+Right click on the folder housing the dandere2x-release, and "New Terminal in Folder". 
+In the terminal that was just opened, type "bash dandere2x_start.sh".
+
