@@ -86,7 +86,8 @@ jobs:
       - name: download waifu2x-ncnn-vulkan-server and move to dist\externals
         run: |
           wget https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-macos.zip
-          unzip waifu2x-ncnn-vulkan-0.1.3-macos.zip dandere2x-python-rework\dandere2x-python-rework\dist\externals\waifu2x-ncnn-vulkan\*
+          mkdir dandere2x-python-rework/dandere2x-python-rework/dist/externals/waifu2x-ncnn-vulkan/
+          unzip waifu2x-ncnn-vulkan-0.1.3-macos.zip dandere2x-python-rework/dandere2x-python-rework/dist/externals/waifu2x-ncnn-vulkan/*
           ls -R
 #          mv D:\a\dandere2x-python-rework\dandere2x-python-rework\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan-0.1.3-windows D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\waifu2x-ncnn-vulkan-server
 #
