@@ -47,7 +47,14 @@ jobs:
       - name: copy config_files and gui_icons over
         run: |
           Move-Item config_files\ dist\config_files\
-          Move-Item gui\ dist\gui\
+          mkdir dist\gui\
+          Move-Item gui\icons dist\gui\icons
+      - name: Download sample video and create workspace
+        run: |
+          Invoke-WebRequest -Uri https://github.com/akai-katto/dandere2x_externals_static/releases/download/0.02/yn_moving.mkv -OutFile yn_moving.mkv
+          mkdir dist\workspace
+          Move-Item yn_moving.mkv dist\workspace
+
       - name: ls
         run: ls -R
       - name: rename dist and compress
