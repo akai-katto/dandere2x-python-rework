@@ -13,10 +13,62 @@ jobs:
         uses: einaregilsson/build-number@v3
         with:
           token: ${{secrets.github_token}}
+#
+#  build_windows:
+#    needs: generate_version_number
+#    runs-on: windows-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-python@v4
+#        with:
+#          python-version: '3.9'
+#      - name: Install PyInstaller
+#        run: pip3 install pyinstaller
+#      - name: Pip install requirements
+#        run: pip3 install -r requirements.txt
+#      - name: Build to single executable
+#        run: |
+#          pyinstaller --onefile gui_driver.py
+##      - name: mkdir dist
+##        run: mkdir dist
+#      - name: download waifu2x-ncnn-vulkan-server and move to dist\externals
+#        run: |
+#          Invoke-WebRequest -Uri https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-windows.zip -OutFile waifu2x-ncnn-vulkan.zip
+#          Expand-Archive waifu2x-ncnn-vulkan.zip -DestinationPath waifu2x-ncnn-vulkan
+#          mkdir D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
+#          Move-Item D:\a\dandere2x-python-rework\dandere2x-python-rework\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan-0.1.3-windows D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\waifu2x-ncnn-vulkan-server
+#
+#      - name: Download ffmpeg and ffprobe and move to dist\externals
+#        run: |
+#          Invoke-WebRequest -Uri https://github.com/ffbinaries/ffbinaries-prebuilt/releases/download/v4.4.1/ffmpeg-4.4.1-win-64.zip -OutFile ffmpeg-4.4.1-win-64.zip
+#          Expand-Archive ffmpeg-4.4.1-win-64.zip D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
+#          Invoke-WebRequest -Uri https://github.com/ffbinaries/ffbinaries-prebuilt/releases/download/v4.4.1/ffprobe-4.4.1-win-64.zip -OutFile ffprobe-4.4.1-win-64.zip
+#          Expand-Archive ffprobe-4.4.1-win-64.zip D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
+#      - name: copy config_files and gui_icons over
+#        run: |
+#          Move-Item config_files\ dist\config_files\
+#          mkdir dist\gui\
+#          Move-Item gui\icons dist\gui\icons
+#      - name: Download sample video and create workspace
+#        run: |
+#          Invoke-WebRequest -Uri https://github.com/akai-katto/dandere2x_externals_static/releases/download/0.02/yn_moving.mkv -OutFile yn_moving.mkv
+#          mkdir dist\workspace
+#          Move-Item yn_moving.mkv dist\workspace
+#
+#      - name: ls
+#        run: ls -R
+#      - name: rename dist and compress
+#        run: |
+#          Move-Item dist dandere2x_windows
+#          Compress-Archive -Path dandere2x_windows -destinationPath dandere2x_windows.zip
+#      - uses: actions/upload-artifact@v3
+#        with:
+#          name: dandere2x_windows
+#          path: dandere2x_windows.zip
 
-  build_windows:
+  build_macos:
     needs: generate_version_number
-    runs-on: windows-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v4
@@ -33,72 +85,74 @@ jobs:
 #        run: mkdir dist
       - name: download waifu2x-ncnn-vulkan-server and move to dist\externals
         run: |
-          Invoke-WebRequest -Uri https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-windows.zip -OutFile waifu2x-ncnn-vulkan.zip
-          Expand-Archive waifu2x-ncnn-vulkan.zip -DestinationPath waifu2x-ncnn-vulkan
+          wget https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-windows.zip waifu2x-ncnn-vulkan.zip
+          unzip waifu2x-ncnn-vulkan.zip waifu2x-ncnn-vulkan
           mkdir D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
-          Move-Item D:\a\dandere2x-python-rework\dandere2x-python-rework\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan-0.1.3-windows D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\waifu2x-ncnn-vulkan-server
-
-      - name: Download ffmpeg and ffprobe and move to dist\externals
-        run: |
-          Invoke-WebRequest -Uri https://github.com/ffbinaries/ffbinaries-prebuilt/releases/download/v4.4.1/ffmpeg-4.4.1-win-64.zip -OutFile ffmpeg-4.4.1-win-64.zip
-          Expand-Archive ffmpeg-4.4.1-win-64.zip D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
-          Invoke-WebRequest -Uri https://github.com/ffbinaries/ffbinaries-prebuilt/releases/download/v4.4.1/ffprobe-4.4.1-win-64.zip -OutFile ffprobe-4.4.1-win-64.zip
-          Expand-Archive ffprobe-4.4.1-win-64.zip D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
-      - name: copy config_files and gui_icons over
-        run: |
-          Move-Item config_files\ dist\config_files\
-          mkdir dist\gui\
-          Move-Item gui\icons dist\gui\icons
-      - name: Download sample video and create workspace
-        run: |
-          Invoke-WebRequest -Uri https://github.com/akai-katto/dandere2x_externals_static/releases/download/0.02/yn_moving.mkv -OutFile yn_moving.mkv
-          mkdir dist\workspace
-          Move-Item yn_moving.mkv dist\workspace
-
-      - name: ls
-        run: ls -R
-      - name: rename dist and compress
-        run: |
-          Move-Item dist dandere2x_release
-          Compress-Archive -Path dandere2x_release -destinationPath dandere2x.zip
-      - uses: actions/upload-artifact@v3
-        with:
-          name: dandere2x_windows
-          path: dandere2x.zip
-
-  release_github:
-    needs: [
-      generate_version_number,
-      build_windows]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-    - name: Download all artifacts
-      uses: actions/download-artifact@v2
-      with:
-        path: ./artifacts/
-
-    - name: Display structure of downloaded files
-      run: |
-        cd ./artifacts/
-        ls -R
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
-        release_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
-        body: |
-          ${{ github.event.head_commit.message }}
-        draft: true
-        prerelease: true
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}-windows
-        files: |
-          ./artifacts/dandere2x_windows/dandere2x.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ls -R
+#          mv D:\a\dandere2x-python-rework\dandere2x-python-rework\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan-0.1.3-windows D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\waifu2x-ncnn-vulkan-server
+#
+#      - name: Download ffmpeg and ffprobe and move to dist\externals
+#        run: |
+#          Invoke-WebRequest -Uri https://github.com/ffbinaries/ffbinaries-prebuilt/releases/download/v4.4.1/ffmpeg-4.4.1-win-64.zip -OutFile ffmpeg-4.4.1-win-64.zip
+#          Expand-Archive ffmpeg-4.4.1-win-64.zip D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
+#          Invoke-WebRequest -Uri https://github.com/ffbinaries/ffbinaries-prebuilt/releases/download/v4.4.1/ffprobe-4.4.1-win-64.zip -OutFile ffprobe-4.4.1-win-64.zip
+#          Expand-Archive ffprobe-4.4.1-win-64.zip D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
+#      - name: copy config_files and gui_icons over
+#        run: |
+#          Move-Item config_files\ dist\config_files\
+#          mkdir dist\gui\
+#          Move-Item gui\icons dist\gui\icons
+#      - name: Download sample video and create workspace
+#        run: |
+#          Invoke-WebRequest -Uri https://github.com/akai-katto/dandere2x_externals_static/releases/download/0.02/yn_moving.mkv -OutFile yn_moving.mkv
+#          mkdir dist\workspace
+#          Move-Item yn_moving.mkv dist\workspace
+#
+#      - name: ls
+#        run: ls -R
+#      - name: rename dist and compress
+#        run: |
+#          Move-Item dist dandere2x_windows
+#          Compress-Archive -Path dandere2x_windows -destinationPath dandere2x_windows.zip
+#      - uses: actions/upload-artifact@v3
+#        with:
+#          name: dandere2x_windows
+#          path: dandere2x_windows.zip
+#
+#
+#  release_github:
+#    needs: [
+#      generate_version_number,
+#      build_windows]
+#    runs-on: ubuntu-latest
+#    if: github.ref == 'refs/heads/main'
+#    steps:
+#    - name: Download all artifacts
+#      uses: actions/download-artifact@v2
+#      with:
+#        path: ./artifacts/
+#
+#    - name: Display structure of downloaded files
+#      run: |
+#        cd ./artifacts/
+#        ls -R
+#    - name: Create Release
+#      id: create_release
+#      uses: actions/create-release@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+#      with:
+#        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
+#        release_name: 1.0.${{needs.generate_version_number.outputs.build_number}}
+#        body: |
+#          ${{ github.event.head_commit.message }}
+#        draft: true
+#        prerelease: true
+#    - name: Release
+#      uses: softprops/action-gh-release@v1
+#      with:
+#        tag_name: 1.0.${{needs.generate_version_number.outputs.build_number}}-windows
+#        files: |
+#          ./artifacts/dandere2x_windows/dandere2x.zip
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
