@@ -81,8 +81,6 @@ jobs:
       - name: Build to single executable
         run: |
           pyinstaller --onefile gui_driver.py
-      - name: mkdir dist
-        run: mkdir dist
       - name: download waifu2x-ncnn-vulkan-server and move to dist\externals
         run: |
           ls -R
