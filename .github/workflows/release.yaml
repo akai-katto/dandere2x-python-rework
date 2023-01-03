@@ -96,6 +96,7 @@ jobs:
         run: |
           mv config_files\ dist\config_files\
           mkdir dist\gui\
+          mkdir dist\gui\icons
           mv gui\icons dist\gui\icons
       - name: Download sample video and create workspace
         run: |
