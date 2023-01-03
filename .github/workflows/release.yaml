@@ -92,23 +92,16 @@ jobs:
           mv waifu2x-ncnn-vulkan-0.1.3-macos waifu2x-ncnn-vulkan-server
           mv waifu2x-ncnn-vulkan-server/ dist/externals/
           ls -R
-#
-#      - name: Download ffmpeg and ffprobe and move to dist\externals
-#        run: |
-#          Invoke-WebRequest -Uri https://github.com/ffbinaries/ffbinaries-prebuilt/releases/download/v4.4.1/ffmpeg-4.4.1-win-64.zip -OutFile ffmpeg-4.4.1-win-64.zip
-#          Expand-Archive ffmpeg-4.4.1-win-64.zip D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
-#          Invoke-WebRequest -Uri https://github.com/ffbinaries/ffbinaries-prebuilt/releases/download/v4.4.1/ffprobe-4.4.1-win-64.zip -OutFile ffprobe-4.4.1-win-64.zip
-#          Expand-Archive ffprobe-4.4.1-win-64.zip D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\
-#      - name: copy config_files and gui_icons over
-#        run: |
-#          Move-Item config_files\ dist\config_files\
-#          mkdir dist\gui\
-#          Move-Item gui\icons dist\gui\icons
-#      - name: Download sample video and create workspace
-#        run: |
-#          Invoke-WebRequest -Uri https://github.com/akai-katto/dandere2x_externals_static/releases/download/0.02/yn_moving.mkv -OutFile yn_moving.mkv
-#          mkdir dist\workspace
-#          Move-Item yn_moving.mkv dist\workspace
+      - name: copy config_files and gui_icons over
+        run: |
+          mv config_files\ dist\config_files\
+          mkdir dist\gui\
+          mv gui\icons dist\gui\icons
+      - name: Download sample video and create workspace
+        run: |
+          wget https://github.com/akai-katto/dandere2x_externals_static/releases/download/0.02/yn_moving.mkv
+          mkdir dist\workspace
+          mv yn_moving.mkv dist\workspace
 #
 #      - name: ls
 #        run: ls -R
