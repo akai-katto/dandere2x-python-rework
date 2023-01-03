@@ -101,7 +101,7 @@ jobs:
           mv ./gui/icons dist/gui/icons
       - name: copy over start script
         run: |
-          mv ./config_files/ dist/dandere2x_start.sh
+          mv ./bash_scripts/macos_start.sh  ./dist/dandere2x_start.sh
       - name: Download sample video and create workspace
         run: |
           wget https://github.com/akai-katto/dandere2x_externals_static/releases/download/0.02/yn_moving.mkv
