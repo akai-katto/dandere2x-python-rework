@@ -70,8 +70,8 @@ jobs:
     needs: generate_version_number
     runs-on: macos-latest
     steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
 #        with:
 #          python-version: '3.9'
 #      - name: Install PyInstaller
@@ -81,16 +81,16 @@ jobs:
 #      - name: Build to single executable
 #        run: |
 #          pyinstaller --onefile gui_driver.py
-#      - name: mkdir dist
-#        run: mkdir dist
+      - name: mkdir dist
+        run: mkdir dist
       - name: download waifu2x-ncnn-vulkan-server and move to dist\externals
         run: |
           ls -R
-#          wget https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-macos.zip
-#          mkdir dandere2x-python-rework/dandere2x-python-rework/dist/externals/waifu2x-ncnn-vulkan/
-#          unzip waifu2x-ncnn-vulkan-0.1.3-macos.zip dandere2x-python-rework/dandere2x-python-rework/dist/externals/waifu2x-ncnn-vulkan/*
-#          ls -R
-#          mv D:\a\dandere2x-python-rework\dandere2x-python-rework\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan-0.1.3-windows D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\waifu2x-ncnn-vulkan-server
+          wget https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-macos.zip
+          mkdir dandere2x-python-rework/dandere2x-python-rework/dist/externals/waifu2x-ncnn-vulkan/
+          unzip waifu2x-ncnn-vulkan-0.1.3-macos.zip dandere2x-python-rework/dandere2x-python-rework/dist/externals/waifu2x-ncnn-vulkan/*
+          ls -R
+          mv D:\a\dandere2x-python-rework\dandere2x-python-rework\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan-0.1.3-windows D:\a\dandere2x-python-rework\dandere2x-python-rework\dist\externals\waifu2x-ncnn-vulkan-server
 #
 #      - name: Download ffmpeg and ffprobe and move to dist\externals
 #        run: |
