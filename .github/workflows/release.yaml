@@ -102,17 +102,17 @@ jobs:
           wget https://github.com/akai-katto/dandere2x_externals_static/releases/download/0.02/yn_moving.mkv
           mkdir dist/workspace
           mv yn_moving.mkv dist/workspace
-#
-#      - name: ls
-#        run: ls -R
-#      - name: rename dist and compress
-#        run: |
-#          Move-Item dist dandere2x_windows
-#          Compress-Archive -Path dandere2x_windows -destinationPath dandere2x_windows.zip
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          name: dandere2x_windows
-#          path: dandere2x_windows.zip
+
+      - name: ls
+        run: ls -R
+      - name: rename 'dist' and compress
+        run: |
+          mv dist dandere2x_macos
+          zip dandere2x_windows dandere2x_macos.zip
+      - uses: actions/upload-artifact@v3
+        with:
+          name: dandere2x_macos
+          path: dandere2x_macos.zip
 #
 #
 #  release_github:
