@@ -134,7 +134,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.button_change_output.hide()
 
     def pre_upscale_state(self):
-        self.ui.progressBar_frame_percentage.hide()
+        self.ui.label_progress_bar.hide()
         self.ui.label_upscale_frame_of_lhs.hide()
         self.ui.label_upscale_frame_of_rhs.hide()
         self.ui.button_suspend.hide()
@@ -170,7 +170,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
     def upscale_in_progress_state(self):
 
-        self.ui.progressBar_frame_percentage.show()
+        self.ui.label_progress_bar.show()
         self.ui.label_upscale_frame_of_lhs.show()
         self.ui.label_upscale_frame_of_rhs.show()
         self.ui.button_upscale.hide()
@@ -179,7 +179,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.button_suspend.show()
 
     def post_upscale_state(self):
-        self.ui.progressBar_frame_percentage.hide()
+        self.ui.label_progress_bar.hide()
         self.ui.label_upscale_frame_of_lhs.hide()
         self.ui.label_upscale_frame_of_rhs.hide()
         self.ui.button_upscale.show()
@@ -278,13 +278,13 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
         progress_bar = "⬛" * percent + "⬜" * (10 - percent)
         return progress_bar
 
-def run(self):
+    def run(self):
 
-        while True:
-            self.parent.ui.label_upscale_frame_of_rhs.setText(
-                    f"{self.parent.dandere2x_gui_session_statistics.current_frame}/{self.parent.dandere2x_gui_session_statistics.frame_count}")
+            while True:
+                self.parent.ui.label_upscale_frame_of_rhs.setText(
+                        f"{self.parent.dandere2x_gui_session_statistics.current_frame}/{self.parent.dandere2x_gui_session_statistics.frame_count}")
 
-            ratio = max(1, int((self.parent.dandere2x_gui_session_statistics.current_frame / self.parent.dandere2x_gui_session_statistics.frame_count) * 100))
-            ratio = int(min(100, ratio))
-            self.parent.ui.progressBar_frame_percentage.setValue(ratio)
-            time.sleep(0.1)
+                ratio = max(1, int((self.parent.dandere2x_gui_session_statistics.current_frame / self.parent.dandere2x_gui_session_statistics.frame_count) * 100))
+                rounded_to_ten = round((min(100, ratio)) / 10)
+                self.parent.ui.label_progress_bar.setPixmap(QPixmap(f"gui/icons/progressbar{rounded_to_ten}.png"))
+                time.sleep(0.1)
