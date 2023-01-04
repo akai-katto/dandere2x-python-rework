@@ -272,7 +272,13 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
         super(QtUpscaleFrameOfUpdater, self).__init__(parent)
         self.parent = parent
 
-    def run(self):
+    @staticmethod
+    def get_progress_bar(percentage: int):
+        percent = round(percentage / 10)
+        progress_bar = "⬛" * percent + "⬜" * (10 - percent)
+        return progress_bar
+
+def run(self):
 
         while True:
             self.parent.ui.label_upscale_frame_of_rhs.setText(
