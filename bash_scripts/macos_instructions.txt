@@ -12,7 +12,7 @@ You will need to install "ffmpeg" via brew. The command to do that, via a Termin
    asking if you run the unverified application. Press "Open". Give it 10 seconds, and it should crash. You may receive
    a notification that it had crashed, this is to be expected. 
 
-2) Navigate to the 'externals/waifu2x-ncnn-vulkan/' folder. "Option + right-click" the 'waifu2x-ncnn-vulkan'
+2) Navigate to the 'externals/waifu2x-ncnn-vulkan-server/' folder. "Option + right-click" the 'waifu2x-ncnn-vulkan'
    file and follow the same "Open" instructions as Step 1). The program will close instgantly. 
 
 What these steps do is they allow your Mac operating system to allow dandere2x + waifu2x-ncnn-vulkan to run,
@@ -26,6 +26,6 @@ You only need to do this once per release.
    and select "New Terminal in Folder". This is the folder containing the files "dandere2x_start.sh" and "dandere2x",
    as well as other folders named "gui" and "externals".
 
-2) In the terminal that was just opened, type "bash dandere2x_start.sh". Give it a few seconds, as it takes pyinstaller
+2) In the terminal that was just opened, type "bash dandere2x_start.sh" and press enter. Give it a 10 seconds, as it takes pyinstaller
    a brief moment to load the executable.
 
