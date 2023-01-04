@@ -26,6 +26,6 @@ You only need to do this once per release.
    and select "New Terminal in Folder". This is the folder containing the files "dandere2x_start.sh" and "dandere2x",
    as well as other folders named "gui" and "externals".
 
-2) In the terminal that was just opened, type "bash dandere2x_start.sh". Give it a few seconds, as it takes pyinstaller
+2) In the terminal that was just opened, type "bash dandere2x_start.sh" and press enter. Give it a 10 seconds, as it takes pyinstaller
    a brief moment to load the executable.
 
