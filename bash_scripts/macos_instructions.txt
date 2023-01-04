@@ -12,7 +12,7 @@ You will need to install "ffmpeg" via brew. The command to do that, via a Termin
    asking if you run the unverified application. Press "Open". Give it 10 seconds, and it should crash. You may receive
    a notification that it had crashed, this is to be expected. 
 
-2) Navigate to the 'externals/waifu2x-ncnn-vulkan/' folder. "Option + right-click" the 'waifu2x-ncnn-vulkan'
+2) Navigate to the 'externals/waifu2x-ncnn-vulkan-server/' folder. "Option + right-click" the 'waifu2x-ncnn-vulkan'
    file and follow the same "Open" instructions as Step 1). The program will close instgantly. 
 
 What these steps do is they allow your Mac operating system to allow dandere2x + waifu2x-ncnn-vulkan to run,
