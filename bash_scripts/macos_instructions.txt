@@ -1,18 +1,26 @@
+** ON NEW INSTALLATION **
+
+On a new installation, you will need to use "brew" package manager to install ffmpeg.
+
+You can install brew from here: https://brew.sh/
+
+You will need to install "ffmpeg" via brew. The command to do that, via a Terminal Instance, is "brew install ffmpeg".
+
 *** WHENEVER YOU DOWNLOAD A NEW RELEASE OF DANDERE2X, YOU MUST FIRST ***
 
-
-1) "Command + right-click" the 'dandere2x' file and click "Open". Give it a few seconds, and it should crash.
+1) "Command + right-click" the 'dandere2x' file and click "Open". A window will be prompted,
+    asking if you run the unverified application. Press "Open". Give it 10 seconds, and it should crash.
 2) Navigate to the 'externals/waifu2x-ncnn-vulkan/' folder. "Command + right-click" the 'waifu2x-ncnn-vulkan'
-   file and "Open". The program will crash.
+   file and follow the same "Open" instructions as Step 1). The program will crash instantly.
 
-What these steps is it allows your mac operating system to allow dandere2x + waifu2x-ncnn-vulkan to run,
-from a permission's perspective.
+What these steps do is they allow your Mac operating system to allow dandere2x + waifu2x-ncnn-vulkan to run,
+from a permission perspective.
 
 You only need to do this once per release.
 
 ** TO RUN ONCE YOU COMPLETED THE FOLLOWING COMMANDS **
 
-Right click on the folder housing the dandere2x-release, and "New Terminal in Folder". 
+Right-click on the folder housing the dandere2x-release, and "New Terminal in Folder".
 In the terminal that was just opened, type "bash dandere2x_start.sh". Give it a few seconds, as it takes pyinstaller
 a brief moment to load the executable.
 
