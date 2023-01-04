@@ -1,4 +1,4 @@
-** ON NEW INSTALLATION **
+** ON NEW INSTALLATION, ONLY ONCE PER MAC **
 
 On a new installation, you will need to use "brew" package manager to install ffmpeg.
 
