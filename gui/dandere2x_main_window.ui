@@ -440,25 +440,6 @@ color: black;
      <string>About</string>
     </property>
    </widget>
-   <widget class="QProgressBar" name="progressBar_frame_percentage">
-    <property name="geometry">
-     <rect>
-      <x>604</x>
-      <y>192</y>
-      <width>173</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="value">
-     <number>24</number>
-    </property>
-    <property name="textVisible">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="button_suspend">
     <property name="enabled">
      <bool>true</bool>
@@ -476,6 +457,22 @@ color: black;
     </property>
     <property name="text">
      <string>Suspend</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_progress_bar">
+    <property name="geometry">
+     <rect>
+      <x>612</x>
+      <y>196</y>
+      <width>161</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="icons/icons.qrc">:/icons/progressbar1.png</pixmap>
     </property>
    </widget>
    <zorder>label_output_name_lhs</zorder>
@@ -502,8 +499,8 @@ color: black;
    <zorder>label_selected_video_runtime_rhs</zorder>
    <zorder>label_selected_video_frame_count_rhs</zorder>
    <zorder>button_about</zorder>
-   <zorder>progressBar_frame_percentage</zorder>
    <zorder>button_suspend</zorder>
+   <zorder>label_progress_bar</zorder>
   </widget>
  </widget>
  <resources>

@@ -6,5 +6,6 @@
     <file>load-action-floppy.png</file>
     <file>settings.png</file>
     <file>save-floppy-disk.png</file>
+    <file>progressbar1.png</file>
   </qresource>
 </RCC>

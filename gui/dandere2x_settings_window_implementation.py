@@ -42,9 +42,7 @@ class Dandere2xSettingsWindowImplementation(QMainWindow):
 
     def save_settings(self):
 
-        settings = {}
-        settings['dandere2x_settings'] = {}
-        settings['waifu2x_settings'] = {}
+        settings = {'dandere2x_settings': {}, 'waifu2x_settings': {}}
 
         settings['dandere2x_settings']['quality_coefficient'] = self.ui.combo_box_dandere2x_settings_quality_coeffecient.currentText()
         settings['dandere2x_settings']['block_size'] = self.ui.combo_box_dandere2x_settings_block_size.currentText()
