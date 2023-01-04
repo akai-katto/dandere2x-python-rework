@@ -143,6 +143,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.label_icon_load_video.setPixmap(QPixmap("gui/icons/load-action-floppy.png"))
         self.ui.label_icon_save_video.setPixmap(QPixmap("gui/icons/download-square-outline.png"))
         self.ui.label_icon_upscale.setPixmap(QPixmap("gui/icons/2x.png"))
+        self.ui.label_progress_bar.setPixmap(QPixmap("gui/icons/progressbar0.png"))
 
     # Manipulations
     def post_select_video_state(self):
