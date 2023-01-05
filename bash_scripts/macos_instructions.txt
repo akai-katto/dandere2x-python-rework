@@ -8,7 +8,7 @@ You will need to install "ffmpeg" via brew. The command to do that, via a Termin
 
 *** WHENEVER YOU DOWNLOAD A NEW RELEASE OF DANDERE2X, YOU MUST FIRST ***
 
-1) "Option + right-click" the 'dandere2x' file and click "Open". A window will be prompted,
+1) Hold "Option + right-click" onto the 'dandere2x' file, and and click "Open" on the list of options. A window will be prompted,
    asking if you run the unverified application. Press "Open". Give it 10 seconds, and it should crash. You may receive
    a notification that it had crashed, this is to be expected. 
 
