@@ -26,7 +26,8 @@ class FramesToVideoPipe(threading.Thread):
         self._log = logging.getLogger(dandere2x_session.input_video_path.name)
 
         self._dandere2x_session = dandere2x_session
-        self._PIPE_VIDEOS_MAX_FRAMES = self._dandere2x_session.output_options['dandere2x']['pipe_video_max_frames']
+        self._split_piped_videos: bool = self._dandere2x_session.output_options['dandere2x']['frames_to_pipe']['split_piped_videos']
+        self._max_frames_per_piped_video: int = self._dandere2x_session.output_options['dandere2x']['frames_to_pipe']['max_frames_per_piped_video']
         self._output_video: Path = output_video
         self._FFMPEG_PATH = load_executable_paths_yaml()["ffmpeg"]
 
@@ -57,13 +58,14 @@ class FramesToVideoPipe(threading.Thread):
             if len(self.images_to_pipe) > 0:
 
                 piped_frames_in_video += 1
-                if piped_frames_in_video > self._PIPE_VIDEOS_MAX_FRAMES:
+                if piped_frames_in_video > self._max_frames_per_piped_video and self._split_piped_videos:
                     current_video += 1
                     piped_frames_in_video = 0
 
                     self.ffmpeg_pipe_subprocess.stdin.close()
                     self.ffmpeg_pipe_subprocess.wait()
                     self._setup_pipe(current_video)
+
                 img = self.images_to_pipe.pop(0).get_pil_image()  # get the first image and remove it from list
                 img.save(self.ffmpeg_pipe_subprocess.stdin, format="BMP")
             else:
@@ -77,13 +79,16 @@ class FramesToVideoPipe(threading.Thread):
         self.ffmpeg_pipe_subprocess.stdin.close()
         self.ffmpeg_pipe_subprocess.wait()
 
-        concat_n_videos(ffmpeg_dir=self._FFMPEG_PATH,
-                        temp_file_dir=str(self._output_video.parent),
-                        list_of_files=self.__list_of_videos,
-                        output_file=str(self._output_video.absolute()))
+        if self._split_piped_videos:
+            concat_n_videos(ffmpeg_dir=self._FFMPEG_PATH,
+                            temp_file_dir=str(self._output_video.parent),
+                            list_of_files=self.__list_of_videos,
+                            output_file=str(self._output_video.absolute()))
 
-        for partial_video in self.__list_of_videos:
-            os.remove(partial_video)
+            for partial_video in self.__list_of_videos:
+                os.remove(partial_video)
+        else:
+            os.rename(self.__list_of_videos[0], str(self._output_video.absolute()))
 
     def save(self, frame):
         """
