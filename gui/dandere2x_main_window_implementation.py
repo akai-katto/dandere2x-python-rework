@@ -262,7 +262,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
 
     def closeEvent(self, event):
         self.dandere2x_gui_is_running = False
-        time.sleep(0.05)
+        time.sleep(0.1)  # need to sleep to avoid race conditions
 
     # Utilities
     def _load_file(self) -> str:
