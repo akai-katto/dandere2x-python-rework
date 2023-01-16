@@ -209,6 +209,6 @@ jobs:
         files: |
           ./artifacts/dandere2x_windows/dandere2x_windows.zip
           ./artifacts/dandere2x_macos/dandere2x_macos.zip
-          ./artifacts/dandere2x_macos/dandere2x_ubuntu.zip
+          ./artifacts/dandere2x_ubuntu/dandere2x_ubuntu.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
