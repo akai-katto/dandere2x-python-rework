@@ -53,18 +53,26 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         with open("config_files/output_options.yaml") as f:
             output_options = yaml.safe_load(f)
 
-        output_options["dandere2x"]["multiprocess_thread_count"] = int(self.settings_ui.ui.combo_box_dandere2x_settings_multiprocess_thread_count.currentText())
-        output_options["waifu2x_ncnn_vulkan"]["model"] = self.settings_ui.ui.combo_box_waifu2x_settings_model.currentText()
-        output_options["waifu2x_ncnn_vulkan"]["tile_size"] = int(self.settings_ui.ui.combo_box_waifu2x_settings_tile_size.currentText())
+        output_options["dandere2x"]["multiprocess_thread_count"] = int(
+            self.settings_ui.ui.combo_box_dandere2x_settings_multiprocess_thread_count.currentText())
+        output_options["waifu2x_ncnn_vulkan"][
+            "model"] = self.settings_ui.ui.combo_box_waifu2x_settings_model.currentText()
+        output_options["waifu2x_ncnn_vulkan"]["tile_size"] = int(
+            self.settings_ui.ui.combo_box_waifu2x_settings_tile_size.currentText())
         return Dandere2xSession(session_id=0,
                                 input_video_path=Path(self.input_file),
                                 output_path=Path(self.output_file),
                                 workspace=Path("./workspace/workingspace"),
-                                scale_factor=int(self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText()),
-                                noise_factor=int(self.settings_ui.ui.combo_box_waifu2x_settings_denoise_level.currentText()),
-                                block_size=int(self.settings_ui.ui.combo_box_dandere2x_settings_block_size.currentText()),
-                                quality=int(self.settings_ui.ui.combo_box_dandere2x_settings_quality_coeffecient.currentText()),
-                                num_waifu2x_threads=int(self.settings_ui.ui.combo_box_waifu2x_settings_waifu2x_processes.currentText()),
+                                scale_factor=int(
+                                    self.settings_ui.ui.combo_box_dandere2x_settings_scale_factor.currentText()),
+                                noise_factor=int(
+                                    self.settings_ui.ui.combo_box_waifu2x_settings_denoise_level.currentText()),
+                                block_size=int(
+                                    self.settings_ui.ui.combo_box_dandere2x_settings_block_size.currentText()),
+                                quality=int(
+                                    self.settings_ui.ui.combo_box_dandere2x_settings_quality_coeffecient.currentText()),
+                                num_waifu2x_threads=int(
+                                    self.settings_ui.ui.combo_box_waifu2x_settings_waifu2x_processes.currentText()),
                                 processing_type=self.settings_ui.ui.combo_box_dandere2x_settings_process_type.currentText(),
                                 output_options=output_options)
 
@@ -81,12 +89,14 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.video_settings: VideoSettings = None
         self.dandere2x_gui_session_statistics = Dandere2xGuiSessionStatistics()
         self.dandere2x_suspend_management = Dandere2xSuspendManagement()
+        self.dandere2x_gui_is_running = True
 
         # Other UI's
         self.settings_ui: Dandere2xSettingsWindowImplementation = Dandere2xSettingsWindowImplementation(self)
         self.settings_ui.hide()
 
-        self.session_statistics_ui: Dandere2xSessionStatisticsImplementation = Dandere2xSessionStatisticsImplementation(self)
+        self.session_statistics_ui: Dandere2xSessionStatisticsImplementation =\
+            Dandere2xSessionStatisticsImplementation(self)
         self.session_statistics_ui.hide()
 
         self.about_dandere2x_ui = Dandere2xAboutImplementation()
@@ -250,6 +260,9 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.dandere2x_thread.finished_signal.connect(self.post_upscale_state)
         self.upscale_in_progress_state()
 
+    def closeEvent(self, event):
+        self.dandere2x_gui_is_running = False
+        time.sleep(0.1)  # need to sleep to avoid race conditions
 
     # Utilities
     def _load_file(self) -> str:
@@ -280,12 +293,11 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
         return progress_bar
 
     def run(self):
+        while True and self.parent.dandere2x_gui_is_running:
+            self.parent.ui.label_upscale_frame_of_rhs.setText(
+                f"{self.parent.dandere2x_gui_session_statistics.current_frame}/{self.parent.dandere2x_gui_session_statistics.frame_count}")
 
-            while True:
-                self.parent.ui.label_upscale_frame_of_rhs.setText(
-                        f"{self.parent.dandere2x_gui_session_statistics.current_frame}/{self.parent.dandere2x_gui_session_statistics.frame_count}")
-
-                ratio = max(1, int((self.parent.dandere2x_gui_session_statistics.current_frame / self.parent.dandere2x_gui_session_statistics.frame_count) * 100))
-                rounded_to_ten = round((min(100, ratio)) / 10)
-                self.parent.ui.label_progress_bar.setPixmap(QPixmap(f"gui/icons/progressbar{rounded_to_ten}.png"))
-                time.sleep(0.1)
+            ratio = max(1, int((self.parent.dandere2x_gui_session_statistics.current_frame / self.parent.dandere2x_gui_session_statistics.frame_count) * 100))
+            rounded_to_ten = round((min(100, ratio)) / 10)
+            self.parent.ui.label_progress_bar.setPixmap(QPixmap(f"gui/icons/progressbar{rounded_to_ten}.png"))
+            time.sleep(0.1)
