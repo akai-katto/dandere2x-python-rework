@@ -67,6 +67,55 @@ jobs:
           name: dandere2x_windows
           path: dandere2x_windows.zip
 
+  build_ubuntu:
+    needs: generate_version_number
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install PyInstaller
+        run: pip3 install pyinstaller
+      - name: Pip install requirements
+        run: pip3 install -r requirements.txt
+      - name: Build to single executable
+        run: |
+          pyinstaller --onefile gui_driver.py
+      - name: rename executable
+        run: |
+          mv dist/gui_driver dist/dandere2x
+      - name: download waifu2x-ncnn-vulkan-server and move to dist\externals
+        run: |
+          ls -R
+          wget https://github.com/akai-katto/waifu2x-ncnn-vulkan-server/releases/download/0.1.3/waifu2x-ncnn-vulkan-0.1.3-ubuntu.zip
+          mkdir -p dist/externals/
+          unzip waifu2x-ncnn-vulkan-0.1.3-ubuntu.zip
+          mv waifu2x-ncnn-vulkan-0.1.3-ubuntu waifu2x-ncnn-vulkan-server
+          mv waifu2x-ncnn-vulkan-server/ dist/externals/
+          ls -R
+      - name: copy config_files and gui_icons over
+        run: |
+          mv ./config_files/ dist/config_files/
+          mkdir -p ./dist/gui/icons
+          mv ./gui/icons dist/gui/
+      - name: Download sample video and create workspace
+        run: |
+          wget https://github.com/akai-katto/dandere2x_externals_static/releases/download/0.02/yn_moving.mkv
+          mkdir dist/workspace
+          mv yn_moving.mkv dist/workspace
+
+      - name: ls
+        run: ls -R
+      - name: rename 'dist' and compress
+        run: |
+          mv dist dandere2x_ubuntu
+          zip -r dandere2x_ubuntu.zip dandere2x_ubuntu
+      - uses: actions/upload-artifact@v3
+        with:
+          name: dandere2x_ubuntu
+          path: dandere2x_ubuntu.zip
+
   build_macos:
     needs: generate_version_number
     runs-on: macos-latest
@@ -127,7 +176,8 @@ jobs:
     needs: [
       generate_version_number,
       build_macos,
-      build_windows]
+      build_windows,
+      build_ubuntu]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
@@ -159,5 +209,6 @@ jobs:
         files: |
           ./artifacts/dandere2x_windows/dandere2x_windows.zip
           ./artifacts/dandere2x_macos/dandere2x_macos.zip
+          ./artifacts/dandere2x_macos/dandere2x_ubuntu.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
