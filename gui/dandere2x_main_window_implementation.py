@@ -17,7 +17,6 @@ from dandere2xlib.ffmpeg.video_settings import VideoSettings
 from dandere2xlib.utilities.dandere2x_utils import get_wait_delay
 from gui.dandere2_gui_session_statistics import Dandere2xGuiSessionStatistics
 from gui.dandere2x_about_implementation import Dandere2xAboutImplementation
-from gui.dandere2x_gui_is_running import Dandere2xGuiIsRunning
 from gui.dandere2x_main_window import Ui_Dandere2xMainWindow
 from gui.dandere2x_session_statistics_implementation import Dandere2xSessionStatisticsImplementation
 from gui.dandere2x_settings_window_implementation import Dandere2xSettingsWindowImplementation
@@ -90,14 +89,14 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.video_settings: VideoSettings = None
         self.dandere2x_gui_session_statistics = Dandere2xGuiSessionStatistics()
         self.dandere2x_suspend_management = Dandere2xSuspendManagement()
-        self.dandere2x_gui_is_running = Dandere2xGuiIsRunning()
+        self.dandere2x_gui_is_running = True
 
         # Other UI's
         self.settings_ui: Dandere2xSettingsWindowImplementation = Dandere2xSettingsWindowImplementation(self)
         self.settings_ui.hide()
 
-        self.session_statistics_ui: Dandere2xSessionStatisticsImplementation = Dandere2xSessionStatisticsImplementation(
-            self)
+        self.session_statistics_ui: Dandere2xSessionStatisticsImplementation =\
+            Dandere2xSessionStatisticsImplementation(self)
         self.session_statistics_ui.hide()
 
         self.about_dandere2x_ui = Dandere2xAboutImplementation()
@@ -235,8 +234,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.ui.label_selected_video_runtime_rhs.setText(duration)
         # Frame Count
         self.ui.label_selected_video_frame_count_rhs.setText(str(self.video_settings.frame_count))
-        self.output_file = Path(self.this_folder) / "workspace" / (
-                    self.input_file.stem + "_d2x" + self.input_file.suffix)
+        self.output_file = Path(self.this_folder) / "workspace" / (self.input_file.stem + "_d2x" + self.input_file.suffix)
         self.post_select_video_state()
 
     def press_change_output_button(self):
@@ -263,8 +261,7 @@ class Dandere2xMainWindowImplementation(QMainWindow):
         self.upscale_in_progress_state()
 
     def closeEvent(self, event):
-        print("killing")
-        self.dandere2x_gui_is_running.kill()
+        self.dandere2x_gui_is_running = False
         time.sleep(0.05)
 
     # Utilities
@@ -296,7 +293,7 @@ class QtUpscaleFrameOfUpdater(QtCore.QThread):
         return progress_bar
 
     def run(self):
-        while True and self.parent.dandere2x_gui_is_running.status():
+        while True and self.parent.dandere2x_gui_is_running:
             self.parent.ui.label_upscale_frame_of_rhs.setText(
                 f"{self.parent.dandere2x_gui_session_statistics.current_frame}/{self.parent.dandere2x_gui_session_statistics.frame_count}")
 

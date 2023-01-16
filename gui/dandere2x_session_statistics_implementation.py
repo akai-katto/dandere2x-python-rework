@@ -28,7 +28,7 @@ class QtStatisticsUpdater(QtCore.QThread):
         self.parent = parent
 
     def run(self):
-        while True and self.parent.dandere2x_main_window_implementation.dandere2x_gui_is_running.status():
+        while True and self.parent.dandere2x_main_window_implementation.dandere2x_gui_is_running:
             self.parent.ui.label_session_statistics_current_frame.setText(str(self.parent.dandere2x_main_window_implementation.dandere2x_gui_session_statistics.current_frame).rjust(7))
             self.parent.ui.label_session_statistics_frames_remaining.setText(str(self.parent.dandere2x_main_window_implementation.dandere2x_gui_session_statistics.frame_count - self.parent.dandere2x_main_window_implementation.dandere2x_gui_session_statistics.current_frame).rjust(7))
 
