@@ -10,6 +10,7 @@ __pycache__/
 externals/*
 temp/*
 workspace/*
+dandere2x_release/*
 .DS_Store
 
 # C extensions

@@ -4,3 +4,4 @@ imageio~=2.22.4
 Pillow~=9.3.0
 colorlog~=6.7.0
 PyQt6~=6.4.0
+pyinstaller~=5.4.0
