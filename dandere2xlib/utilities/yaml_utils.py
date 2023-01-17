@@ -25,7 +25,7 @@ def load_executable_paths_yaml() -> dict:
 
     # This is acquired technical debt / my pyinstaller refuses to work by simply checking if it's frozen.
     for potential in potential_main_paths:
-        # get location of dandere2x directories (will be in the same folder as main)
+        # get location of dandere2x directories (will be in the same folder as main.py)
         configfile = "executable_paths.yaml"
         main_path = potential
         config_path = Path(path.join(main_path, "config_files"))
